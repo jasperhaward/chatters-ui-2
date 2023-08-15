@@ -1,0 +1,7 @@
+@import "./Input.module.scss";
+
+.textarea {
+  @extend .input;
+  height: auto;
+  resize: none;
+}

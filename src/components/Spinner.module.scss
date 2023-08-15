@@ -1,0 +1,21 @@
+.spinner {
+  font-size: var(--font-size-sm);
+  color: var(--background);
+  animation: rotation 1s linear infinite;
+  margin-left: 4px;
+  margin-right: 4px;
+
+  &.white {
+    color: var(--white);
+  }
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}

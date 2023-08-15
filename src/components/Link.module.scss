@@ -1,0 +1,9 @@
+@import "./Button.module.scss";
+
+.ghost {
+  @extend .button;
+  @extend .ghost;
+  display: block;
+  width: auto;
+  text-decoration: none;
+}

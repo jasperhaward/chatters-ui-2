@@ -1,0 +1,23 @@
+.fixed {
+  position: fixed;
+}
+
+.topLeft {
+  top: var(--padding-xl);
+  left: var(--padding-xl);
+}
+
+.topRight {
+  top: var(--padding-xl);
+  right: var(--padding-xl);
+}
+
+.bottomLeft {
+  bottom: var(--padding-xl);
+  left: var(--padding-xl);
+}
+
+.bottomRight {
+  bottom: var(--padding-xl);
+  right: var(--padding-xl);
+}

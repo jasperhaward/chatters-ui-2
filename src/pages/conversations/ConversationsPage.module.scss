@@ -1,0 +1,27 @@
+.conversations {
+  width: 80%;
+  max-width: 1200px;
+  height: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding-top: 6rem;
+  padding-bottom: 6rem;
+
+  .card {
+    display: flex;
+
+    .conversationsPanel {
+      display: flex;
+      flex-direction: column;
+      flex-basis: 0;
+      width: 30%;
+      min-width: 350px;
+      padding: var(--padding-xl);
+    }
+
+    .messagesPanel {
+      flex-grow: 1;
+      padding: var(--padding-xl);
+    }
+  }
+}
