@@ -54,7 +54,7 @@ const validation: ValidationRules<RegisterInputs> = {
 
 export default function RegisterPage() {
   const [_location, setLocation] = useLocation();
-  const { isLoading, error, mutate } = useRegister();
+  const register = useRegister();
   // prettier-ignore
   const { 
     inputs, 
@@ -71,7 +71,7 @@ export default function RegisterPage() {
     setHasSubmitted(true);
 
     if (!hasErrors) {
-      const result = await mutate(inputs);
+      const result = await register.mutate(inputs);
 
       if (result.data) {
         setLocation(`${paths.login}?username=${result.data.username}`);
@@ -90,7 +90,7 @@ export default function RegisterPage() {
             placeholder="Username"
             type="text"
             name="username"
-            disabled={isLoading}
+            disabled={register.isLoading}
             value={inputs.username}
             onInput={onInput}
           />
@@ -101,7 +101,7 @@ export default function RegisterPage() {
             placeholder="Password"
             type="password"
             name="password"
-            disabled={isLoading}
+            disabled={register.isLoading}
             value={inputs.password}
             onInput={onInput}
           />
@@ -112,16 +112,18 @@ export default function RegisterPage() {
             placeholder="Confirm password"
             type="password"
             name="confirmPassword"
-            disabled={isLoading}
+            disabled={register.isLoading}
             value={inputs.confirmPassword}
             onInput={onInput}
           />
           {hasSubmitted && errors?.confirmPassword && (
             <ErrorMessage>{errors.confirmPassword}</ErrorMessage>
           )}
-          {error && <ErrorMessage>{error.message}</ErrorMessage>}
-          <Button type="submit" disabled={isLoading}>
-            {isLoading && <Spinner />} Create account
+          {register.error && (
+            <ErrorMessage>{register.error.message}</ErrorMessage>
+          )}
+          <Button type="submit" disabled={register.isLoading}>
+            {register.isLoading && <Spinner />} Create account
           </Button>
         </div>
       </form>

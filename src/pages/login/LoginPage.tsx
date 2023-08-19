@@ -27,7 +27,7 @@ const validation: ValidationRules<LoginInputs> = {
 
 export default function LoginPage() {
   const [session, setSession] = useContext(SessionContext);
-  const { isLoading, error, mutate } = useLogin();
+  const login = useLogin();
   // prettier-ignore
   const { 
     inputs, 
@@ -44,7 +44,7 @@ export default function LoginPage() {
     setHasSubmitted(true);
 
     if (!hasErrors) {
-      const result = await mutate(inputs);
+      const result = await login.mutate(inputs);
 
       if (result.data) {
         // setting the session will automatically redirect the user to the conversations page
@@ -73,7 +73,7 @@ export default function LoginPage() {
             placeholder="Username"
             type="text"
             name="username"
-            disabled={isLoading}
+            disabled={login.isLoading}
             value={inputs.username}
             onInput={onInput}
           />
@@ -84,16 +84,16 @@ export default function LoginPage() {
             placeholder="Password"
             type="password"
             name="password"
-            disabled={isLoading}
+            disabled={login.isLoading}
             value={inputs.password}
             onInput={onInput}
           />
           {hasSubmitted && errors?.password && (
             <ErrorMessage>{errors.password}</ErrorMessage>
           )}
-          {error && <ErrorMessage>{error.message}</ErrorMessage>}
-          <Button type="submit" disabled={isLoading}>
-            {isLoading && <Spinner />} Login
+          {login.error && <ErrorMessage>{login.error.message}</ErrorMessage>}
+          <Button type="submit" disabled={login.isLoading}>
+            {login.isLoading && <Spinner />} Login
           </Button>
         </div>
       </form>
