@@ -1,56 +1,28 @@
-import { useMemo } from "preact/hooks";
+import { format, isToday, isYesterday, isThisWeek, isThisYear } from "date-fns";
 
 export interface TimestampProps {
   className?: string;
-  /** ISO 8061 formatted date string. */
-  timestamp: string;
-  /**
-   * Determines whether time is displayed, when false only dates/days are displayed
-   * Defaults to true.
-   */
-  time?: boolean;
   /** Determines whether dates are shown in a short format. Defaults to false */
   short?: boolean;
+  /** ISO 8061 formatted date string. */
+  children: string;
 }
 
-export function Timestamp({
-  className,
-  timestamp,
-  time = true,
-  short,
-}: TimestampProps) {
-  const formattedTimestamp = useMemo(() => {
-    const date = new Date(timestamp);
+export function Timestamp({ className, short, children }: TimestampProps) {
+  let timestamp: string;
+  const date = new Date(children);
 
-    if (date.isToday()) {
-      if (time) {
-        return date.toLocaleString("en-GB", {
-          hour: "2-digit",
-          minute: "2-digit",
-          hour12: true,
-        });
-      }
+  if (isToday(date)) {
+    timestamp = format(date, "HH:mm");
+  } else if (isYesterday(date)) {
+    timestamp = "Yesterday";
+  } else if (isThisWeek(date)) {
+    timestamp = format(date, "E");
+  } else if (isThisYear(date)) {
+    timestamp = format(date, short ? "d LLL" : "d LLLL");
+  } else {
+    timestamp = format(date, short ? "LLL yyyy" : "d LLLL yyyy");
+  }
 
-      return "Today";
-    } else if (date.isYesterday()) {
-      return "Yesterday";
-    } else if (date.isThisWeek()) {
-      return date.toLocaleString("en-GB", {
-        weekday: "long",
-      });
-    } else if (date.isThisYear()) {
-      return date.toLocaleString("en-GB", {
-        day: "numeric",
-        month: short ? "short" : "long",
-      });
-    } else {
-      return date.toLocaleString("en-GB", {
-        day: short ? undefined : "numeric",
-        month: short ? "short" : "long",
-        year: "numeric",
-      });
-    }
-  }, [timestamp]);
-
-  return <time className={className}>{formattedTimestamp}</time>;
+  return <time className={className}>{timestamp}</time>;
 }

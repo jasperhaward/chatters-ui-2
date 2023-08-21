@@ -6,5 +6,5 @@ export interface Conversation {
   createdBy: User;
   title: string | null;
   recipients: User[];
-  messages: Message[];
+  latestMessage: Message | null;
 }

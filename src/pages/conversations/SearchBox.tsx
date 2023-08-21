@@ -25,11 +25,6 @@ export default function SearchBox({
         disabled={disabled}
         onInput={onInput}
       />
-      {value === "" ? (
-        <Icon icon={["fas", "search"]} />
-      ) : (
-        <Icon icon={["fas", "times"]} />
-      )}
     </div>
   );
 }

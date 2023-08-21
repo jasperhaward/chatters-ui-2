@@ -71,6 +71,11 @@ h2 {
   line-height: var(--line-height-md);
 }
 
+h3 {
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-sm);
+}
+
 p {
   margin: var(--padding-sm) 0;
   color: var(--grey-dark);
@@ -85,6 +90,13 @@ label {
   line-height: var(--line-height-xs);
 }
 
+mark {
+  padding: 0 1px;
+  border-radius: 3px;
+  color: var(--white);
+  background-color: var(--grey-dark);
+}
+
 ::-webkit-scrollbar {
   width: 18px;
 }
@@ -97,6 +109,6 @@ label {
   transition: background-color ease 0.15s;
 
   &:hover {
-    background-color: var(--grey-dark);
+    background-color: var(--border-color);
   }
 }

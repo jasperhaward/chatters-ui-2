@@ -1,11 +1,11 @@
 .conversations {
-  width: 80%;
+  width: 70%;
   max-width: 1200px;
   height: 100%;
   margin-left: auto;
   margin-right: auto;
-  padding-top: 6rem;
-  padding-bottom: 6rem;
+  padding-top: 5rem;
+  padding-bottom: 4rem;
 
   .card {
     display: flex;
@@ -14,9 +14,15 @@
       display: flex;
       flex-direction: column;
       flex-basis: 0;
+      gap: var(--padding-xs);
       width: 30%;
       min-width: 350px;
       padding: var(--padding-xl);
+
+      .conversationsContainer {
+        flex-grow: 1;
+        overflow-y: auto;
+      }
     }
 
     .messagesPanel {

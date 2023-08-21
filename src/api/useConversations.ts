@@ -1,12 +1,13 @@
+import { Conversation } from "../types";
 import { useAuthorizedFetch } from "./useAuthorizedFetch";
-import { useMutation } from "./useMutation";
+import { useQuery } from "./useQuery";
 
-export function useLogout() {
+export function useConversations() {
   const fetch = useAuthorizedFetch();
 
-  return useMutation(() =>
-    fetch<never>("/api/v1/auth/logout", {
-      method: "POST",
+  return useQuery(() =>
+    fetch<Conversation[]>("/api/v1/conversations", {
+      method: "GET",
     })
   );
 }
