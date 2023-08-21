@@ -1,5 +1,5 @@
-import styles from "./Button.module.scss";
 import { ComponentChildren } from "preact";
+import styles from "./Button.module.scss";
 
 export interface ButtonProps {
   className?: string;

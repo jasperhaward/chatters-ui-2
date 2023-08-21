@@ -1,7 +1,8 @@
 import styles from "./Conversation.module.scss";
-import { Icon, Timestamp, HighlightedText } from "../../components";
-import { Conversation as IConversation } from "../../types";
-import { useScrollIntoView, useSession } from "../../hooks";
+
+import { Conversation as IConversation } from "@/types";
+import { useScrollIntoView, useSession } from "@/hooks";
+import { Icon, Timestamp, HighlightedText } from "@/components";
 import { buildConversationHeader } from "./utils";
 
 export interface ConversationProps {

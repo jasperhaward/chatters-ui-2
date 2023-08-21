@@ -1,9 +1,10 @@
 import { useContext } from "preact/hooks";
 import styles from "./LoginPage.module.scss";
 
-import { useLogin } from "../../api";
-import { paths } from "../../App";
-import { SessionContext } from "../../context";
+import { useLogin } from "@/api";
+import { paths } from "@/App";
+import { SessionContext } from "@/context";
+import { ValidationRules, useForm } from "@/hooks";
 import {
   Button,
   Spinner,
@@ -12,8 +13,7 @@ import {
   Input,
   Panel,
   Link,
-} from "../../components";
-import { ValidationRules, useForm } from "../../hooks";
+} from "@/components";
 
 interface LoginInputs {
   username: string;

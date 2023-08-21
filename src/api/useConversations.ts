@@ -1,4 +1,4 @@
-import { Conversation } from "../types";
+import { Conversation } from "@/types";
 import { useAuthorizedFetch } from "./useAuthorizedFetch";
 import { useQuery } from "./useQuery";
 

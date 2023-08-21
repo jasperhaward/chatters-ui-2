@@ -1,9 +1,10 @@
 import { useLocation } from "wouter";
 import styles from "./RegisterPage.module.scss";
 
-import config from "../../config";
-import { useRegister } from "../../api";
-import { paths } from "../../App";
+import config from "@/config";
+import { useRegister } from "@/api";
+import { paths } from "@/App";
+import { useForm, ValidationRules } from "@/hooks";
 import {
   Input,
   Panel,
@@ -12,8 +13,7 @@ import {
   ErrorMessage,
   FixedElement,
   Link,
-} from "../../components";
-import { useForm, ValidationRules } from "../../hooks";
+} from "@/components";
 
 interface RegisterInputs {
   username: string;

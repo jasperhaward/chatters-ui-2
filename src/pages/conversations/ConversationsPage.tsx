@@ -2,17 +2,11 @@ import { useEffect, useMemo } from "preact/hooks";
 import { useLocation } from "wouter";
 import styles from "./ConversationsPage.module.scss";
 
-import { paths } from "../../App";
-import { useConversations, useLogout } from "../../api";
-import {
-  Spinner,
-  FixedElement,
-  Button,
-  Card,
-  ErrorMessage,
-} from "../../components";
-import { useSession, useInputs } from "../../hooks";
-import { Conversation as IConversation } from "../../types";
+import { paths } from "@/App";
+import { useConversations, useLogout } from "@/api";
+import { Conversation as IConversation } from "@/types";
+import { useSession, useInputs } from "@/hooks";
+import { Spinner, FixedElement, Button, Card } from "@/components";
 
 import Conversation from "./Conversation";
 import ConversationsPane from "./ConversationsPane";

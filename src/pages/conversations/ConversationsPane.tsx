@@ -1,8 +1,8 @@
 import { useMemo } from "preact/hooks";
 
-import { ErrorMessage } from "../../components";
-import { Conversation as IConversation } from "../../types";
-import { UseQuery } from "../../api/useQuery";
+import { UseQuery } from "@/api";
+import { Conversation as IConversation } from "@/types";
+import { ErrorMessage } from "@/components";
 
 import Conversation from "./Conversation";
 import { buildConversationHeader } from "./utils";

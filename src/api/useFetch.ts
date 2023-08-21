@@ -1,4 +1,4 @@
-import config from "../config";
+import config from "@/config";
 
 export interface UseFetchRequestInit extends Omit<RequestInit, "body"> {
   method: "GET" | "POST" | "DELETE";

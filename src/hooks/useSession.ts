@@ -1,6 +1,6 @@
 import { useContext } from "preact/hooks";
-import { SessionContext } from "../context";
-import { Session } from "../types";
+import { SessionContext } from "@/context";
+import { Session } from "@/types";
 
 export type UseSession = [
   session: Session,

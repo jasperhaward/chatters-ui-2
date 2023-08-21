@@ -1,4 +1,4 @@
-import { Conversation } from "../../types";
+import { Conversation } from "@/types";
 
 export function buildConversationHeader(conversation: Conversation) {
   return (

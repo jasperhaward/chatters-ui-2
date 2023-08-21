@@ -1,4 +1,4 @@
-import { User } from "../types";
+import { User } from "@/types";
 import { useFetch } from "./useFetch";
 import { useMutation } from "./useMutation";
 
@@ -15,6 +15,6 @@ export function useRegister() {
     fetch<User>("/api/v1/auth/register", {
       method: "POST",
       body: params,
-    }),
+    })
   );
 }

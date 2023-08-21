@@ -1,4 +1,4 @@
-import { Input, Icon } from "../../components";
+import { Input } from "@/components";
 
 export interface SearchBoxProps {
   name: string;
@@ -16,15 +16,13 @@ export default function SearchBox({
   onClear,
 }: SearchBoxProps) {
   return (
-    <div>
-      <Input
-        name={name}
-        placeholder="Search"
-        autoComplete="off"
-        value={value}
-        disabled={disabled}
-        onInput={onInput}
-      />
-    </div>
+    <Input
+      name={name}
+      placeholder="Search"
+      autoComplete="off"
+      value={value}
+      disabled={disabled}
+      onInput={onInput}
+    />
   );
 }
