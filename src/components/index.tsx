@@ -9,6 +9,7 @@ export * from "./Icon";
 export * from "./Input";
 export * from "./Link";
 export * from "./Panel";
+export * from "./Skeleton";
 export * from "./Spinner";
 export * from "./Textarea";
 export * from "./Timestamp";
