@@ -111,7 +111,7 @@ textarea {
 }
 
 ::-webkit-scrollbar {
-  width: 18px;
+  width: 16px;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -119,9 +119,4 @@ textarea {
   border-radius: 10px;
   background-color: var(--grey-dark);
   background-clip: padding-box;
-  transition: background-color var(--transition-duration-long);
-
-  &:hover {
-    background-color: var(--grey);
-  }
 }
