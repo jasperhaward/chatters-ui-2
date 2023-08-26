@@ -3,7 +3,7 @@ import { Icon } from "./Icon";
 
 export interface SpinnerProps {
   className?: string;
-  color?: "white";
+  color?: "foreground";
 }
 
 export function Spinner({ className = "", color }: SpinnerProps) {

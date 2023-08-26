@@ -1,5 +1,5 @@
 .brand {
-  color: var(--white);
+  color: var(--foreground);
   font-size: var(--font-size-md);
   font-weight: 500;
 
@@ -9,16 +9,16 @@
 }
 
 .footer {
-  color: var(--grey-medium);
+  color: var(--grey-light);
   font-size: var(--font-size-xs);
 
   a {
     color: inherit;
     text-underline-offset: 4px;
-    transition: color ease 0.3s;
+    transition: color var(--transition-duration-long);
 
     &:hover {
-      color: var(--white);
+      color: var(--foreground);
     }
   }
 }

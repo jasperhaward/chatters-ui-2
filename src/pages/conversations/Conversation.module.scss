@@ -4,11 +4,11 @@
   width: 100%;
   padding: var(--padding-md);
   outline: none;
-  color: var(--white);
+  color: var(--foreground);
   background-color: transparent;
   text-align: left;
   border-radius: var(--border-radius);
-  transition: background-color ease 0.15s;
+  transition: background-color var(--transition-duration);
 
   &:not(:last-child) {
     margin-bottom: var(--padding-xs);
@@ -21,7 +21,7 @@
   &.selected,
   &:hover,
   &:focus {
-    background-color: var(--border-color);
+    background-color: var(--grey-dark);
   }
 
   .avatar {
@@ -42,7 +42,7 @@
 
       .title {
         flex-grow: 1;
-        color: var(--white);
+        color: var(--foreground);
         font-size: var(--font-size-sm);
         overflow: hidden;
         white-space: nowrap;
@@ -50,7 +50,7 @@
       }
 
       .timestamp {
-        color: var(--grey-dark);
+        color: var(--grey);
         font-size: var(--font-size-xs);
         white-space: nowrap;
       }
@@ -64,7 +64,7 @@
       text-overflow: ellipsis;
 
       span {
-        color: var(--grey-dark);
+        color: var(--grey);
         margin-right: var(--padding-xs);
       }
     }

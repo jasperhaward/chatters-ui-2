@@ -1,16 +1,18 @@
 @font-face {
   font-family: "Inter Regular";
-  src: url("./assets/fonts/Inter-Regular.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("./assets/fonts/InterRegular.woff2") format("woff2");
 }
 
 :root {
+  --foreground: rgb(250, 250, 250);
   --background: rgb(9, 9, 11);
-  --white: rgb(255, 255, 255);
+  --grey-light: rgb(210, 210, 210);
+  --grey: rgb(161, 161, 170);
+  --grey-dark: rgb(35, 35, 37);
   --red: rgb(127, 29, 29);
-  --grey-medium: rgb(210, 210, 210);
-  --grey-dark: rgb(161, 161, 170);
-  --grey-xdark: rgb(24, 24, 27);
-  --border-color: rgb(39, 39, 42);
   --border-radius: 0.5rem;
   --border-width: 1px;
   --font-size-xs: 0.8rem;
@@ -26,6 +28,8 @@
   --padding-md: 0.75rem;
   --padding-lg: 1rem;
   --padding-xl: 1.5rem;
+  --transition-duration: 0.15s;
+  --transition-duration-long: 0.3s;
 }
 
 *,
@@ -35,18 +39,17 @@
   border: 0 solid #e5e7eb;
 }
 
-* {
-  border-color: var(--border-color);
+html {
+  height: 100%;
+  line-height: 1.5;
 }
 
-html,
 body {
   height: 100%;
-}
-
-body {
   margin: 0;
   font-family: "Inter Regular";
+  font-weight: 500;
+  color: var(--foreground);
   background-color: var(--background);
 }
 
@@ -57,7 +60,7 @@ h4,
 h5,
 h6 {
   margin: 0;
-  color: var(--white);
+  color: var(--foreground);
   font-weight: 600;
 }
 
@@ -71,21 +74,16 @@ h2 {
   line-height: var(--line-height-md);
 }
 
-h3 {
-  font-size: var(--font-size-sm);
-  line-height: var(--line-height-sm);
-}
-
 p {
   margin: var(--padding-sm) 0;
-  color: var(--grey-dark);
+  color: var(--grey);
   font-size: var(--font-size-sm);
   line-height: var(--line-height-sm);
 }
 
 label {
   text-align: left;
-  color: var(--white);
+  color: var(--foreground);
   font-size: var(--font-size-sm);
   line-height: var(--line-height-xs);
 }
@@ -93,8 +91,23 @@ label {
 mark {
   padding: 0 1px;
   border-radius: 3px;
-  color: var(--white);
-  background-color: var(--grey-dark);
+  color: var(--foreground);
+  background-color: var(--grey);
+}
+
+button,
+input,
+optgroup,
+select,
+textarea {
+  margin: 0;
+  padding: 0;
+  font-family: inherit;
+  font-size: 100%;
+  font-weight: inherit;
+  line-height: inherit;
+  color: inherit;
+  outline: none;
 }
 
 ::-webkit-scrollbar {
@@ -104,11 +117,11 @@ mark {
 ::-webkit-scrollbar-thumb {
   border: 5px solid transparent;
   border-radius: 10px;
-  background-color: var(--grey-xdark);
+  background-color: var(--grey-dark);
   background-clip: padding-box;
-  transition: background-color ease 0.15s;
+  transition: background-color var(--transition-duration-long);
 
   &:hover {
-    background-color: var(--border-color);
+    background-color: var(--grey);
   }
 }

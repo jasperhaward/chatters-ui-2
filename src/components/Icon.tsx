@@ -1,4 +1,3 @@
-import { createElement } from "preact";
 import {
   IconPrefix,
   IconName,
@@ -16,20 +15,20 @@ export interface IconProps {
 export function Icon({ className = "", icon: [prefix, iconName] }: IconProps) {
   const icon = factory({ prefix, iconName });
 
-  if (icon) {
-    const [element] = icon.abstract;
-
-    const children = element.children!.map((child) =>
-      createElement(child.tag, child.attributes)
-    );
-
-    const elementProps = {
-      ...element.attributes,
-      class: `${styles.icon} ${className} ${element.attributes.class}`,
-    };
-
-    return createElement(element.tag, elementProps, children);
-  } else {
+  if (!icon) {
     throw new Error(`Icon '${prefix}' - '${iconName}' not in library.`);
   }
+
+  const [element] = icon.abstract;
+
+  return (
+    <svg
+      className={`${styles.icon} ${element.attributes.class} ${className}`}
+      {...element.attributes}
+    >
+      {element.children!.map((child, index) => (
+        <path key={index} {...child.attributes} />
+      ))}
+    </svg>
+  );
 }

@@ -53,7 +53,7 @@ const validation: ValidationRules<RegisterInputs> = {
 };
 
 export default function RegisterPage() {
-  const [_location, setLocation] = useLocation();
+  const [location, setLocation] = useLocation();
   const register = useRegister();
   // prettier-ignore
   const { 
@@ -122,7 +122,7 @@ export default function RegisterPage() {
           {register.error && (
             <ErrorMessage>{register.error.message}</ErrorMessage>
           )}
-          <Button type="submit" disabled={register.isLoading}>
+          <Button type="submit" color="contrast" disabled={register.isLoading}>
             {register.isLoading && <Spinner />} Create account
           </Button>
         </div>

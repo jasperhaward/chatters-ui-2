@@ -9,8 +9,9 @@ export interface TimestampProps {
 }
 
 export function Timestamp({ className, short, children }: TimestampProps) {
-  let timestamp: string;
   const date = new Date(children);
+
+  let timestamp: string;
 
   if (isToday(date)) {
     timestamp = format(date, "HH:mm");

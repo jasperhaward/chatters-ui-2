@@ -1,12 +1,12 @@
 .spinner {
+  margin-left: 4px;
+  margin-right: 4px;
   font-size: var(--font-size-sm);
   color: var(--background);
   animation: rotation 1s linear infinite;
-  margin-left: 4px;
-  margin-right: 4px;
 
-  &.white {
-    color: var(--white);
+  &.foreground {
+    color: var(--foreground);
   }
 }
 

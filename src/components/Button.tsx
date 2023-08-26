@@ -4,7 +4,7 @@ import styles from "./Button.module.scss";
 export interface ButtonProps {
   className?: string;
   type?: "submit";
-  color?: "ghost";
+  color: "ghost" | "contrast";
   disabled?: boolean;
   children: ComponentChildren;
   onClick?: (event: JSX.TargetedEvent<HTMLButtonElement>) => void;

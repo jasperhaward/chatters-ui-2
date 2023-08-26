@@ -67,7 +67,7 @@ export default function ConversationsPage({ params }: ChatProps) {
     <div className={styles.conversations}>
       <Card className={styles.card}>
         <span className={styles.conversationsPanel}>
-          <h3>Conversations</h3>
+          <h2>Conversations</h2>
           <SearchBox
             name="search"
             value={inputs.search}
@@ -83,7 +83,7 @@ export default function ConversationsPage({ params }: ChatProps) {
               onConversationClick={onConversationClick}
             />
           </div>
-          <Button>Create conversation</Button>
+          <Button color="contrast">Create conversation</Button>
         </span>
         <span className={styles.messagesPanel}>Messages</span>
       </Card>
@@ -93,7 +93,7 @@ export default function ConversationsPage({ params }: ChatProps) {
           disabled={logout.isLoading}
           onClick={onLogoutClick}
         >
-          {logout.isLoading && <Spinner color="white" />}
+          {logout.isLoading && <Spinner color="foreground" />}
           Logout
         </Button>
       </FixedElement>
