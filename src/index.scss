@@ -89,10 +89,10 @@ label {
 }
 
 mark {
-  padding: 0 1px;
-  border-radius: 3px;
   color: var(--foreground);
-  background-color: var(--grey);
+  background-color: transparent;
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
 
 button,
