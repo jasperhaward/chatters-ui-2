@@ -1,6 +1,6 @@
-import { User } from ".";
+import { UserWithCreatedAt } from ".";
 
 export interface Session {
-  user: User;
+  user: UserWithCreatedAt;
   token: string;
 }

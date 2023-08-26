@@ -1,4 +1,4 @@
-import { Conversation, Message, User } from ".";
+import { Conversation, Message, UserWithCreatedAt } from ".";
 
 export interface ConversationCreatedEvent {
   type: "conversation/created";
@@ -12,12 +12,12 @@ export interface MessageCreatedEvent {
 
 export interface RecipientAddedEvent {
   type: "recipient/added";
-  payload: User;
+  payload: UserWithCreatedAt;
 }
 
 export interface RecipientRemovedEvent {
   type: "recipient/removed";
-  payload: User;
+  payload: UserWithCreatedAt;
 }
 
 export type ClientEvent =
