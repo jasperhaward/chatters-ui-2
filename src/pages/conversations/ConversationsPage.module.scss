@@ -15,11 +15,6 @@
     width: 30%;
     min-width: 350px;
     padding: var(--padding-xl);
-
-    .conversationsContainer {
-      flex-grow: 1;
-      overflow-y: auto;
-    }
   }
 
   .messagesPanel {

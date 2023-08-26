@@ -1,3 +1,12 @@
+.conversationsPane {
+  flex-grow: 1;
+  overflow: hidden;
+
+  &.overflow {
+    overflow-y: auto;
+  }
+}
+
 .noConversations {
   margin-top: var(--padding-xs);
   color: var(--grey-light);

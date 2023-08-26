@@ -71,18 +71,18 @@ export default function ConversationsPage({ params }: ChatProps) {
           <SearchBox
             name="search"
             value={inputs.search}
-            disabled={conversations.isLoading}
+            disabled={conversations.isLoading || !!conversations.error}
             onInput={onInput}
             onClear={onSearchClearClick}
           />
-          <div className={styles.conversationsContainer}>
-            <ConversationsPane
-              search={inputs.search}
-              conversations={conversations}
-              selectedConversation={selectedConversation}
-              onConversationClick={onConversationClick}
-            />
-          </div>
+          <ConversationsPane
+            isLoading={conversations.isLoading}
+            search={inputs.search}
+            error={conversations.error}
+            conversations={conversations.data}
+            selectedConversation={selectedConversation}
+            onConversationClick={onConversationClick}
+          />
           <Button color="contrast">Create conversation</Button>
         </span>
         <span className={styles.messagesPanel}>Messages</span>
