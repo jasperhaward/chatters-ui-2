@@ -20,15 +20,14 @@ export default function Conversation({
 }: ConversationProps) {
   const ref = useScrollIntoView<HTMLButtonElement>(isSelected);
   const [session] = useSession();
+
   const { latestMessage } = conversation;
   const isGroupConversation = conversation.recipients.length > 1;
 
   return (
     <button
       ref={ref}
-      className={`${conversation.id} ${styles.conversation} ${
-        isSelected ? styles.selected : ""
-      }`}
+      className={`${styles.conversation} ${isSelected ? styles.selected : ""}`}
       onClick={() => onClick(conversation)}
     >
       <Icon
