@@ -1,4 +1,5 @@
 import { useMemo } from "preact/hooks";
+import styles from "./ConversationsPane.module.scss";
 
 import { UseQuery } from "@/api";
 import { Conversation as IConversation } from "@/types";
@@ -49,6 +50,6 @@ export default function ConversationsPane({
       ))}
     </>
   ) : (
-    <span>No conversations found.</span>
+    <div className={styles.noConversations}>No conversations found.</div>
   );
 }
