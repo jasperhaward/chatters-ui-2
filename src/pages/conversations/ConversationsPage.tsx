@@ -65,7 +65,7 @@ export default function ConversationsPage({ params }: ChatProps) {
 
   return (
     <div className={styles.conversations}>
-      <Card className={styles.card}>
+      <Card flex>
         <span className={styles.conversationsPanel}>
           <h2>Conversations</h2>
           <SearchBox

@@ -7,27 +7,23 @@
   padding-top: 5rem;
   padding-bottom: 4rem;
 
-  .card {
+  .conversationsPanel {
     display: flex;
+    flex-direction: column;
+    flex-basis: 0;
+    gap: var(--padding-sm);
+    width: 30%;
+    min-width: 350px;
+    padding: var(--padding-xl);
 
-    .conversationsPanel {
-      display: flex;
-      flex-direction: column;
-      flex-basis: 0;
-      gap: var(--padding-sm);
-      width: 30%;
-      min-width: 350px;
-      padding: var(--padding-xl);
-
-      .conversationsContainer {
-        flex-grow: 1;
-        overflow-y: auto;
-      }
-    }
-
-    .messagesPanel {
+    .conversationsContainer {
       flex-grow: 1;
-      padding: var(--padding-xl);
+      overflow-y: auto;
     }
+  }
+
+  .messagesPanel {
+    flex-grow: 1;
+    padding: var(--padding-xl);
   }
 }
