@@ -10,7 +10,7 @@ export interface CardProps {
 export function Card({ className = "", flex, children }: CardProps) {
   return (
     <div className={`${styles.card} ${flex ? styles.flex : ""} ${className}`}>
-      {children}{" "}
+      {children}
     </div>
   );
 }

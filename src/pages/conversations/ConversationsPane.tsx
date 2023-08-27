@@ -61,17 +61,15 @@ export default function ConversationsPane({
           </Button>
         </div>
       ) : filteredConversations && filteredConversations.length > 0 ? (
-        <>
-          {filteredConversations.map((conversation) => (
-            <Conversation
-              key={conversation.id}
-              isSelected={conversation === selectedConversation}
-              search={search}
-              conversation={conversation}
-              onClick={onConversationClick}
-            />
-          ))}
-        </>
+        filteredConversations.map((conversation) => (
+          <Conversation
+            key={conversation.id}
+            isSelected={conversation === selectedConversation}
+            search={search}
+            conversation={conversation}
+            onClick={onConversationClick}
+          />
+        ))
       ) : (
         <div className={styles.centerChildren}>
           <div className={styles.noConversations}>No conversations found.</div>
