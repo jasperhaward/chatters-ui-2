@@ -1,15 +1,11 @@
 .conversationsPane {
   flex-grow: 1;
-  overflow: hidden;
-
-  &.overflow {
-    overflow-y: auto;
-  }
+  overflow-y: auto;
 }
 
 .noConversations {
   margin-top: var(--padding-xs);
-  color: var(--grey-light);
+  color: var(--foreground);
   text-align: center;
   font-size: var(--font-size-sm);
 }

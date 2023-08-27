@@ -38,11 +38,7 @@ export default function ConversationsPane({
   }, [conversations, search]);
 
   return (
-    <div
-      className={`${styles.conversationsPane} ${
-        isLoading ? "" : styles.overflow
-      }`}
-    >
+    <div className={styles.conversationsPane}>
       {isLoading ? (
         <>
           <ConversationSkeleton />
