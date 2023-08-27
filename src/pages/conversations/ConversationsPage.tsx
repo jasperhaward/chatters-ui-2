@@ -83,7 +83,12 @@ export default function ConversationsPage({ params }: ChatProps) {
             selectedConversation={selectedConversation}
             onConversationClick={onConversationClick}
           />
-          <Button color="contrast">Create conversation</Button>
+          <Button
+            color="contrast"
+            disabled={conversations.isLoading || !!conversations.error}
+          >
+            Create conversation
+          </Button>
         </span>
         <span className={styles.messagesPanel}>Messages</span>
       </Card>
