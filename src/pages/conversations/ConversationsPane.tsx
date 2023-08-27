@@ -3,10 +3,10 @@ import styles from "./ConversationsPane.module.scss";
 
 import { Conversation as IConversation } from "@/types";
 import { Button } from "@/components";
+import { caseInsensitiveIncludes } from "@/utils";
 
 import Conversation from "./Conversation";
 import ConversationSkeleton from "./ConversationSkeleton";
-import { buildConversationHeader } from "./utils";
 
 export interface ConversationsPaneProps {
   isLoading: boolean;
@@ -32,12 +32,25 @@ export default function ConversationsPane({
       return null;
     }
 
-    return conversations.filter((conversation) => {
-      return buildConversationHeader(conversation)
-        .toUpperCase()
-        .includes(search.toUpperCase());
-    });
+    return conversations.filter(filterConversationBySearch);
   }, [conversations, search]);
+
+  /**
+   * Should return true if a conversation's title or any
+   * recipient's username includes the search string.
+   */
+  function filterConversationBySearch(conversation: IConversation) {
+    if (
+      conversation.title &&
+      caseInsensitiveIncludes(conversation.title, search)
+    ) {
+      return true;
+    }
+
+    return conversation.recipients.some((recipient) => {
+      return caseInsensitiveIncludes(recipient.username, search);
+    });
+  }
 
   return (
     <div className={styles.conversationsPane}>

@@ -7,3 +7,7 @@ export function parseEnv(key: string): string {
 
   return value;
 }
+
+export function caseInsensitiveIncludes(string: string, search: string) {
+  return string.toUpperCase().includes(search.toUpperCase());
+}
