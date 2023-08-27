@@ -49,11 +49,17 @@ export function useQuery<Data>(func: () => Promise<Data>): UseQuery<Data> {
     }
   }
 
+  async function retry() {
+    setError(null);
+    setIsLoading(true);
+    await query();
+  }
+
   return {
     isLoading,
     error,
     data,
-    retry: query,
+    retry,
     setData,
   } as UseQuery<Data>;
 }
