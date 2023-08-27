@@ -1,11 +1,22 @@
 .conversationsPane {
   flex-grow: 1;
   overflow-y: auto;
-}
 
-.noConversations {
-  margin-top: var(--padding-xs);
-  color: var(--foreground);
-  text-align: center;
-  font-size: var(--font-size-sm);
+  .centerChildren {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }
+
+  .errorMessage {
+    margin-bottom: var(--padding-sm);
+    font-size: var(--font-size-sm);
+    text-align: center;
+  }
+
+  .noConversations {
+    font-size: var(--font-size-sm);
+  }
 }

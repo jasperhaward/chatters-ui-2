@@ -2,7 +2,7 @@ import { useMemo } from "preact/hooks";
 import styles from "./ConversationsPane.module.scss";
 
 import { Conversation as IConversation } from "@/types";
-import { ErrorMessage } from "@/components";
+import { Button } from "@/components";
 
 import Conversation from "./Conversation";
 import ConversationSkeleton from "./ConversationSkeleton";
@@ -15,6 +15,7 @@ export interface ConversationsPaneProps {
   conversations: IConversation[] | null;
   selectedConversation: IConversation | undefined;
   onConversationClick: (conversation: IConversation) => void;
+  onRetryClick: () => void;
 }
 
 export default function ConversationsPane({
@@ -24,6 +25,7 @@ export default function ConversationsPane({
   conversations,
   selectedConversation,
   onConversationClick,
+  onRetryClick,
 }: ConversationsPaneProps) {
   const filteredConversations = useMemo(() => {
     if (!conversations) {
@@ -50,7 +52,14 @@ export default function ConversationsPane({
           <ConversationSkeleton />
         </>
       ) : error ? (
-        <ErrorMessage>{error.message}</ErrorMessage>
+        <div className={styles.centerChildren}>
+          <div className={styles.errorMessage}>
+            Failed to load conversations, <br /> please try again.
+          </div>
+          <Button color="contrast" onClick={onRetryClick}>
+            Retry
+          </Button>
+        </div>
       ) : filteredConversations && filteredConversations.length > 0 ? (
         <>
           {filteredConversations.map((conversation) => (
@@ -64,7 +73,9 @@ export default function ConversationsPane({
           ))}
         </>
       ) : (
-        <div className={styles.noConversations}>No conversations found.</div>
+        <div className={styles.centerChildren}>
+          <div className={styles.noConversations}>No conversations found.</div>
+        </div>
       )}
     </div>
   );

@@ -82,6 +82,7 @@ export default function ConversationsPage({ params }: ChatProps) {
             conversations={conversations.data}
             selectedConversation={selectedConversation}
             onConversationClick={onConversationClick}
+            onRetryClick={conversations.retry}
           />
           <Button
             color="contrast"
