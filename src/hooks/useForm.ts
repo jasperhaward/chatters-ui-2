@@ -1,4 +1,4 @@
-import { useMemo, useReducer, useState } from "preact/hooks";
+import { useMemo, useState } from "preact/hooks";
 import { useInputs, OnInputEvent } from "./useInputs";
 
 export type ValidationRules<T> = {
