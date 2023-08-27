@@ -21,8 +21,9 @@ export default function Conversation({
   const ref = useScrollIntoView<HTMLButtonElement>(isSelected);
   const [session] = useSession();
 
-  const { latestMessage } = conversation;
   const isGroupConversation = conversation.recipients.length > 1;
+  const isLatestMessageCreatedByUser =
+    conversation.latestMessage?.createdBy.id === session.user.id;
 
   return (
     <button
@@ -34,29 +35,28 @@ export default function Conversation({
         className={styles.avatar}
         icon={["fas", isGroupConversation ? "users" : "user"]}
       />
-      <div className={styles.detailsContainer}>
-        <div className={styles.upperDetails}>
-          <HighlightedText className={styles.title} query={search}>
-            {buildConversationHeader(conversation)}
-          </HighlightedText>
-          <Timestamp className={styles.timestamp} short>
-            {latestMessage?.createdAt || conversation.createdAt}
-          </Timestamp>
-        </div>
-        <div className={styles.lowerDetails}>
-          <span>
-            {latestMessage
-              ? latestMessage.createdBy.id === session.user.id
-                ? "You"
-                : isGroupConversation
-                ? latestMessage.createdBy.username
-                : ""
-              : conversation.createdBy.username}
-            :
-          </span>
-          {latestMessage?.content || "Conversation created"}
-        </div>
+      <div className={styles.details}>
+        <HighlightedText className={styles.title} query={search}>
+          {buildConversationHeader(conversation)}
+        </HighlightedText>
+        {conversation.latestMessage ? (
+          <div className={styles.message}>
+            {(isLatestMessageCreatedByUser || isGroupConversation) && (
+              <span>
+                {isLatestMessageCreatedByUser
+                  ? "You:"
+                  : `${conversation.latestMessage.createdBy.username}:`}
+              </span>
+            )}
+            {conversation.latestMessage.content}
+          </div>
+        ) : (
+          <div className={styles.created}>Conversation created</div>
+        )}
       </div>
+      <Timestamp className={styles.timestamp} short>
+        {conversation.latestMessage?.createdAt || conversation.createdAt}
+      </Timestamp>
     </button>
   );
 }

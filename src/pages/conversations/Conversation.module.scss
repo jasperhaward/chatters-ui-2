@@ -1,18 +1,13 @@
 .conversation {
   display: flex;
   align-items: center;
+  gap: var(--padding-sm);
   width: 100%;
   padding: var(--padding-md);
-  outline: none;
   color: var(--foreground);
-  background-color: transparent;
-  text-align: left;
+  background-color: var(--background);
   border-radius: var(--border-radius);
   transition: background-color var(--transition-duration);
-
-  &:not(:last-child) {
-    margin-bottom: var(--padding-xs);
-  }
 
   &:hover {
     cursor: pointer;
@@ -27,47 +22,45 @@
   .avatar {
     font-size: 20px;
     min-width: 28px;
-    margin-right: var(--padding-sm);
   }
 
-  .detailsContainer {
+  .details {
     min-width: 0;
     flex-grow: 1;
+    text-align: left;
 
-    .upperDetails {
-      display: flex;
-      justify-content: space-between;
-      gap: var(--padding-xs);
-      width: 100%;
-
-      .title {
-        flex-grow: 1;
-        color: var(--foreground);
-        font-size: var(--font-size-sm);
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-      }
-
-      .timestamp {
-        color: var(--grey);
-        font-size: var(--font-size-xs);
-        white-space: nowrap;
-      }
-    }
-
-    .lowerDetails {
-      margin-top: var(--padding-xs);
+    .title {
+      margin-bottom: var(--padding-xs);
+      color: var(--foreground);
+      font-size: var(--font-size-sm);
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
+    }
+
+    .message {
       color: var(--grey-light);
       font-size: var(--font-size-xs);
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
 
       span {
         color: var(--grey);
         margin-right: var(--padding-xs);
       }
     }
+
+    .created {
+      color: var(--grey);
+      font-size: var(--font-size-xs);
+    }
+  }
+
+  .timestamp {
+    color: var(--grey);
+    font-size: var(--font-size-xs);
+    // needed to keep conversation details width consistent
+    min-width: 42px;
   }
 }
