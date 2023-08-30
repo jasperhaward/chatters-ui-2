@@ -14,4 +14,3 @@ export * from "./Panel";
 export * from "./Skeleton";
 export * from "./Spinner";
 export * from "./Textarea";
-export * from "./Timestamp";

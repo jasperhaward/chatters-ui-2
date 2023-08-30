@@ -1,8 +1,9 @@
+import { format, isToday, isYesterday, isThisWeek, isThisYear } from "date-fns";
 import styles from "./Conversation.module.scss";
 
 import { Conversation as IConversation } from "@/types";
 import { useScrollIntoView, useSession } from "@/hooks";
-import { Icon, Timestamp, HighlightedText } from "@/components";
+import { Icon, HighlightedText } from "@/components";
 import { buildConversationTitle } from "./utils";
 
 export interface ConversationProps {
@@ -24,6 +25,22 @@ export default function Conversation({
   const isGroupConversation = conversation.recipients.length > 1;
   const isLatestMessageCreatedByUser =
     conversation.latestMessage?.createdBy.id === session.user.id;
+
+  function formatTimestamp(timestamp: string) {
+    const date = new Date(timestamp);
+
+    if (isToday(date)) {
+      return format(date, "HH:mm");
+    } else if (isYesterday(date)) {
+      return "Yesterday";
+    } else if (isThisWeek(date)) {
+      return format(date, "E");
+    } else if (isThisYear(date)) {
+      return format(date, "d LLL");
+    } else {
+      return format(date, "LLL yyyy");
+    }
+  }
 
   return (
     <button
@@ -54,9 +71,11 @@ export default function Conversation({
           <div className={styles.created}>Conversation created</div>
         )}
       </div>
-      <Timestamp className={styles.timestamp} short>
-        {conversation.latestMessage?.createdAt || conversation.createdAt}
-      </Timestamp>
+      <time className={styles.timestamp}>
+        {formatTimestamp(
+          conversation.latestMessage?.createdAt || conversation.createdAt
+        )}
+      </time>
     </button>
   );
 }
