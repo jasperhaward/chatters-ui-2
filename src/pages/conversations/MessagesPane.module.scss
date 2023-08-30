@@ -1,0 +1,12 @@
+.messagesPane {
+  flex-grow: 1;
+  overflow-y: auto;
+
+  .datestamp {
+    display: block;
+    margin-bottom: var(--padding-xs);
+    text-align: center;
+    color: var(--grey-light);
+    font-size: var(--font-size-xs);
+  }
+}

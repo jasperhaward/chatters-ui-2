@@ -3,15 +3,16 @@ import { useLocation } from "wouter";
 import styles from "./ConversationsPage.module.scss";
 
 import { paths } from "@/App";
-import { useConversations, useLogout } from "@/api";
+import { useConversations, useMessages, useLogout } from "@/api";
 import { Conversation as IConversation } from "@/types";
 import { useSession, useInputs } from "@/hooks";
 import { Spinner, FixedElement, Button, Card } from "@/components";
 
+import { buildConversationTitle } from "./utils";
 import ConversationsPane from "./ConversationsPane";
 import SearchBox from "./SearchBox";
 import MessageBox from "./MessageBox";
-import { buildConversationTitle } from "./utils";
+import MessagesPane from "./MessagesPane";
 
 const conversationInputs = {
   search: "",
@@ -42,9 +43,15 @@ export default function ConversationsPage({ params }: ChatProps) {
     });
   }, [conversations.data, params.id]);
 
+  const messages = useMessages(selectedConversation);
+
   useEffect(() => {
-    if (conversations.data && !selectedConversation) {
-      setLocation(`${paths.conversations}/${conversations.data[0].id}`);
+    if (
+      conversations.data &&
+      conversations.data.length > 0 &&
+      !selectedConversation
+    ) {
+      setLocation(`${paths.conversations}/${conversations.data[0]!.id}`);
     }
   }, [conversations.data, selectedConversation]);
 
@@ -102,7 +109,12 @@ export default function ConversationsPage({ params }: ChatProps) {
               ? buildConversationTitle(selectedConversation)
               : "Messages"}
           </h2>
-          <div style={{ flexGrow: 1 }}></div>
+          <MessagesPane
+            isLoading={messages.isLoading}
+            error={messages.error}
+            messages={messages.data}
+            onRetryClick={messages.retry}
+          />
           <MessageBox
             name="message"
             value={inputs.message}
