@@ -8,9 +8,10 @@ import { Conversation as IConversation } from "@/types";
 import { useSession, useInputs } from "@/hooks";
 import { Spinner, FixedElement, Button, Card } from "@/components";
 
-import Conversation from "./Conversation";
 import ConversationsPane from "./ConversationsPane";
 import SearchBox from "./SearchBox";
+import MessageBox from "./MessageBox";
+import { buildConversationTitle } from "./utils";
 
 const conversationInputs = {
   search: "",
@@ -63,6 +64,10 @@ export default function ConversationsPage({ params }: ChatProps) {
     setLocation(`${paths.conversations}/${conversation.id}`);
   }
 
+  function onMessageSubmit() {
+    setInputs({ message: "" });
+  }
+
   return (
     <div className={styles.conversations}>
       <Card flex>
@@ -91,7 +96,21 @@ export default function ConversationsPage({ params }: ChatProps) {
             Create conversation
           </Button>
         </span>
-        <span className={styles.messagesPanel}>Messages</span>
+        <span className={styles.messagesPanel}>
+          <h2>
+            {selectedConversation
+              ? buildConversationTitle(selectedConversation)
+              : "Messages"}
+          </h2>
+          <div style={{ flexGrow: 1 }}></div>
+          <MessageBox
+            name="message"
+            value={inputs.message}
+            disabled={conversations.isLoading || !!conversations.error}
+            onInput={onInput}
+            onSubmit={onMessageSubmit}
+          />
+        </span>
       </Card>
       <FixedElement position="topRight">
         <Button

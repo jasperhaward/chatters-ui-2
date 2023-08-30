@@ -3,7 +3,7 @@ import styles from "./Conversation.module.scss";
 import { Conversation as IConversation } from "@/types";
 import { useScrollIntoView, useSession } from "@/hooks";
 import { Icon, Timestamp, HighlightedText } from "@/components";
-import { buildConversationHeader } from "./utils";
+import { buildConversationTitle } from "./utils";
 
 export interface ConversationProps {
   isSelected: boolean;
@@ -37,7 +37,7 @@ export default function Conversation({
       />
       <div className={styles.details}>
         <HighlightedText className={styles.title} query={search}>
-          {buildConversationHeader(conversation)}
+          {buildConversationTitle(conversation)}
         </HighlightedText>
         {conversation.latestMessage ? (
           <div className={styles.message}>

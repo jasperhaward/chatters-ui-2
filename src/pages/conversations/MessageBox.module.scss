@@ -1,0 +1,14 @@
+.messageBox {
+  position: relative;
+
+  .textarea {
+    padding-right: 45px;
+  }
+
+  .button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+  }
+}
