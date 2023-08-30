@@ -8,6 +8,7 @@
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "isolatedModules": true,
     "noEmitOnError": true,
+    "noUncheckedIndexedAccess": true,
     "jsx": "react-jsx",
     "jsxImportSource": "preact",
     "skipLibCheck": true,

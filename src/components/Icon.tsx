@@ -21,6 +21,10 @@ export function Icon({ className = "", icon: [prefix, iconName] }: IconProps) {
 
   const [element] = icon.abstract;
 
+  if (!element) {
+    throw new Error(`Malformed icon abstract.`);
+  }
+
   return (
     <svg
       className={`${styles.icon} ${element.attributes.class} ${className}`}
