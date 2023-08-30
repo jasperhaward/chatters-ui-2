@@ -1,5 +1,9 @@
 import { useEffect, useState } from "preact/hooks";
 
+export interface UseQueryOptions {
+  enabled?: boolean;
+}
+
 export type UseQuery<Data> =
   | {
       isLoading: true;
@@ -23,14 +27,22 @@ export type UseQuery<Data> =
       setData: (data: Data) => void;
     };
 
-export function useQuery<Data>(func: () => Promise<Data>): UseQuery<Data> {
+export function useQuery<Data>(
+  func: () => Promise<Data>,
+  dependencies: unknown[],
+  options: UseQueryOptions = {
+    enabled: true,
+  }
+): UseQuery<Data> {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
   const [data, setData] = useState<Data | null>(null);
 
   useEffect(() => {
-    query();
-  }, []);
+    if (options.enabled) {
+      query();
+    }
+  }, dependencies);
 
   async function query() {
     try {
