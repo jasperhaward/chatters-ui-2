@@ -1,5 +1,4 @@
-import styles from "./MessageBox.module.scss";
-import { Button, Icon, Textarea } from "@/components";
+import { Button, InputGroup, Icon, Textarea } from "@/components";
 
 export interface MessageBoxProps {
   name: string;
@@ -19,9 +18,8 @@ export default function MessageBox({
   const isValueValid = value !== "";
 
   return (
-    <div className={styles.messageBox}>
+    <InputGroup>
       <Textarea
-        className={styles.textarea}
         name={name}
         placeholder="Type a message..."
         maxHeight={175}
@@ -37,6 +35,6 @@ export default function MessageBox({
       >
         <Icon icon={["fas", "paper-plane"]} />
       </Button>
-    </div>
+    </InputGroup>
   );
 }

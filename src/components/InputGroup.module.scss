@@ -1,4 +1,4 @@
-.messageBox {
+.inputGroup {
   display: flex;
   border-color: var(--grey-dark);
   border-width: var(--border-width);
@@ -8,7 +8,8 @@
     box-shadow: var(--halo-box-shadow);
   }
 
-  .textarea {
+  input,
+  textarea {
     border-width: 0;
 
     &:focus {

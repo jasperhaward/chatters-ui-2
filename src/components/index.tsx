@@ -7,6 +7,7 @@ export * from "./FixedElement";
 export * from "./HighlightedText";
 export * from "./Icon";
 export * from "./Input";
+export * from "./InputGroup";
 export * from "./Link";
 export * from "./Panel";
 export * from "./Skeleton";

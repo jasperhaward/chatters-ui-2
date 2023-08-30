@@ -1,4 +1,4 @@
-import { Input } from "@/components";
+import { InputGroup, Button, Input, Icon } from "@/components";
 
 export interface SearchBoxProps {
   name: string;
@@ -16,13 +16,20 @@ export default function SearchBox({
   onClear,
 }: SearchBoxProps) {
   return (
-    <Input
-      name={name}
-      placeholder="Search"
-      autoComplete="off"
-      value={value}
-      disabled={disabled}
-      onInput={onInput}
-    />
+    <InputGroup>
+      <Input
+        name={name}
+        placeholder="Search"
+        autoComplete="off"
+        value={value}
+        disabled={disabled}
+        onInput={onInput}
+      />
+      {value !== "" && (
+        <Button color="ghost" disabled={disabled} onClick={onClear}>
+          <Icon icon={["fas", "times"]} />
+        </Button>
+      )}
+    </InputGroup>
   );
 }
