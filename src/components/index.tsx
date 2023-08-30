@@ -1,6 +1,7 @@
 export * from "./AuthedRoute";
 export * from "./Button";
 export * from "./Card";
+export * from "./CenterChildren";
 export * from "./Divider";
 export * from "./ErrorMessage";
 export * from "./FixedElement";

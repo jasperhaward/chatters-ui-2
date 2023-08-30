@@ -2,7 +2,7 @@ import { useMemo } from "preact/hooks";
 import styles from "./ConversationsPane.module.scss";
 
 import { Conversation as IConversation } from "@/types";
-import { Button } from "@/components";
+import { Button, CenterChildren } from "@/components";
 import { caseInsensitiveIncludes } from "@/utils";
 
 import Conversation from "./Conversation";
@@ -65,14 +65,14 @@ export default function ConversationsPane({
           <ConversationSkeleton />
         </>
       ) : error ? (
-        <div className={styles.centerChildren}>
-          <div className={styles.errorMessage}>
+        <CenterChildren>
+          <div>
             Failed to load conversations, <br /> please try again.
           </div>
           <Button color="contrast" onClick={onRetryClick}>
             Retry
           </Button>
-        </div>
+        </CenterChildren>
       ) : filteredConversations && filteredConversations.length > 0 ? (
         filteredConversations.map((conversation) => (
           <Conversation
@@ -84,9 +84,9 @@ export default function ConversationsPane({
           />
         ))
       ) : (
-        <div className={styles.centerChildren}>
-          <div className={styles.noConversations}>No conversations found.</div>
-        </div>
+        <CenterChildren>
+          <div>No conversations found.</div>
+        </CenterChildren>
       )}
     </div>
   );
