@@ -25,7 +25,7 @@
 
 .ghost {
   color: var(--foreground);
-  background-color: transparent;
+  background-color: var(--background);
   transition: background-color var(--transition-duration);
 
   &:hover {

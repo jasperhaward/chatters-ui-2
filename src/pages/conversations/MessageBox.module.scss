@@ -1,14 +1,18 @@
 .messageBox {
-  position: relative;
+  display: flex;
+  border-color: var(--grey-dark);
+  border-width: var(--border-width);
+  border-radius: var(--border-radius);
 
-  .textarea {
-    padding-right: 45px;
+  &:focus-within {
+    box-shadow: var(--halo-box-shadow);
   }
 
-  .button {
-    position: absolute;
-    top: 0;
-    right: 0;
-    height: 100%;
+  .textarea {
+    border-width: 0;
+
+    &:focus {
+      box-shadow: none;
+    }
   }
 }

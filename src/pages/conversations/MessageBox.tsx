@@ -31,7 +31,6 @@ export default function MessageBox({
         onEnterPress={isValueValid ? onSubmit : undefined}
       />
       <Button
-        className={styles.button}
         color="ghost"
         disabled={disabled || !isValueValid}
         onClick={onSubmit}
