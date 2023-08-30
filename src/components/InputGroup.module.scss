@@ -11,6 +11,7 @@
   input,
   textarea {
     border-width: 0;
+    height: calc(var(--input-height) - 2 * var(--border-width));
 
     &:focus {
       box-shadow: none;

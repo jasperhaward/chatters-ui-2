@@ -1,6 +1,6 @@
 .input {
   display: block;
-  height: 2.5rem;
+  height: var(--input-height);
   width: 100%;
   padding: var(--padding-sm) var(--padding-md);
   color: var(--foreground);
