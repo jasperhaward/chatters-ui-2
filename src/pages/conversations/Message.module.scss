@@ -10,14 +10,12 @@
   }
 
   .content {
+    margin-right: 3rem;
     padding: var(--padding-sm) var(--padding-md);
     color: var(--background);
     background-color: var(--foreground);
-    border-color: var(--grey-dark);
-    border-width: var(--border-width);
-    border-radius: var(--border-radius);
     font-size: var(--font-size-sm);
-    margin-right: 3rem;
+    border-radius: var(--border-radius);
   }
 
   .timestamp {
@@ -30,10 +28,12 @@
     justify-content: end;
 
     .content {
-      color: var(--foreground);
-      background-color: var(--background);
       margin-right: 0;
       margin-left: 3rem;
+      border-color: var(--grey-dark);
+      border-width: var(--border-width);
+      color: var(--foreground);
+      background-color: var(--background);
     }
 
     .timestamp {
