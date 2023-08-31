@@ -1,6 +1,7 @@
-import { Button, InputGroup, Icon, Textarea } from "@/components";
+import { Button, InputGroup, Icon, Textarea, Spinner } from "@/components";
 
 export interface MessageBoxProps {
+  isLoading: boolean;
   name: string;
   value: string;
   disabled: boolean;
@@ -9,6 +10,7 @@ export interface MessageBoxProps {
 }
 
 export default function MessageBox({
+  isLoading,
   name,
   value,
   disabled,
@@ -29,7 +31,7 @@ export default function MessageBox({
         name={name}
         placeholder="Type a message..."
         maxHeight={175}
-        disabled={disabled}
+        disabled={disabled || isLoading}
         value={value}
         onInput={onInput}
         onEnterPress={onEnterPress}
@@ -39,7 +41,11 @@ export default function MessageBox({
         disabled={disabled || !isValueValid}
         onClick={onSubmit}
       >
-        <Icon icon={["fas", "paper-plane"]} />
+        {isLoading ? (
+          <Spinner color="foreground" />
+        ) : (
+          <Icon icon={["fas", "paper-plane"]} />
+        )}
       </Button>
     </InputGroup>
   );

@@ -3,8 +3,14 @@ import { useLocation } from "wouter";
 import styles from "./ConversationsPage.module.scss";
 
 import { paths } from "@/App";
-import { useConversations, useMessages, useLogout } from "@/api";
-import { Conversation as IConversation } from "@/types";
+import {
+  CreateMessageParams,
+  useConversations,
+  useMessages,
+  useLogout,
+  useCreateMessage,
+} from "@/api";
+import { Conversation as IConversation, Message } from "@/types";
 import { useSession, useInputs } from "@/hooks";
 import { Spinner, FixedElement, Button, Card } from "@/components";
 
@@ -32,6 +38,7 @@ export default function ConversationsPage({ params }: ChatProps) {
   const [inputs, onInput, setInputs] = useInputs(conversationInputs);
   const logout = useLogout();
   const conversations = useConversations();
+  const createMessage = useCreateMessage();
 
   const selectedConversation = useMemo(() => {
     if (!conversations.data || !params.id) {
@@ -71,8 +78,52 @@ export default function ConversationsPage({ params }: ChatProps) {
     setLocation(`${paths.conversations}/${conversation.id}`);
   }
 
-  function onMessageSubmit() {
-    setInputs({ message: "" });
+  async function onMessageSubmit() {
+    const params: CreateMessageParams = {
+      conversationId: selectedConversation!.id,
+      content: inputs.message.trim(),
+    };
+
+    const result = await createMessage.mutate(params);
+
+    if (result.data) {
+      const message = result.data;
+
+      prependMessage(message);
+      updateConversationLatestMessage(message);
+      setInputs({ message: "" });
+    }
+  }
+
+  /**
+   * Prepends a message to the selected conversation's messages.
+   */
+  function prependMessage(message: Message) {
+    messages.setData((prev) => [message, ...prev]);
+  }
+
+  /**
+   * Update a conversation's `latestMessage` and moves the updated conversation
+   * to the first position as it will have the most recent message.
+   */
+  function updateConversationLatestMessage(message: Message) {
+    conversations.setData((prev) =>
+      prev
+        .map((conversation) => {
+          if (conversation.id === message.conversationId) {
+            return { ...conversation, latestMessage: message };
+          }
+
+          return conversation;
+        })
+        .sort((a, b) => {
+          return a.id === message.conversationId
+            ? -1
+            : b.id === message.conversationId
+            ? 1
+            : 0;
+        })
+    );
   }
 
   return (
@@ -117,9 +168,14 @@ export default function ConversationsPage({ params }: ChatProps) {
             onRetryClick={messages.retry}
           />
           <MessageBox
+            isLoading={createMessage.isLoading}
             name="message"
             value={inputs.message}
-            disabled={conversations.isLoading || !!conversations.error}
+            disabled={
+              conversations.isLoading ||
+              !!conversations.error ||
+              messages.isLoading
+            }
             onInput={onInput}
             onSubmit={onMessageSubmit}
           />
