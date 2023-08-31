@@ -31,7 +31,7 @@ export default function MessageBox({
         name={name}
         placeholder="Type a message..."
         maxHeight={175}
-        disabled={disabled || isLoading}
+        disabled={disabled}
         value={value}
         onInput={onInput}
         onEnterPress={onEnterPress}
