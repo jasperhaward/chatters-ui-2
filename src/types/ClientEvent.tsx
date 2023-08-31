@@ -20,6 +20,13 @@ export interface RecipientRemovedEvent {
   payload: UserWithCreatedAt;
 }
 
+export interface ErrorEvent {
+  error: {
+    code: string;
+    message: string;
+  };
+}
+
 export type ClientEvent =
   | ConversationCreatedEvent
   | MessageCreatedEvent

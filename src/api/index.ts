@@ -1,4 +1,5 @@
 export * from "./useAuthorizedFetch";
+export * from "./useClientEvents";
 export * from "./useConversations";
 export * from "./useCreateMessage";
 export * from "./useFetch";

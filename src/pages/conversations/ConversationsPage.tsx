@@ -9,8 +9,9 @@ import {
   useMessages,
   useLogout,
   useCreateMessage,
+  useClientEvents,
 } from "@/api";
-import { Conversation as IConversation, Message } from "@/types";
+import { ClientEvent, ErrorEvent, Conversation, Message } from "@/types";
 import { useSession, useInputs } from "@/hooks";
 import { Spinner, FixedElement, Button, Card } from "@/components";
 
@@ -34,8 +35,10 @@ export interface ChatProps {
 export default function ConversationsPage({ params }: ChatProps) {
   const [session, setSession] = useSession();
   const [location, setLocation] = useLocation();
-
   const [inputs, onInput, setInputs] = useInputs(conversationInputs);
+
+  useClientEvents(onClientEvent);
+
   const logout = useLogout();
   const conversations = useConversations();
   const createMessage = useCreateMessage();
@@ -62,6 +65,21 @@ export default function ConversationsPage({ params }: ChatProps) {
     }
   }, [conversations.data, selectedConversation]);
 
+  function onClientEvent(event: ClientEvent | ErrorEvent) {
+    if ("error" in event) {
+      // TODO: show toast
+    } else {
+      switch (event.type) {
+        case "conversation/created":
+          prependConversation(event.payload);
+          break;
+        case "message/created":
+          updateConversationLatestMessage(event.payload);
+          break;
+      }
+    }
+  }
+
   async function onLogoutClick() {
     const result = await logout.mutate();
 
@@ -74,7 +92,7 @@ export default function ConversationsPage({ params }: ChatProps) {
     setInputs({ search: "" });
   }
 
-  function onConversationClick(conversation: IConversation) {
+  function onConversationClick(conversation: Conversation) {
     setLocation(`${paths.conversations}/${conversation.id}`);
   }
 
@@ -86,7 +104,9 @@ export default function ConversationsPage({ params }: ChatProps) {
 
     const result = await createMessage.mutate(params);
 
-    if (result.data) {
+    if (result.error) {
+      // TODO: show toast
+    } else {
       const message = result.data;
 
       prependMessage(message);
@@ -100,6 +120,10 @@ export default function ConversationsPage({ params }: ChatProps) {
    */
   function prependMessage(message: Message) {
     messages.setData((prev) => [message, ...prev]);
+  }
+
+  function prependConversation(conversation: Conversation) {
+    conversations.setData((prev) => [conversation, ...prev]);
   }
 
   /**
