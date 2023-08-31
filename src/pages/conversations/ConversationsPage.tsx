@@ -13,7 +13,7 @@ import {
 } from "@/api";
 import { ClientEvent, ErrorEvent, Conversation, Message } from "@/types";
 import { useSession, useInputs } from "@/hooks";
-import { Spinner, FixedElement, Button, Card } from "@/components";
+import { Spinner, FixedElement, Button, Card, useToast } from "@/components";
 
 import { buildConversationTitle } from "./utils";
 import ConversationsPane from "./ConversationsPane";
@@ -36,6 +36,7 @@ export default function ConversationsPage({ params }: ChatProps) {
   const [session, setSession] = useSession();
   const [location, setLocation] = useLocation();
   const [inputs, onInput, setInputs] = useInputs(conversationInputs);
+  const toast = useToast();
 
   useClientEvents(onClientEvent);
 
@@ -67,7 +68,10 @@ export default function ConversationsPage({ params }: ChatProps) {
 
   function onClientEvent(event: ClientEvent | ErrorEvent) {
     if ("error" in event) {
-      // TODO: show toast
+      toast({
+        title: "Failed to subscribe to updates, please refresh the page.",
+        description: event.error.message,
+      });
     } else {
       switch (event.type) {
         case "conversation/created":
@@ -105,7 +109,10 @@ export default function ConversationsPage({ params }: ChatProps) {
     const result = await createMessage.mutate(params);
 
     if (result.error) {
-      // TODO: show toast
+      toast({
+        title: "Failed to send message, please try again.",
+        description: result.error.message,
+      });
     } else {
       const message = result.data;
 
