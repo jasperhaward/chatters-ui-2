@@ -42,7 +42,7 @@ export function useFetch(): UseFetch {
           throw new ApiResponseError(json);
         } else {
           throw new InvalidApiResponseError(
-            "Response does not match error response schema"
+            "Response does not match error response schema."
           );
         }
       }
@@ -56,9 +56,9 @@ export function useFetch(): UseFetch {
       ) {
         throw error;
       } else if (error instanceof SyntaxError) {
-        throw new InvalidApiResponseError("Response is not valid JSON");
+        throw new InvalidApiResponseError("Response is not valid JSON.");
       } else {
-        throw new InvalidApiResponseError("Unknown response error", {
+        throw new InvalidApiResponseError("Unknown response error.", {
           cause: error,
         });
       }
@@ -79,7 +79,7 @@ export class InvalidApiResponseError extends Error {}
 
 export class UnauthorizedApiResponseError extends Error {
   constructor() {
-    super("Invalid credentials");
+    super("Invalid credentials.");
   }
 }
 
