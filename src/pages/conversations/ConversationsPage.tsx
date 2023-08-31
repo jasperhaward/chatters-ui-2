@@ -113,6 +113,7 @@ export default function ConversationsPage({ params }: ChatProps) {
             isLoading={messages.isLoading}
             error={messages.error}
             messages={messages.data}
+            selectedConversation={selectedConversation}
             onRetryClick={messages.retry}
           />
           <MessageBox

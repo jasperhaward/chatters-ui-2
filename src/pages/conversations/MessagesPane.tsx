@@ -11,7 +11,7 @@ import {
 } from "date-fns";
 import styles from "./MessagesPane.module.scss";
 
-import { Message as IMessage } from "@/types";
+import { Conversation, Message as IMessage } from "@/types";
 import { useSession } from "@/hooks";
 import { Button, CenterChildren } from "@/components";
 import Message from "./Message";
@@ -21,6 +21,7 @@ export interface MessagesPaneProps {
   isLoading: boolean;
   error: Error | null;
   messages: IMessage[] | null;
+  selectedConversation: Conversation | undefined;
   onRetryClick: () => void;
 }
 
@@ -28,6 +29,7 @@ export default function MessagesPane({
   isLoading,
   error,
   messages,
+  selectedConversation,
   onRetryClick,
 }: MessagesPaneProps) {
   const [{ user }] = useSession();
@@ -162,6 +164,10 @@ export default function MessagesPane({
             Retry
           </Button>
         </CenterChildren>
+      ) : selectedConversation && messages!.length === 0 ? (
+        <time className={styles.datestamp}>
+          {formatDatestamp(selectedConversation.createdAt)}
+        </time>
       ) : (
         layout!.map(({ message, ...layout }) => (
           <Fragment key={message.id}>
