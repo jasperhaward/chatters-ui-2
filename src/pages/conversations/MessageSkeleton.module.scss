@@ -1,0 +1,23 @@
+.messageSkeleton {
+  $avatar-size: calc(var(--avatar-size) + 2 * var(--padding-xs));
+  display: flex;
+  align-items: center;
+  min-height: $avatar-size;
+  margin-bottom: var(--padding-xs);
+
+  .avatar {
+    min-width: $avatar-size;
+    padding: var(--padding-xs);
+    font-size: var(--avatar-size);
+  }
+
+  .content {
+    padding: var(--padding-sm) var(--padding-md);
+    font-size: var(--font-size-sm);
+    border-radius: var(--border-radius);
+  }
+
+  &.right {
+    justify-content: end;
+  }
+}
