@@ -1,38 +1,46 @@
 import { useEffect, useState } from "preact/hooks";
 
+export interface UseQueryLoadingState<Data> {
+  isLoading: true;
+  error: null;
+  data: null;
+  retry: () => void;
+  setData: (data: Data) => void;
+}
+
+export interface UseQuerySuccessfulState<Data> {
+  isLoading: false;
+  error: null;
+  data: Data;
+  retry: () => void;
+  setData: (data: Data) => void;
+}
+
+export interface UseQueryErrorState<Data> {
+  isLoading: false;
+  error: Error;
+  data: null;
+  retry: () => void;
+  setData: (data: Data) => void;
+}
+
+export type UseQuery<Data> =
+  | UseQueryLoadingState<Data>
+  | UseQuerySuccessfulState<Data>
+  | UseQueryErrorState<Data>;
+
 export interface UseQueryOptions {
   enabled?: boolean;
 }
 
-export type UseQuery<Data> =
-  | {
-      isLoading: true;
-      error: null;
-      data: null;
-      retry: () => void;
-      setData: (data: Data) => void;
-    }
-  | {
-      isLoading: false;
-      error: null;
-      data: Data;
-      retry: () => void;
-      setData: (data: Data) => void;
-    }
-  | {
-      isLoading: false;
-      error: Error;
-      data: null;
-      retry: () => void;
-      setData: (data: Data) => void;
-    };
+const defaultOptions: UseQueryOptions = {
+  enabled: true,
+};
 
 export function useQuery<Data>(
   func: () => Promise<Data>,
   dependencies: unknown[],
-  options: UseQueryOptions = {
-    enabled: true,
-  }
+  options: UseQueryOptions = defaultOptions
 ): UseQuery<Data> {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
@@ -53,7 +61,7 @@ export function useQuery<Data>(
       const error =
         caughtError instanceof Error
           ? caughtError
-          : new Error(`Invalid error instance: ${caughtError}`);
+          : new Error("Invalid error instance", { cause: caughtError });
 
       setError(error);
     } finally {

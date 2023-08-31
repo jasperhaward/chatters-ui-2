@@ -6,11 +6,12 @@ export function useMessages(selectedConversation: Conversation | undefined) {
   const fetch = useAuthorizedFetch();
 
   return useQuery(
-    () =>
-      fetch<Message[]>(
+    () => {
+      return fetch<Message[]>(
         `/api/v1/conversations/${selectedConversation!.id}/messages`,
         { method: "GET" }
-      ),
+      );
+    },
     [selectedConversation],
     { enabled: selectedConversation !== undefined }
   );

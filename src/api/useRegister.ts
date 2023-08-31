@@ -11,10 +11,10 @@ export interface RegisterParams {
 export function useRegister() {
   const fetch = useFetch();
 
-  return useMutation((params: RegisterParams) =>
-    fetch<UserWithCreatedAt>("/api/v1/auth/register", {
+  return useMutation((params: RegisterParams) => {
+    return fetch<UserWithCreatedAt>("/api/v1/auth/register", {
       method: "POST",
       body: params,
-    })
-  );
+    });
+  });
 }

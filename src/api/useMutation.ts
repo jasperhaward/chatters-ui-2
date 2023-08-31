@@ -35,7 +35,7 @@ export function useMutation<Data, Args extends unknown[]>(
       const error =
         caughtError instanceof Error
           ? caughtError
-          : new Error(`Invalid error instance: ${caughtError}`);
+          : new Error("Invalid error instance", { cause: caughtError });
 
       setError(error);
 
@@ -45,5 +45,10 @@ export function useMutation<Data, Args extends unknown[]>(
     }
   };
 
-  return { isLoading, data, error, mutate };
+  return {
+    isLoading,
+    data,
+    error,
+    mutate,
+  };
 }
