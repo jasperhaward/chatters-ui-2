@@ -2,7 +2,7 @@ import { useEffect } from "preact/hooks";
 
 import config from "@/config";
 import { useSession } from "@/hooks";
-import { ClientEvent } from "@/types";
+import { ClientEvent, ErrorEvent } from "@/types";
 
 export function useClientEvents(
   onEvent: (event: ClientEvent | ErrorEvent) => void
@@ -21,6 +21,27 @@ export function useClientEvents(
       onEvent(JSON.parse(event.data));
     });
 
+    websocket.addEventListener("error", (event) => {
+      const error: ErrorEvent = {
+        error: {
+          code: event.type,
+          message: "Unknown connection error.",
+        },
+      };
+
+      onEvent(error);
+    });
+
+    websocket.addEventListener("close", (event) => {
+      const error: ErrorEvent = {
+        error: {
+          code: `${event.code}`,
+          message: event.reason || "Connection closed unexpectedly.",
+        },
+      };
+
+      onEvent(error);
+    });
     return () => websocket.close();
   }, []);
 }
