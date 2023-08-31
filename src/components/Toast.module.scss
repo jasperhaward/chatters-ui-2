@@ -1,0 +1,18 @@
+.toast {
+  position: absolute;
+  top: var(--padding-xl);
+  right: var(--padding-xl);
+  display: flex;
+  align-items: center;
+  gap: var(--padding-md);
+  padding: var(--padding-lg);
+  color: var(--foreground);
+  background-color: var(--background);
+  border-color: var(--grey-dark);
+  border-width: var(--border-width);
+  border-radius: var(--border-radius);
+
+  .description {
+    color: var(--grey-light);
+  }
+}
