@@ -4,9 +4,10 @@ import { Icon, IconTuple } from ".";
 export interface SkeletonProps {
   className?: string;
   icon?: IconTuple;
+  width?: number | string;
 }
 
-export function Skeleton({ className = "", icon }: SkeletonProps) {
+export function Skeleton({ className = "", width, icon }: SkeletonProps) {
   if (icon) {
     return (
       <Icon
@@ -16,5 +17,10 @@ export function Skeleton({ className = "", icon }: SkeletonProps) {
     );
   }
 
-  return <div className={`${styles.skeleton} ${styles.text} ${className}`} />;
+  return (
+    <div
+      className={`${styles.skeleton} ${styles.text} ${className}`}
+      style={{ width }}
+    />
+  );
 }
