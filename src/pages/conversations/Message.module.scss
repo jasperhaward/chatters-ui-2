@@ -1,6 +1,5 @@
 .message {
   display: flex;
-  margin-bottom: var(--padding-xs);
 
   .avatar {
     min-width: calc(var(--avatar-size) + 2 * var(--padding-xs));
@@ -11,6 +10,7 @@
 
   .content {
     margin-right: 3rem;
+    margin-bottom: var(--padding-xs);
     padding: var(--padding-sm) var(--padding-md);
     color: var(--background);
     background-color: var(--foreground);
