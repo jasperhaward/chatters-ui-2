@@ -1,11 +1,11 @@
-import { useEffect, useState } from "preact/hooks";
+import { StateUpdater, useEffect, useState } from "preact/hooks";
 
 export interface UseQueryLoadingState<Data> {
   isLoading: true;
   error: null;
   data: null;
   retry: () => void;
-  setData: (data: Data) => void;
+  setData: StateUpdater<Data>;
 }
 
 export interface UseQuerySuccessfulState<Data> {
@@ -13,7 +13,7 @@ export interface UseQuerySuccessfulState<Data> {
   error: null;
   data: Data;
   retry: () => void;
-  setData: (data: Data) => void;
+  setData: StateUpdater<Data>;
 }
 
 export interface UseQueryErrorState<Data> {
@@ -21,7 +21,7 @@ export interface UseQueryErrorState<Data> {
   error: Error;
   data: null;
   retry: () => void;
-  setData: (data: Data) => void;
+  setData: StateUpdater<Data>;
 }
 
 export type UseQuery<Data> =
