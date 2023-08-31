@@ -12,7 +12,7 @@ export function useSession(): UseSession {
 
   if (!session) {
     throw new Error(
-      `useSession() called without a valid session, this hook must be called from within an <AuthedRoute />.`
+      `useSession() must be called from within <SessionContext.Provider />.`
     );
   }
 
