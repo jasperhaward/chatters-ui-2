@@ -17,6 +17,12 @@ export default function MessageBox({
 }: MessageBoxProps) {
   const isValueValid = value !== "";
 
+  function onEnterPress() {
+    if (isValueValid) {
+      onSubmit();
+    }
+  }
+
   return (
     <InputGroup>
       <Textarea
@@ -26,7 +32,7 @@ export default function MessageBox({
         disabled={disabled}
         value={value}
         onInput={onInput}
-        onEnterPress={isValueValid ? onSubmit : undefined}
+        onEnterPress={onEnterPress}
       />
       <Button
         color="ghost"

@@ -9,7 +9,7 @@ export interface TextareaProps {
   maxHeight: number;
   value: string;
   onInput: (event: JSX.TargetedEvent<HTMLTextAreaElement>) => void;
-  onEnterPress?: () => void;
+  onEnterPress: () => void;
 }
 
 export function Textarea({
@@ -45,7 +45,7 @@ export function Textarea({
   }
 
   function onKeyPress(event: JSX.TargetedKeyboardEvent<HTMLTextAreaElement>) {
-    if (onEnterPress && !event.shiftKey && event.key === "Enter") {
+    if (!event.shiftKey && event.key === "Enter") {
       event.preventDefault();
       onEnterPress();
     }
