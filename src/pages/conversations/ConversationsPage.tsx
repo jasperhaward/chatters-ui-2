@@ -87,7 +87,12 @@ export default function ConversationsPage({ params }: ChatProps) {
   async function onLogoutClick() {
     const result = await logout.mutate();
 
-    if (!result.error) {
+    if (result.error) {
+      toast({
+        title: "Failed to logout, please try again.",
+        description: result.error.message,
+      });
+    } else {
       setSession(null);
     }
   }
