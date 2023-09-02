@@ -1,4 +1,5 @@
 import { useContext } from "preact/hooks";
+import { useSearch } from "wouter/use-location";
 import styles from "./LoginPage.module.scss";
 
 import { useLogin } from "@/api";
@@ -26,6 +27,7 @@ const validation: ValidationRules<LoginInputs> = {
 };
 
 export default function LoginPage() {
+  const search = useSearch();
   const [session, setSession] = useContext(SessionContext);
   const login = useLogin();
   // prettier-ignore
@@ -54,10 +56,8 @@ export default function LoginPage() {
   }
 
   function defaultInputs(): LoginInputs {
-    const url = new URL(`${document.location}`);
-
     return {
-      username: url.searchParams.get("username") || "",
+      username: new URLSearchParams(search).get("username") || "",
       password: "",
     };
   }
