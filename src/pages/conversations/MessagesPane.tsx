@@ -61,9 +61,9 @@ export default function MessagesPane({
       isCreatedByUser,
       isDisplayDatestamp: isDisplayDatestamp(prevMessage, message),
       isDisplayTimestamp: isDisplayTimestamp(message, nextMessage),
-      isDisplayAvatar: isCreatedByUser
+      isDisplayAuthor: isCreatedByUser
         ? false
-        : isDisplayAvatar(prevMessage, message),
+        : isDisplayAuthor(prevMessage, message),
     };
   }
 
@@ -86,14 +86,15 @@ export default function MessagesPane({
   }
 
   /**
-   * Determines whether a message's (that wasn't created by the current user) avatar should be displayed.
+   * Determines whether a message's (that wasn't created by the
+   * current user) author & avatar should be displayed.
    * @param prevMessage
    * @param message
    * @returns true if:
    *  - there is no `prevMessage` or;
    *  - `message` & `prevMessage` were created by different users
    */
-  function isDisplayAvatar(
+  function isDisplayAuthor(
     prevMessage: IMessage | undefined,
     message: IMessage
   ) {
@@ -179,7 +180,7 @@ export default function MessagesPane({
             <Message
               message={message}
               isCreatedByUser={layout.isCreatedByUser}
-              isDisplayAvatar={layout.isDisplayAvatar}
+              isDisplayAuthor={layout.isDisplayAuthor}
               isDisplayTimestamp={layout.isDisplayTimestamp}
             />
           </Fragment>

@@ -1,39 +1,52 @@
-.message {
-  display: flex;
+.messageContainer {
+  margin-bottom: var(--padding-xs);
+  $avatar-width: calc(var(--avatar-size) + 2 * var(--padding-xs));
 
-  .avatar {
-    min-width: calc(var(--avatar-size) + 2 * var(--padding-xs));
-    padding: var(--padding-xs);
-    font-size: var(--avatar-size);
-    color: var(--foreground);
+  .author {
+    margin-left: $avatar-width;
+    color: var(--grey);
+    font-size: var(--font-size-xs);
   }
 
-  .content {
+  .message {
+    display: flex;
     margin-right: 3rem;
-    margin-bottom: var(--padding-xs);
-    padding: var(--padding-sm) var(--padding-md);
-    color: var(--background);
-    background-color: var(--foreground);
-    font-size: var(--font-size-sm);
-    border-radius: var(--border-radius);
+
+    .avatar {
+      min-width: $avatar-width;
+      padding: var(--padding-xs);
+      font-size: var(--avatar-size);
+      color: var(--foreground);
+    }
+
+    .content {
+      padding: var(--padding-sm) var(--padding-md);
+      color: var(--background);
+      background-color: var(--foreground);
+      font-size: var(--font-size-sm);
+      border-radius: var(--border-radius);
+    }
   }
 
   .timestamp {
     display: block;
+    margin-left: $avatar-width;
     color: var(--grey);
     font-size: var(--font-size-xs);
   }
 
   &.createdByUser {
-    justify-content: end;
-
-    .content {
-      margin-right: 0;
+    .message {
+      justify-content: end;
       margin-left: 3rem;
-      border-color: var(--grey-dark);
-      border-width: var(--border-width);
-      color: var(--foreground);
-      background-color: var(--background);
+      margin-right: 0;
+
+      .content {
+        border-color: var(--grey-dark);
+        border-width: var(--border-width);
+        color: var(--foreground);
+        background-color: var(--background);
+      }
     }
 
     .timestamp {
