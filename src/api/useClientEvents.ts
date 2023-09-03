@@ -12,16 +12,16 @@ export function useClientEvents(
   useEffect(() => {
     const websocket = new WebSocket(`${config.websocketApiUrl}/api/v1/socket`);
 
-    websocket.addEventListener("open", () => {
+    function onOpen() {
       const token = `Bearer ${session.token}`;
       websocket.send(token);
-    });
+    }
 
-    websocket.addEventListener("message", (event: MessageEvent<string>) => {
+    function onMessage(event: MessageEvent<string>) {
       onEvent(JSON.parse(event.data));
-    });
+    }
 
-    websocket.addEventListener("error", (event) => {
+    function onError(event: Event) {
       const error: ErrorEvent = {
         error: {
           code: event.type,
@@ -30,9 +30,9 @@ export function useClientEvents(
       };
 
       onEvent(error);
-    });
+    }
 
-    websocket.addEventListener("close", (event) => {
+    function onClose(event: CloseEvent) {
       const error: ErrorEvent = {
         error: {
           code: `${event.code}`,
@@ -41,7 +41,16 @@ export function useClientEvents(
       };
 
       onEvent(error);
-    });
-    return () => websocket.close();
+    }
+
+    websocket.addEventListener("open", onOpen);
+    websocket.addEventListener("message", onMessage);
+    websocket.addEventListener("error", onError);
+    websocket.addEventListener("close", onClose);
+
+    return () => {
+      websocket.removeEventListener("close", onClose);
+      websocket.close();
+    };
   }, []);
 }
