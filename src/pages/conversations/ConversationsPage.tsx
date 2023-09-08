@@ -13,7 +13,7 @@ import {
 } from "@/api";
 import { ClientEvent, ErrorEvent, Conversation, Message } from "@/types";
 import { useSession, useInputs } from "@/hooks";
-import { Spinner, FixedElement, Button, Card, useToast } from "@/components";
+import { Spinner, FixedElement, Button, Card, useToasts } from "@/components";
 
 import { buildConversationTitle } from "./utils";
 import ConversationsPane from "./ConversationsPane";
@@ -35,8 +35,8 @@ export interface ChatProps {
 export default function ConversationsPage({ params }: ChatProps) {
   const [session, setSession] = useSession();
   const [location, setLocation] = useLocation();
+  const [toast, clearToasts] = useToasts();
   const [inputs, onInput, setInputs] = useInputs(conversationInputs);
-  const toast = useToast();
 
   useClientEvents(onClientEvent);
 
@@ -65,6 +65,9 @@ export default function ConversationsPage({ params }: ChatProps) {
       setLocation(`${paths.conversations}/${conversations.data[0]!.id}`);
     }
   }, [conversations.data, selectedConversation]);
+
+  // clear toasts on unmount
+  useEffect(() => clearToasts, []);
 
   function onClientEvent(event: ClientEvent | ErrorEvent) {
     if ("error" in event) {

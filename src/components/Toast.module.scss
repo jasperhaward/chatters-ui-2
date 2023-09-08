@@ -1,11 +1,19 @@
-.toast {
+.toastContainer {
   position: absolute;
   top: var(--padding-xl);
   right: var(--padding-xl);
+  pointer-events: none;
+}
+
+.toast {
   display: flex;
   align-items: center;
   gap: var(--padding-md);
+  width: fit-content;
+  margin-left: auto;
+  margin-bottom: var(--padding-md);
   padding: var(--padding-lg);
+  pointer-events: all;
   color: var(--foreground);
   background-color: var(--background);
   border-color: var(--grey-dark);
