@@ -5,8 +5,13 @@ import { Button } from "./Button";
 import { Icon } from "./Icon";
 
 export interface Toast {
+  permanent?: boolean;
   title: string;
   description: string;
+}
+
+export interface ToastWithId extends Toast {
+  id: number;
 }
 
 export type DisplayToast = (toast: Toast) => void;
@@ -22,31 +27,46 @@ export interface ToastProviderProps {
 }
 
 export function ToastProvider({ children }: ToastProviderProps) {
-  const [toast, setToast] = useState<Toast | null>(null);
+  const [toasts, setToasts] = useState<ToastWithId[]>([]);
 
   function onDisplayToast(toast: Toast) {
-    setToast(toast);
-    setTimeout(() => setToast(null), 4500);
+    const toastWithId: ToastWithId = {
+      id: Math.random(),
+      ...toast,
+    };
+
+    setToasts([...toasts, toastWithId]);
+
+    if (!toast.permanent) {
+      setTimeout(() => {
+        removeToast(toastWithId);
+      }, 4500);
+    }
   }
 
-  function onCloseClick() {
-    setToast(null);
+  function removeToast(toast: ToastWithId) {
+    const updatedToasts = toasts.filter((activeToast) => {
+      return activeToast.id !== toast.id;
+    });
+    setToasts(updatedToasts);
   }
 
   return (
     <ToastContext.Provider value={onDisplayToast}>
       {children}
-      {toast && (
-        <div className={styles.toast}>
+      {toasts.map((toast, index) => (
+        <div key={index} className={styles.toast}>
           <div>
             <h3>{toast.title}</h3>
             <div className={styles.description}>{toast.description}</div>
           </div>
-          <Button color="ghost" onClick={onCloseClick}>
-            <Icon icon={["fas", "times"]} />
-          </Button>
+          {!toast.permanent && (
+            <Button color="ghost" onClick={() => removeToast(toast)}>
+              <Icon icon={["fas", "times"]} />
+            </Button>
+          )}
         </div>
-      )}
+      ))}
     </ToastContext.Provider>
   );
 }

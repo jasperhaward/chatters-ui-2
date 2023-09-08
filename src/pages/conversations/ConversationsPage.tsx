@@ -69,6 +69,7 @@ export default function ConversationsPage({ params }: ChatProps) {
   function onClientEvent(event: ClientEvent | ErrorEvent) {
     if ("error" in event) {
       toast({
+        permanent: true,
         title: "Failed to subscribe to updates, please refresh the page.",
         description: event.error.message,
       });
