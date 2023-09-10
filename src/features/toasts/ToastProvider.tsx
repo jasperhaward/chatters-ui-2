@@ -41,7 +41,7 @@ export function ToastProvider({ children }: ToastProviderProps) {
       ...params,
       expiresAt: params.permanent ? null : addSeconds(new Date(), 4),
     };
-    setToasts([...toasts, toast]);
+    setToasts((prev) => [...prev, toast]);
   }
 
   function onClearToasts() {
