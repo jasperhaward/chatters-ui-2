@@ -1,5 +1,4 @@
 export * from "./useAuthorizedFetch";
-export * from "./useClientEvents";
 export * from "./useConversations";
 export * from "./useCreateMessage";
 export * from "./useFetch";
@@ -9,3 +8,4 @@ export * from "./useMessages";
 export * from "./useMutation";
 export * from "./useQuery";
 export * from "./useRegister";
+export * from "./useServerEvents";

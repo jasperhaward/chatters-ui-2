@@ -9,9 +9,10 @@ import {
   useMessages,
   useLogout,
   useCreateMessage,
-  useClientEvents,
+  ServerEvent,
+  useServerEvents,
 } from "@/api";
-import { ClientEvent, ErrorEvent, Conversation, Message } from "@/types";
+import { Conversation, Message } from "@/types";
 import { useInputs } from "@/hooks";
 import { Spinner, FixedElement, Button, Card } from "@/components";
 import { useSession } from "@/features/auth";
@@ -40,8 +41,7 @@ export default function ConversationsPage({ params }: ChatProps) {
   const [toast, clearToasts] = useToasts();
   const [inputs, onInput, setInputs] = useInputs(conversationInputs);
 
-  useClientEvents(onClientEvent);
-
+  const disconnectServerEvents = useServerEvents(onServerEvent);
   const logout = useLogout();
   const conversations = useConversations();
   const createMessage = useCreateMessage();
@@ -68,25 +68,28 @@ export default function ConversationsPage({ params }: ChatProps) {
     }
   }, [conversations.data, selectedConversation]);
 
-  // clear toasts on unmount
-  useEffect(() => clearToasts, []);
+  useEffect(() => {
+    // clear toasts & disconnect from websocket events when this component unmounts
+    return () => {
+      clearToasts();
+      disconnectServerEvents();
+    };
+  }, []);
 
-  function onClientEvent(event: ClientEvent | ErrorEvent) {
-    if ("error" in event) {
-      toast({
-        permanent: true,
-        title: "Failed to subscribe to updates, please refresh the page.",
-        description: event.error.message,
-      });
-    } else {
-      switch (event.type) {
-        case "conversation/created":
-          prependConversation(event.payload);
-          break;
-        case "message/created":
-          updateConversationLatestMessage(event.payload);
-          break;
-      }
+  function onServerEvent(event: ServerEvent) {
+    switch (event.type) {
+      case "conversation/created":
+        prependConversation(event.payload);
+        break;
+      case "message/created":
+        updateConversationLatestMessage(event.payload);
+        break;
+      case "error":
+        toast({
+          permanent: true,
+          title: "Failed to subscribe to updates, please refresh the page.",
+          description: event.payload.message,
+        });
     }
   }
 
