@@ -31,7 +31,7 @@ const conversationInputs = {
 
 export interface ChatProps {
   params: {
-    id?: string;
+    conversationId?: string;
   };
 }
 
@@ -47,14 +47,14 @@ export default function ConversationsPage({ params }: ChatProps) {
   const createMessage = useCreateMessage();
 
   const selectedConversation = useMemo(() => {
-    if (!conversations.data || !params.id) {
+    if (!conversations.data || !params.conversationId) {
       return;
     }
 
     return conversations.data.find((conversation) => {
-      return conversation.id === params.id;
+      return conversation.id === params.conversationId;
     });
-  }, [conversations.data, params.id]);
+  }, [conversations.data, params.conversationId]);
 
   const messages = useMessages(selectedConversation);
 
@@ -69,7 +69,7 @@ export default function ConversationsPage({ params }: ChatProps) {
   }, [conversations.data, selectedConversation]);
 
   useEffect(() => {
-    // clear toasts & disconnect from websocket events when this component unmounts
+    // clear toasts & disconnect from server events when this component unmounts
     return () => {
       clearToasts();
       disconnectServerEvents();

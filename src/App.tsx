@@ -53,7 +53,7 @@ function App() {
             component={ConversationsPage}
           />
           <AuthedRoute
-            path={`${paths.conversations}/:id`}
+            path={`${paths.conversations}/:conversationId`}
             component={ConversationsPage}
           />
         </Switch>
