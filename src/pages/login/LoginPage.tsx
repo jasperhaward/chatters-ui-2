@@ -1,10 +1,8 @@
-import { useContext } from "preact/hooks";
 import { useSearch } from "wouter/use-location";
 import styles from "./LoginPage.module.scss";
 
 import { useLogin } from "@/api";
 import { paths } from "@/App";
-import { SessionContext } from "@/context";
 import { ValidationRules, useForm } from "@/hooks";
 import {
   Button,
@@ -15,6 +13,7 @@ import {
   Panel,
   Link,
 } from "@/components";
+import { useSessionContext } from "@/features/auth";
 
 interface LoginInputs {
   username: string;
@@ -28,7 +27,7 @@ const validation: ValidationRules<LoginInputs> = {
 
 export default function LoginPage() {
   const search = useSearch();
-  const [session, setSession] = useContext(SessionContext);
+  const [session, setSession] = useSessionContext();
   const login = useLogin();
   // prettier-ignore
   const { 

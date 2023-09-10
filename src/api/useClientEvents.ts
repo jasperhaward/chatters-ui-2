@@ -1,8 +1,8 @@
 import { useEffect } from "preact/hooks";
 
 import config from "@/config";
-import { useSession } from "@/hooks";
 import { ClientEvent, ErrorEvent } from "@/types";
+import { useSession } from "@/features/auth";
 
 export function useClientEvents(
   onEvent: (event: ClientEvent | ErrorEvent) => void

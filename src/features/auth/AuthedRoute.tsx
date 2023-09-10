@@ -1,11 +1,10 @@
-import { useContext } from "preact/hooks";
 import { Route, RouteProps, Redirect } from "wouter";
 
 import { paths } from "@/App";
-import { SessionContext } from "@/context";
+import { useSessionContext } from ".";
 
 export function AuthedRoute(props: RouteProps) {
-  const [session] = useContext(SessionContext);
+  const [session] = useSessionContext();
 
   if (!session) {
     return <Redirect to={paths.login} />;

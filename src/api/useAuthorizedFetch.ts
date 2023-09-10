@@ -1,4 +1,4 @@
-import { useSession } from "@/hooks";
+import { useSession } from "@/features/auth";
 import { UseFetch, useFetch, UnauthorizedApiResponseError } from "./useFetch";
 
 export function useAuthorizedFetch(): UseFetch {

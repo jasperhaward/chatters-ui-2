@@ -12,8 +12,9 @@ import {
 import styles from "./MessagesPane.module.scss";
 
 import { Conversation, Message as IMessage } from "@/types";
-import { useSession } from "@/hooks";
 import { Button, CenterChildren } from "@/components";
+import { useSession } from "@/features/auth";
+
 import Message from "./Message";
 import MessageSkeleton from "./MessageSkeleton";
 

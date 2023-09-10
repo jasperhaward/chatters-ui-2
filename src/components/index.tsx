@@ -1,4 +1,3 @@
-export * from "./AuthedRoute";
 export * from "./Button";
 export * from "./Card";
 export * from "./CenterChildren";

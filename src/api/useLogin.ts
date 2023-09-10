@@ -1,4 +1,4 @@
-import { Session } from "@/types";
+import { Session } from "@/features/auth";
 import { useFetch } from "./useFetch";
 import { useMutation } from "./useMutation";
 

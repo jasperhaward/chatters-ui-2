@@ -2,8 +2,9 @@ import { format, isToday, isYesterday, isThisWeek, isThisYear } from "date-fns";
 import styles from "./Conversation.module.scss";
 
 import { Conversation as IConversation } from "@/types";
-import { useScrollIntoView, useSession } from "@/hooks";
+import { useScrollIntoView } from "@/hooks";
 import { Icon, HighlightedText } from "@/components";
+import { useSession } from "@/features/auth";
 import { buildConversationTitle } from "./utils";
 
 export interface ConversationProps {
