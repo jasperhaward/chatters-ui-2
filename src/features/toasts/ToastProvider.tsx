@@ -1,7 +1,7 @@
 import { addSeconds } from "date-fns";
 import { ComponentChildren } from "preact";
 import { useEffect, useState } from "preact/hooks";
-import styles from "./Toast.module.scss";
+import styles from "./ToastProvider.module.scss";
 
 import { Toast, ToastContext } from ".";
 import { Toast as IToast, ToastParameters } from "./types";
