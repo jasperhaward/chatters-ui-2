@@ -1,10 +1,3 @@
-.toastContainer {
-  position: absolute;
-  top: var(--padding-xl);
-  right: var(--padding-xl);
-  pointer-events: none;
-}
-
 .toast {
   display: flex;
   align-items: center;
