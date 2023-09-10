@@ -71,8 +71,8 @@ export default function ConversationsPage({ params }: ChatProps) {
   useEffect(() => {
     // clear toasts & disconnect from server events when this component unmounts
     return () => {
-      clearToasts();
       disconnectServerEvents();
+      clearToasts();
     };
   }, []);
 
@@ -90,6 +90,7 @@ export default function ConversationsPage({ params }: ChatProps) {
           title: "Failed to subscribe to updates, please refresh the page.",
           description: event.payload.message,
         });
+        break;
     }
   }
 
