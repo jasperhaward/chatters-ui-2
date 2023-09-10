@@ -1,9 +1,10 @@
 import { Redirect, Route, Switch, useLocation } from "wouter";
 import styles from "./App.module.scss";
 
-import { Icon, FixedElement, ToastProvider } from "./components";
+import { Icon, FixedElement } from "./components";
 import { useLocalStorage } from "./hooks";
 import { Session, SessionContext, AuthedRoute } from "./features/auth";
+import { ToastProvider } from "./features/toasts";
 
 import ConversationsPage from "./pages/conversations/ConversationsPage";
 import LoginPage from "./pages/login/LoginPage";
