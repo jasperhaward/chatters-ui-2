@@ -21,10 +21,12 @@
   --font-size-sm: 0.875rem;
   --font-size-md: 1.5rem;
   --font-size-lg: 2.5rem;
+  --font-size-xl: 2.5rem;
   --line-height-xs: 1rem;
   --line-height-sm: 1.25rem;
   --line-height-md: 2rem;
   --line-height-lg: 3rem;
+  --line-height-xl: 3rem;
   --padding-xs: 0.25rem;
   --padding-sm: 0.5rem;
   --padding-md: 0.75rem;
@@ -72,8 +74,8 @@ h6 {
 }
 
 h1 {
-  font-size: var(--font-size-lg);
-  line-height: var(--line-height-lg);
+  font-size: var(--font-size-xl);
+  line-height: var(--line-height-xl);
 }
 
 h2 {
