@@ -1,4 +1,4 @@
-import { Button, InputGroup, Icon, Textarea, Spinner } from "@/components";
+import { IconButton, InputGroup, Textarea, Spinner } from "@/components";
 
 export interface MessageBoxProps {
   isLoading: boolean;
@@ -36,17 +36,15 @@ export default function MessageBox({
         onInput={onInput}
         onEnterPress={onEnterPress}
       />
-      <Button
-        color="ghost"
-        disabled={disabled || !isValueValid}
-        onClick={onSubmit}
-      >
-        {isLoading ? (
-          <Spinner color="foreground" />
-        ) : (
-          <Icon icon={["fas", "paper-plane"]} />
-        )}
-      </Button>
+      {isLoading ? (
+        <Spinner color="grey" />
+      ) : (
+        <IconButton
+          icon={["fas", "paper-plane"]}
+          disabled={disabled || !isValueValid}
+          onClick={onSubmit}
+        />
+      )}
     </InputGroup>
   );
 }

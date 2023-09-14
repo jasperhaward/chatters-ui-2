@@ -1,5 +1,5 @@
 import styles from "./Toast.module.scss";
-import { Button, Icon } from "@/components";
+import { IconButton } from "@/components";
 import { Toast as IToast } from "./types";
 
 export interface ToastProps {
@@ -15,9 +15,7 @@ export function Toast({ toast, onCloseClick }: ToastProps) {
         <div className={styles.description}>{toast.description}</div>
       </div>
       {!toast.permanent && (
-        <Button color="ghost" onClick={onCloseClick}>
-          <Icon icon={["fas", "times"]} />
-        </Button>
+        <IconButton icon={["fas", "times"]} onClick={onCloseClick} />
       )}
     </div>
   );

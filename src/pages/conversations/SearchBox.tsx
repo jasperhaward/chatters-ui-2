@@ -1,4 +1,4 @@
-import { InputGroup, Button, Input, Icon } from "@/components";
+import { InputGroup, IconButton, Input } from "@/components";
 
 export interface SearchBoxProps {
   name: string;
@@ -26,9 +26,11 @@ export default function SearchBox({
         onInput={onInput}
       />
       {value !== "" && (
-        <Button color="ghost" disabled={disabled} onClick={onClear}>
-          <Icon icon={["fas", "times"]} />
-        </Button>
+        <IconButton
+          icon={["fas", "times"]}
+          disabled={disabled}
+          onClick={onClear}
+        />
       )}
     </InputGroup>
   );

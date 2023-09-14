@@ -1,0 +1,20 @@
+.iconButton {
+  padding: var(--padding-sm) var(--padding-lg);
+  color: var(--grey);
+  background-color: var(--background);
+  font-size: var(--font-size-sm);
+  border-radius: var(--border-radius);
+  transition: color var(--transition-duration),
+    opacity var(--transition-duration);
+
+  &:hover,
+  &:focus {
+    cursor: pointer;
+    color: var(--foreground);
+  }
+
+  &:disabled {
+    pointer-events: none;
+    opacity: var(--disabled-opacity);
+  }
+}

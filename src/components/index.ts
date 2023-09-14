@@ -6,6 +6,7 @@ export * from "./ErrorMessage";
 export * from "./FixedElement";
 export * from "./HighlightedText";
 export * from "./Icon";
+export * from "./IconButton";
 export * from "./Input";
 export * from "./InputGroup";
 export * from "./Link";
