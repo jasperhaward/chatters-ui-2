@@ -123,7 +123,8 @@ export default function RegisterPage() {
             <ErrorMessage>{register.error.message}</ErrorMessage>
           )}
           <Button type="submit" color="contrast" disabled={register.isLoading}>
-            {register.isLoading && <Spinner />} Create account
+            {register.isLoading && <Spinner color="background" />} Create
+            account
           </Button>
         </div>
       </form>

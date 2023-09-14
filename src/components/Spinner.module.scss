@@ -2,11 +2,18 @@
   margin-left: 4px;
   margin-right: 4px;
   font-size: var(--font-size-sm);
-  color: var(--background);
   animation: rotation 1s linear infinite;
+
+  &.background {
+    color: var(--background);
+  }
 
   &.foreground {
     color: var(--foreground);
+  }
+
+  &.grey {
+    color: var(--grey);
   }
 }
 

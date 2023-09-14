@@ -3,13 +3,13 @@ import { Icon } from "./Icon";
 
 export interface SpinnerProps {
   className?: string;
-  color?: "foreground";
+  color: "background" | "foreground" | "grey";
 }
 
 export function Spinner({ className = "", color }: SpinnerProps) {
   return (
     <Icon
-      className={`${styles.spinner} ${className} ${color ? styles[color] : ""}`}
+      className={`${styles.spinner} ${styles[color]} ${className}`}
       icon={["fas", "circle-notch"]}
     />
   );
