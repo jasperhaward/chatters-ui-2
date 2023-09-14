@@ -1,6 +1,4 @@
 .spinner {
-  margin-left: 4px;
-  margin-right: 4px;
   font-size: var(--font-size-sm);
   animation: rotation 1s linear infinite;
 
@@ -14,6 +12,19 @@
 
   &.grey {
     color: var(--grey);
+  }
+
+  &.enabled {
+    margin-left: var(--padding-sm);
+    margin-right: var(--padding-sm);
+  }
+
+  &.left {
+    margin-left: var(--padding-sm);
+  }
+
+  &.right {
+    margin-right: var(--padding-sm);
   }
 }
 

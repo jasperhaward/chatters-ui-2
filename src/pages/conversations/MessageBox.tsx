@@ -37,7 +37,7 @@ export default function MessageBox({
         onEnterPress={onEnterPress}
       />
       {isLoading ? (
-        <Spinner color="grey" />
+        <Spinner color="grey" margin="enabled" />
       ) : (
         <IconButton
           icon={["fas", "paper-plane"]}
