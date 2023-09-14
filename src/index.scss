@@ -19,13 +19,13 @@
     rgb(39, 39, 42) 0px 0px 0px 4px, rgba(0, 0, 0, 0) 0px 0px 0px 0px;
   --font-size-xs: 0.8rem;
   --font-size-sm: 0.875rem;
-  --font-size-md: 1.5rem;
-  --font-size-lg: 2.5rem;
+  --font-size-md: 1.2rem;
+  --font-size-lg: 1.5rem;
   --font-size-xl: 2.5rem;
   --line-height-xs: 1rem;
   --line-height-sm: 1.25rem;
-  --line-height-md: 2rem;
-  --line-height-lg: 3rem;
+  --line-height-md: 1.6rem;
+  --line-height-lg: 2rem;
   --line-height-xl: 3rem;
   --padding-xs: 0.25rem;
   --padding-sm: 0.5rem;
@@ -69,7 +69,6 @@ h4,
 h5,
 h6 {
   margin: 0;
-  color: var(--foreground);
   font-weight: 600;
 }
 
@@ -79,11 +78,16 @@ h1 {
 }
 
 h2 {
+  font-size: var(--font-size-lg);
+  line-height: var(--line-height-lg);
+}
+
+h3 {
   font-size: var(--font-size-md);
   line-height: var(--line-height-md);
 }
 
-h3 {
+h4 {
   font-size: var(--font-size-sm);
   line-height: var(--line-height-sm);
 }
@@ -93,13 +97,6 @@ p {
   color: var(--grey);
   font-size: var(--font-size-sm);
   line-height: var(--line-height-sm);
-}
-
-label {
-  text-align: left;
-  color: var(--foreground);
-  font-size: var(--font-size-sm);
-  line-height: var(--line-height-xs);
 }
 
 mark {

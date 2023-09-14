@@ -11,7 +11,7 @@ export function Toast({ toast, onCloseClick }: ToastProps) {
   return (
     <div className={styles.toast}>
       <div>
-        <h3>{toast.title}</h3>
+        <h4>{toast.title}</h4>
         <div className={styles.description}>{toast.description}</div>
       </div>
       {!toast.permanent && (
