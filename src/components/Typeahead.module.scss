@@ -1,0 +1,53 @@
+.typeahead {
+  position: relative;
+
+  &:focus-within {
+    input {
+      box-shadow: none;
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+
+    .options {
+      display: block;
+    }
+  }
+
+  .options {
+    position: absolute;
+    display: none;
+    width: 100%;
+    max-height: 250px;
+    overflow-y: auto;
+    padding: var(--padding-xs);
+    border-color: var(--grey-dark);
+    border-width: var(--border-width);
+    border-top: 0;
+    border-bottom-left-radius: var(--border-radius);
+    border-bottom-right-radius: var(--border-radius);
+    background-color: var(--background);
+
+    .noOptions {
+      line-height: 70px;
+      color: var(--grey-light);
+      text-align: center;
+    }
+
+    .option {
+      display: flex;
+      align-items: center;
+      gap: var(--padding-sm);
+      width: 100%;
+      padding: 0.375rem var(--padding-sm);
+      text-align: left;
+      border-radius: var(--border-radius-sm);
+      background-color: var(--background);
+
+      &:hover,
+      &:focus {
+        cursor: pointer;
+        background-color: var(--grey-dark);
+      }
+    }
+  }
+}
