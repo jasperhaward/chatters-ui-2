@@ -13,6 +13,7 @@
   --grey: rgb(161, 161, 170);
   --grey-dark: rgb(35, 35, 37);
   --red: rgb(127, 29, 29);
+  --border-radius-sm: 0.3rem;
   --border-radius: 0.5rem;
   --border-width: 1px;
   --halo-box-shadow: rgb(9, 9, 11) 0px 0px 0px 2px,
@@ -35,6 +36,7 @@
   --transition-duration: 0.15s;
   --transition-duration-long: 0.3s;
   --disabled-opacity: 0.6;
+  --hover-opacity: 0.8;
   --input-height: 2.5rem;
   --avatar-size: 1.25rem;
   --backdrop-blur: blur(4px);
@@ -93,8 +95,19 @@ h4 {
 }
 
 p {
-  margin: var(--padding-sm) 0;
+  margin-top: var(--padding-sm);
+  margin-bottom: var(--padding-sm);
   color: var(--grey);
+  font-size: var(--font-size-sm);
+  font-weight: 400;
+  line-height: var(--line-height-sm);
+}
+
+label {
+  display: block;
+  margin-top: var(--padding-sm);
+  margin-bottom: var(--padding-sm);
+  text-align: left;
   font-size: var(--font-size-sm);
   line-height: var(--line-height-sm);
 }
