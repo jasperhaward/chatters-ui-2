@@ -94,7 +94,7 @@ export default function RegisterPage() {
             value={inputs.username}
             onInput={onInput}
           />
-          {hasSubmitted && errors?.username && (
+          {hasSubmitted && errors.username && (
             <ErrorMessage>{errors.username}</ErrorMessage>
           )}
           <Input
@@ -105,7 +105,7 @@ export default function RegisterPage() {
             value={inputs.password}
             onInput={onInput}
           />
-          {hasSubmitted && errors?.password && (
+          {hasSubmitted && errors.password && (
             <ErrorMessage>{errors.password}</ErrorMessage>
           )}
           <Input
@@ -116,7 +116,7 @@ export default function RegisterPage() {
             value={inputs.confirmPassword}
             onInput={onInput}
           />
-          {hasSubmitted && errors?.confirmPassword && (
+          {hasSubmitted && errors.confirmPassword && (
             <ErrorMessage>{errors.confirmPassword}</ErrorMessage>
           )}
           {register.error && (

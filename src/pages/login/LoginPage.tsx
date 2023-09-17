@@ -76,7 +76,7 @@ export default function LoginPage() {
             value={inputs.username}
             onInput={onInput}
           />
-          {hasSubmitted && errors?.username && (
+          {hasSubmitted && errors.username && (
             <ErrorMessage>{errors.username}</ErrorMessage>
           )}
           <Input
@@ -87,7 +87,7 @@ export default function LoginPage() {
             value={inputs.password}
             onInput={onInput}
           />
-          {hasSubmitted && errors?.password && (
+          {hasSubmitted && errors.password && (
             <ErrorMessage>{errors.password}</ErrorMessage>
           )}
           {login.error && <ErrorMessage>{login.error.message}</ErrorMessage>}
