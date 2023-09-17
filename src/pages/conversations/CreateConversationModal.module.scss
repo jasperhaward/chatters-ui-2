@@ -1,0 +1,24 @@
+.errorMessage {
+  margin-top: var(--padding-sm);
+  margin-bottom: var(--padding-sm);
+}
+
+.recipients {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--padding-xs);
+
+  .pill {
+    padding: var(--padding-sm) var(--padding-md);
+
+    svg {
+      margin-left: var(--padding-xs);
+    }
+  }
+}
+
+.createConversation {
+  display: block;
+  margin-top: var(--padding-xs);
+  margin-left: auto;
+}

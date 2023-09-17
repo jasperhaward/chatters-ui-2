@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "preact/hooks";
+import { useEffect, useMemo, useState } from "preact/hooks";
 import { useLocation } from "wouter";
 import styles from "./ConversationsPage.module.scss";
 
@@ -11,6 +11,7 @@ import {
   useCreateMessage,
   ServerEvent,
   useServerEvents,
+  useContacts,
 } from "@/api";
 import { Conversation, Message } from "@/types";
 import { useInputs } from "@/hooks";
@@ -23,6 +24,7 @@ import ConversationsPane from "./ConversationsPane";
 import SearchBox from "./SearchBox";
 import MessageBox from "./MessageBox";
 import MessagesPane from "./MessagesPane";
+import CreateConversationModal from "./CreateConversationModal";
 
 const conversationInputs = {
   search: "",
@@ -39,11 +41,13 @@ export default function ConversationsPage({ params }: ChatProps) {
   const [session, setSession] = useSession();
   const [location, setLocation] = useLocation();
   const [toast, clearToasts] = useToasts();
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [inputs, onInput, setInputs] = useInputs(conversationInputs);
 
   const disconnectServerEvents = useServerEvents(onServerEvent);
   const logout = useLogout();
   const conversations = useConversations();
+  const contacts = useContacts();
   const createMessage = useCreateMessage();
 
   const selectedConversation = useMemo(() => {
@@ -137,6 +141,20 @@ export default function ConversationsPage({ params }: ChatProps) {
     }
   }
 
+  function onCreateConversationClick() {
+    setIsModalOpen(true);
+  }
+
+  function onCreateConversationModalClose() {
+    setIsModalOpen(false);
+  }
+
+  function onConversationCreated(conversation: Conversation) {
+    prependConversation(conversation);
+    setIsModalOpen(false);
+    setLocation(`${paths.conversations}/${conversation.id}`);
+  }
+
   /**
    * Prepends a message to the selected conversation's messages.
    */
@@ -196,6 +214,7 @@ export default function ConversationsPage({ params }: ChatProps) {
           <Button
             color="contrast"
             disabled={conversations.isLoading || !!conversations.error}
+            onClick={onCreateConversationClick}
           >
             Create conversation
           </Button>
@@ -233,10 +252,17 @@ export default function ConversationsPage({ params }: ChatProps) {
           disabled={logout.isLoading}
           onClick={onLogoutClick}
         >
-          {logout.isLoading && <Spinner color="foreground" />}
+          {logout.isLoading && <Spinner color="foreground" margin="right" />}
           Logout
         </Button>
       </FixedElement>
+      {isModalOpen && (
+        <CreateConversationModal
+          contacts={contacts}
+          onClose={onCreateConversationModalClose}
+          onConversationCreated={onConversationCreated}
+        />
+      )}
     </div>
   );
 }
