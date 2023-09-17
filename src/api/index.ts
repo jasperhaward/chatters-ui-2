@@ -1,5 +1,7 @@
 export * from "./useAuthorizedFetch";
 export * from "./useConversations";
+export * from "./useContacts";
+export * from "./useCreateConversation";
 export * from "./useCreateMessage";
 export * from "./useFetch";
 export * from "./useLogin";
