@@ -14,7 +14,7 @@ export default function RetryableApiError({
   return (
     <div className={styles.retryableError}>
       <p>{children}</p>
-      <Button color="contrast" onClick={onRetryClick}>
+      <Button color="foreground" onClick={onRetryClick}>
         Retry
       </Button>
     </div>

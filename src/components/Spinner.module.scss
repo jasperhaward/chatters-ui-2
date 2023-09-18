@@ -13,19 +13,6 @@
   &.grey {
     color: var(--grey);
   }
-
-  &.enabled {
-    margin-left: var(--padding-sm);
-    margin-right: var(--padding-sm);
-  }
-
-  &.left {
-    margin-left: var(--padding-sm);
-  }
-
-  &.right {
-    margin-right: var(--padding-sm);
-  }
 }
 
 @keyframes rotation {

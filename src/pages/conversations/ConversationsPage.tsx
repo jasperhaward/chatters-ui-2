@@ -212,7 +212,7 @@ export default function ConversationsPage({ params }: ChatProps) {
             onRetryClick={conversations.retry}
           />
           <Button
-            color="contrast"
+            color="foreground"
             disabled={conversations.isLoading || !!conversations.error}
             onClick={onCreateConversationClick}
           >
@@ -250,9 +250,9 @@ export default function ConversationsPage({ params }: ChatProps) {
         <Button
           color="ghost"
           disabled={logout.isLoading}
+          spinner={logout.isLoading}
           onClick={onLogoutClick}
         >
-          {logout.isLoading && <Spinner color="foreground" margin="right" />}
           Logout
         </Button>
       </FixedElement>

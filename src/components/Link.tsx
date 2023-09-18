@@ -4,17 +4,14 @@ import styles from "./Link.module.scss";
 
 export interface LinkProps {
   className?: string;
-  color?: "ghost";
+  color: "ghost";
   to: string;
   children: ComponentChildren;
 }
 
 export function Link({ className = "", color, to, children }: LinkProps) {
   return (
-    <WouterLink
-      className={`${color ? styles[color] : ""} ${className}`}
-      to={to}
-    >
+    <WouterLink className={`${styles[color]} ${className}`} to={to}>
       {children}
     </WouterLink>
   );

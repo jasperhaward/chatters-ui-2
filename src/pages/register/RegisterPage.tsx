@@ -122,10 +122,12 @@ export default function RegisterPage() {
           {register.error && (
             <ErrorMessage>{register.error.message}</ErrorMessage>
           )}
-          <Button type="submit" color="contrast" disabled={register.isLoading}>
-            {register.isLoading && (
-              <Spinner color="background" margin="right" />
-            )}
+          <Button
+            type="submit"
+            color="foreground"
+            disabled={register.isLoading}
+            spinner={register.isLoading}
+          >
             Create account
           </Button>
         </div>

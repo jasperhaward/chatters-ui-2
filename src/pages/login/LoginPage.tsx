@@ -91,8 +91,12 @@ export default function LoginPage() {
             <ErrorMessage>{errors.password}</ErrorMessage>
           )}
           {login.error && <ErrorMessage>{login.error.message}</ErrorMessage>}
-          <Button type="submit" color="contrast" disabled={login.isLoading}>
-            {login.isLoading && <Spinner color="background" margin="right" />}
+          <Button
+            type="submit"
+            color="foreground"
+            disabled={login.isLoading}
+            spinner={login.isLoading}
+          >
             Login
           </Button>
         </div>

@@ -148,21 +148,21 @@ export default function CreateConversationModal({
       />
       {contacts.error ? (
         <ErrorMessage className={styles.errorMessage}>
-          Failed to load contacts, please refresh the page.
+          Failed to load contacts, please refresh the page
         </ErrorMessage>
       ) : hasSubmitted && recipients.length === 0 ? (
         <ErrorMessage className={styles.errorMessage}>
           Must select at least 1 recipient
         </ErrorMessage>
       ) : (
-        <p>Chose from your contacts.</p>
+        <p>Chose from your contacts</p>
       )}
       <div className={styles.recipients}>
         {recipients.map((recipient) => (
           <Button
             key={recipient.id}
             className={styles.pill}
-            color="contrast"
+            color="foreground"
             onClick={() => onRecipientRemove(recipient)}
           >
             {recipient.username}
@@ -184,7 +184,7 @@ export default function CreateConversationModal({
               {errors.title}
             </ErrorMessage>
           ) : (
-            <p>Set an optional title.</p>
+            <p>Set an optional title</p>
           )}
         </>
       )}
@@ -195,13 +195,11 @@ export default function CreateConversationModal({
       )}
       <Button
         className={styles.createConversation}
-        color="contrast"
+        color="foreground"
         disabled={createConversation.isLoading || !!contacts.error}
+        spinner={createConversation.isLoading}
         onClick={onCreateConversationClick}
       >
-        {createConversation.isLoading && (
-          <Spinner color="background" margin="right" />
-        )}
         Create conversation
       </Button>
     </Modal>

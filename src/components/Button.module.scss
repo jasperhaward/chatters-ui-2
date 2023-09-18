@@ -11,9 +11,13 @@
     pointer-events: none;
     opacity: var(--disabled-opacity);
   }
+
+  .spinner {
+    margin-right: var(--padding-sm);
+  }
 }
 
-.contrast {
+.foreground {
   color: var(--background);
   background-color: var(--foreground);
   transition: opacity var(--transition-duration);
