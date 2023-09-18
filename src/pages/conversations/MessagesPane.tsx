@@ -12,11 +12,11 @@ import {
 import styles from "./MessagesPane.module.scss";
 
 import { Conversation, Message as IMessage } from "@/types";
-import { Button, CenterChildren } from "@/components";
 import { useSession } from "@/features/auth";
 
 import Message from "./Message";
 import MessageSkeleton from "./MessageSkeleton";
+import RetryableApiError from "./RetryableApiError";
 
 export interface MessagesPaneProps {
   isLoading: boolean;
@@ -158,14 +158,9 @@ export default function MessagesPane({
           <MessageSkeleton width="35%" />
         </>
       ) : error ? (
-        <CenterChildren>
-          <div className={styles.errorMessage}>
-            Failed to load messages, please try again.
-          </div>
-          <Button color="contrast" onClick={onRetryClick}>
-            Retry
-          </Button>
-        </CenterChildren>
+        <RetryableApiError onRetryClick={onRetryClick}>
+          Failed to load messages, please try again.
+        </RetryableApiError>
       ) : selectedConversation && messages!.length === 0 ? (
         <time className={styles.datestamp}>
           {formatDatestamp(selectedConversation.createdAt)}

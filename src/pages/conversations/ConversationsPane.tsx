@@ -2,11 +2,11 @@ import { useMemo } from "preact/hooks";
 import styles from "./ConversationsPane.module.scss";
 
 import { Conversation as IConversation } from "@/types";
-import { Button, CenterChildren } from "@/components";
 import { caseInsensitiveIncludes } from "@/utils";
 
 import Conversation from "./Conversation";
 import ConversationSkeleton from "./ConversationSkeleton";
+import RetryableApiError from "./RetryableApiError";
 
 export interface ConversationsPaneProps {
   isLoading: boolean;
@@ -65,14 +65,9 @@ export default function ConversationsPane({
           <ConversationSkeleton />
         </>
       ) : error ? (
-        <CenterChildren>
-          <div>
-            Failed to load conversations, <br /> please try again.
-          </div>
-          <Button color="contrast" onClick={onRetryClick}>
-            Retry
-          </Button>
-        </CenterChildren>
+        <RetryableApiError onRetryClick={onRetryClick}>
+          Failed to load conversations, please try again.
+        </RetryableApiError>
       ) : filteredConversations && filteredConversations.length > 0 ? (
         filteredConversations.map((conversation) => (
           <Conversation
@@ -84,9 +79,9 @@ export default function ConversationsPane({
           />
         ))
       ) : (
-        <CenterChildren>
-          <div>No conversations found.</div>
-        </CenterChildren>
+        <div className={styles.noConversations}>
+          <p>No conversations found</p>
+        </div>
       )}
     </div>
   );
