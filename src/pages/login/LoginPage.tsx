@@ -92,6 +92,7 @@ export default function LoginPage() {
           )}
           {login.error && <ErrorMessage>{login.error.message}</ErrorMessage>}
           <Button
+            className={styles.login}
             type="submit"
             color="foreground"
             disabled={login.isLoading}

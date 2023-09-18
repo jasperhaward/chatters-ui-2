@@ -123,6 +123,7 @@ export default function RegisterPage() {
             <ErrorMessage>{register.error.message}</ErrorMessage>
           )}
           <Button
+            className={styles.createAccount}
             type="submit"
             color="foreground"
             disabled={register.isLoading}

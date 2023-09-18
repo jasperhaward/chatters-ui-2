@@ -147,13 +147,11 @@ export default function CreateConversationModal({
         onSelect={onRecipientAdd}
       />
       {contacts.error ? (
-        <ErrorMessage className={styles.errorMessage}>
+        <ErrorMessage>
           Failed to load contacts, please refresh the page
         </ErrorMessage>
       ) : hasSubmitted && recipients.length === 0 ? (
-        <ErrorMessage className={styles.errorMessage}>
-          Must select at least 1 recipient
-        </ErrorMessage>
+        <ErrorMessage>Must select at least 1 recipient</ErrorMessage>
       ) : (
         <p>Chose from your contacts</p>
       )}
@@ -180,16 +178,14 @@ export default function CreateConversationModal({
             onInput={onInput}
           />
           {hasSubmitted && errors.title ? (
-            <ErrorMessage className={styles.errorMessage}>
-              {errors.title}
-            </ErrorMessage>
+            <ErrorMessage>{errors.title}</ErrorMessage>
           ) : (
             <p>Set an optional title</p>
           )}
         </>
       )}
       {createConversation.error && (
-        <ErrorMessage className={styles.errorMessage}>
+        <ErrorMessage>
           {formatConversationCreationError(createConversation.error)}
         </ErrorMessage>
       )}

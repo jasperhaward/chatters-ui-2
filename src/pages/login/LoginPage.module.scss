@@ -9,12 +9,16 @@
     text-align: center;
 
     .inputs {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
       width: 350px;
-      gap: var(--padding-sm);
-      margin: var(--padding-xl) auto;
+      margin: var(--padding-lg) auto;
+
+      input {
+        margin-bottom: var(--padding-sm);
+      }
+
+      .login {
+        width: 100%;
+      }
     }
   }
 }
