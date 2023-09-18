@@ -49,7 +49,7 @@ export function Typeahead({
       />
       <div className={styles.options}>
         {filteredOptions.length === 0 ? (
-          <div className={styles.noOptions}>No results found.</div>
+          <p className={styles.noOptions}>No results found</p>
         ) : (
           filteredOptions.map((option) => (
             <button
