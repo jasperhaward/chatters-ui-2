@@ -16,18 +16,16 @@ export function ToastProvider({ children }: ToastProviderProps) {
   useEffect(() => {
     const interval = setInterval(() => {
       if (toasts.length > 0) {
-        const expiredToasts: IToast[] = [];
         const unexpiredToasts: IToast[] = [];
 
         for (const toast of toasts) {
-          if (toast.expiresAt && toast.expiresAt < new Date()) {
-            expiredToasts.push(toast);
-          } else {
+          if (toast.expiresAt === null || toast.expiresAt > new Date()) {
             unexpiredToasts.push(toast);
           }
         }
 
-        if (expiredToasts.length > 0) {
+        // only call setToasts if any toasts have expired
+        if (unexpiredToasts.length !== toasts.length) {
           setToasts(unexpiredToasts);
         }
       }
