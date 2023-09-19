@@ -34,7 +34,7 @@ function App() {
           </h2>
         </FixedElement>
         <FixedElement position="bottomLeft">
-          <span className={styles.footer}>
+          <footer className={styles.footer}>
             Built with Preact, TypeScript & SASS. Source code is available on{" "}
             <a
               target="_blank"
@@ -43,7 +43,7 @@ function App() {
               GitHub
             </a>
             .
-          </span>
+          </footer>
         </FixedElement>
         <Switch>
           <Route path={paths.index} component={RegisterPage} />
