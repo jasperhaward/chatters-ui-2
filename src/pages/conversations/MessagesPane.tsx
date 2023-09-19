@@ -33,7 +33,7 @@ export default function MessagesPane({
   selectedConversation,
   onRetryClick,
 }: MessagesPaneProps) {
-  const [{ user }] = useSession();
+  const [session] = useSession();
 
   const ref = useRef<HTMLDivElement>(null);
 
@@ -55,7 +55,7 @@ export default function MessagesPane({
     const prevMessage = messages[index - 1];
     const nextMessage = messages[index + 1];
 
-    const isCreatedByUser = message.createdBy.id === user.id;
+    const isCreatedByUser = message.createdBy.id === session.user.id;
 
     return {
       message,
