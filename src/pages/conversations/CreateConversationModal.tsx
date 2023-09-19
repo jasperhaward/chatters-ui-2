@@ -2,6 +2,12 @@ import { useMemo, useState } from "preact/hooks";
 import styles from "./CreateConversationModal.module.scss";
 
 import config from "@/config";
+import {
+  ApiResponseError,
+  CreateConversationParams,
+  UseQuery,
+  useCreateConversation,
+} from "@/api";
 import { ValidationRules, useForm } from "@/hooks";
 import {
   Button,
@@ -9,16 +15,9 @@ import {
   Icon,
   Input,
   Modal,
-  Spinner,
   Typeahead,
   TypeaheadOption,
 } from "@/components";
-import {
-  ApiResponseError,
-  CreateConversationParams,
-  UseQuery,
-  useCreateConversation,
-} from "@/api";
 import { Conversation, User } from "@/types";
 
 interface CreateConversationInputs {

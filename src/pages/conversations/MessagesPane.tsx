@@ -11,6 +11,7 @@ import {
 } from "date-fns";
 import styles from "./MessagesPane.module.scss";
 
+import { UseQuery } from "@/api";
 import { Conversation, Message as IMessage } from "@/types";
 import { useSession } from "@/features/auth";
 
@@ -19,16 +20,12 @@ import MessageSkeleton from "./MessageSkeleton";
 import RetryableApiError from "./RetryableApiError";
 
 export interface MessagesPaneProps {
-  isLoading: boolean;
-  error: Error | null;
-  messages: IMessage[] | null;
+  messages: UseQuery<IMessage[]>;
   selectedConversation: Conversation | undefined;
   onRetryClick: () => void;
 }
 
 export default function MessagesPane({
-  isLoading,
-  error,
   messages,
   selectedConversation,
   onRetryClick,
@@ -44,11 +41,11 @@ export default function MessagesPane({
   }, [messages]);
 
   const layout = useMemo(() => {
-    if (!messages) {
+    if (!messages.data) {
       return null;
     }
 
-    return messages.slice().reverse().map(buildLayout);
+    return messages.data.slice().reverse().map(buildLayout);
   }, [messages]);
 
   function buildLayout(message: IMessage, index: number, messages: IMessage[]) {
@@ -145,7 +142,7 @@ export default function MessagesPane({
 
   return (
     <div className={styles.messagesPane}>
-      {isLoading ? (
+      {messages.isLoading ? (
         <>
           <MessageSkeleton isAlignRight width="40%" />
           <MessageSkeleton isAlignRight width="35%" />
@@ -157,11 +154,11 @@ export default function MessagesPane({
           <MessageSkeleton isDisplayAvatar width="40%" />
           <MessageSkeleton width="35%" />
         </>
-      ) : error ? (
+      ) : messages.error ? (
         <RetryableApiError onRetryClick={onRetryClick}>
           Failed to load messages, please try again.
         </RetryableApiError>
-      ) : selectedConversation && messages!.length === 0 ? (
+      ) : selectedConversation && messages.data.length === 0 ? (
         <time className={styles.datestamp}>
           {formatDatestamp(selectedConversation.createdAt)}
         </time>

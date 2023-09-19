@@ -1,6 +1,7 @@
 import { useMemo } from "preact/hooks";
 import styles from "./ConversationsPane.module.scss";
 
+import { UseQuery } from "@/api";
 import { Conversation as IConversation } from "@/types";
 import { caseInsensitiveIncludes } from "@/utils";
 
@@ -9,30 +10,26 @@ import ConversationSkeleton from "./ConversationSkeleton";
 import RetryableApiError from "./RetryableApiError";
 
 export interface ConversationsPaneProps {
-  isLoading: boolean;
   search: string;
-  error: Error | null;
-  conversations: IConversation[] | null;
+  conversations: UseQuery<IConversation[]>;
   selectedConversation: IConversation | undefined;
   onConversationClick: (conversation: IConversation) => void;
   onRetryClick: () => void;
 }
 
 export default function ConversationsPane({
-  isLoading,
   search,
-  error,
   conversations,
   selectedConversation,
   onConversationClick,
   onRetryClick,
 }: ConversationsPaneProps) {
   const filteredConversations = useMemo(() => {
-    if (!conversations) {
+    if (!conversations.data) {
       return null;
     }
 
-    return conversations.filter(filterConversationBySearch);
+    return conversations.data.filter(filterConversationBySearch);
   }, [conversations, search]);
 
   /**
@@ -54,7 +51,7 @@ export default function ConversationsPane({
 
   return (
     <div className={styles.conversationsPane}>
-      {isLoading ? (
+      {conversations.isLoading ? (
         <>
           <ConversationSkeleton />
           <ConversationSkeleton />
@@ -64,7 +61,7 @@ export default function ConversationsPane({
           <ConversationSkeleton />
           <ConversationSkeleton />
         </>
-      ) : error ? (
+      ) : conversations.error ? (
         <RetryableApiError onRetryClick={onRetryClick}>
           Failed to load conversations, please try again.
         </RetryableApiError>

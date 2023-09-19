@@ -203,10 +203,8 @@ export default function ConversationsPage({ params }: ChatProps) {
             onClear={onSearchClearClick}
           />
           <ConversationsPane
-            isLoading={conversations.isLoading}
             search={inputs.search}
-            error={conversations.error}
-            conversations={conversations.data}
+            conversations={conversations}
             selectedConversation={selectedConversation}
             onConversationClick={onConversationClick}
             onRetryClick={conversations.retry}
@@ -226,9 +224,7 @@ export default function ConversationsPage({ params }: ChatProps) {
               : "Messages"}
           </h2>
           <MessagesPane
-            isLoading={messages.isLoading}
-            error={messages.error}
-            messages={messages.data}
+            messages={messages}
             selectedConversation={selectedConversation}
             onRetryClick={messages.retry}
           />
