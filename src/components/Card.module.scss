@@ -1,10 +1,7 @@
 .card {
+  display: flex;
   height: 100%;
   border-color: var(--grey-dark);
   border-width: var(--border-width);
   border-radius: var(--border-radius);
-
-  &.flex {
-    display: flex;
-  }
 }

@@ -22,13 +22,11 @@ import RetryableApiError from "./RetryableApiError";
 export interface MessagesPaneProps {
   messages: UseQuery<IMessage[]>;
   selectedConversation: Conversation | undefined;
-  onRetryClick: () => void;
 }
 
 export default function MessagesPane({
   messages,
   selectedConversation,
-  onRetryClick,
 }: MessagesPaneProps) {
   const [session] = useSession();
 
@@ -155,7 +153,7 @@ export default function MessagesPane({
           <MessageSkeleton width="35%" />
         </>
       ) : messages.error ? (
-        <RetryableApiError onRetryClick={onRetryClick}>
+        <RetryableApiError onRetryClick={messages.retry}>
           Failed to load messages, please try again.
         </RetryableApiError>
       ) : selectedConversation && messages.data.length === 0 ? (

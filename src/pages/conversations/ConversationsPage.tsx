@@ -26,11 +26,6 @@ import MessageBox from "./MessageBox";
 import MessagesPane from "./MessagesPane";
 import CreateConversationModal from "./CreateConversationModal";
 
-const conversationInputs = {
-  search: "",
-  message: "",
-};
-
 export interface ChatProps {
   params: {
     conversationId?: string;
@@ -41,14 +36,18 @@ export default function ConversationsPage({ params }: ChatProps) {
   const [session, setSession] = useSession();
   const [location, setLocation] = useLocation();
   const [toast, clearToasts] = useToasts();
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [inputs, onInput, setInputs] = useInputs(conversationInputs);
 
-  const disconnectServerEvents = useServerEvents(onServerEvent);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [inputs, onInput, setInputs] = useInputs({
+    search: "",
+    message: "",
+  });
+
   const logout = useLogout();
   const conversations = useConversations();
   const contacts = useContacts();
   const createMessage = useCreateMessage();
+  const disconnectServerEvents = useServerEvents(onServerEvent);
 
   const selectedConversation = useMemo(() => {
     if (!conversations.data || !params.conversationId) {
@@ -73,7 +72,7 @@ export default function ConversationsPage({ params }: ChatProps) {
   }, [conversations.data, selectedConversation]);
 
   useEffect(() => {
-    // clear toasts & disconnect from server events when this component unmounts
+    // clear toasts & disconnect from server events on unmount
     return () => {
       disconnectServerEvents();
       clearToasts();
@@ -83,7 +82,10 @@ export default function ConversationsPage({ params }: ChatProps) {
   function onServerEvent(event: ServerEvent) {
     switch (event.type) {
       case "conversation/created":
-        prependConversation(event.payload);
+        conversations.setData((conversations) => [
+          event.payload,
+          ...conversations,
+        ]);
         break;
       case "message/created":
         updateConversationLatestMessage(event.payload);
@@ -135,7 +137,7 @@ export default function ConversationsPage({ params }: ChatProps) {
     } else {
       const message = result.data;
 
-      prependMessage(message);
+      messages.setData((messages) => [message, ...messages]);
       updateConversationLatestMessage(message);
       setInputs({ message: "" });
     }
@@ -150,20 +152,9 @@ export default function ConversationsPage({ params }: ChatProps) {
   }
 
   function onConversationCreated(conversation: Conversation) {
-    prependConversation(conversation);
+    conversations.setData((conversations) => [conversation, ...conversations]);
     setIsModalOpen(false);
     setLocation(`${paths.conversations}/${conversation.id}`);
-  }
-
-  /**
-   * Prepends a message to the selected conversation's messages.
-   */
-  function prependMessage(message: Message) {
-    messages.setData((prev) => [message, ...prev]);
-  }
-
-  function prependConversation(conversation: Conversation) {
-    conversations.setData((prev) => [conversation, ...prev]);
   }
 
   /**
@@ -171,8 +162,8 @@ export default function ConversationsPage({ params }: ChatProps) {
    * to the first position as it will have the most recent message.
    */
   function updateConversationLatestMessage(message: Message) {
-    conversations.setData((prev) =>
-      prev
+    conversations.setData((conversations) =>
+      conversations
         .map((conversation) => {
           if (conversation.id === message.conversationId) {
             return { ...conversation, latestMessage: message };
@@ -192,13 +183,13 @@ export default function ConversationsPage({ params }: ChatProps) {
 
   return (
     <div className={styles.conversations}>
-      <Card flex>
+      <Card>
         <span className={styles.conversationsPanel}>
           <h2>Conversations</h2>
           <SearchBox
             name="search"
-            value={inputs.search}
             disabled={conversations.isLoading || !!conversations.error}
+            value={inputs.search}
             onInput={onInput}
             onClear={onSearchClearClick}
           />
@@ -207,7 +198,6 @@ export default function ConversationsPage({ params }: ChatProps) {
             conversations={conversations}
             selectedConversation={selectedConversation}
             onConversationClick={onConversationClick}
-            onRetryClick={conversations.retry}
           />
           <Button
             color="foreground"
@@ -226,17 +216,17 @@ export default function ConversationsPage({ params }: ChatProps) {
           <MessagesPane
             messages={messages}
             selectedConversation={selectedConversation}
-            onRetryClick={messages.retry}
           />
           <MessageBox
             isLoading={createMessage.isLoading}
             name="message"
-            value={inputs.message}
             disabled={
               conversations.isLoading ||
               !!conversations.error ||
-              messages.isLoading
+              messages.isLoading ||
+              !!messages.error
             }
+            value={inputs.message}
             onInput={onInput}
             onSubmit={onMessageSubmit}
           />

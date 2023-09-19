@@ -14,7 +14,6 @@ export interface ConversationsPaneProps {
   conversations: UseQuery<IConversation[]>;
   selectedConversation: IConversation | undefined;
   onConversationClick: (conversation: IConversation) => void;
-  onRetryClick: () => void;
 }
 
 export default function ConversationsPane({
@@ -22,7 +21,6 @@ export default function ConversationsPane({
   conversations,
   selectedConversation,
   onConversationClick,
-  onRetryClick,
 }: ConversationsPaneProps) {
   const filteredConversations = useMemo(() => {
     if (!conversations.data) {
@@ -62,7 +60,7 @@ export default function ConversationsPane({
           <ConversationSkeleton />
         </>
       ) : conversations.error ? (
-        <RetryableApiError onRetryClick={onRetryClick}>
+        <RetryableApiError onRetryClick={conversations.retry}>
           Failed to load conversations, please try again.
         </RetryableApiError>
       ) : filteredConversations && filteredConversations.length > 0 ? (
