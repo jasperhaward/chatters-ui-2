@@ -15,7 +15,7 @@ import {
 } from "@/api";
 import { Conversation, Message } from "@/types";
 import { useInputs } from "@/hooks";
-import { Spinner, FixedElement, Button, Card } from "@/components";
+import { FixedElement, Button, Card } from "@/components";
 import { useSession } from "@/features/auth";
 import { useToasts } from "@/features/toasts";
 
