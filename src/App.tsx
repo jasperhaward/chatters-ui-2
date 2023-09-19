@@ -25,40 +25,39 @@ function App() {
   }
 
   return (
-    <SessionContext.Provider value={[session, setSession]}>
-      <ToastProvider>
-        <FixedElement position="topLeft">
-          <h2 className={styles.brand}>
-            <Icon icon={["fas", "terminal"]} />
-            Chatters
-          </h2>
-        </FixedElement>
-        <FixedElement position="bottomLeft">
-          <footer className={styles.footer}>
-            Built with Preact, TypeScript & SASS. Source code is available on{" "}
-            <a
-              target="_blank"
-              href="https://github.com/jasperhaward/chatters-ui"
-            >
-              GitHub
-            </a>
-            .
-          </footer>
-        </FixedElement>
-        <Switch>
-          <Route path={paths.index} component={RegisterPage} />
-          <Route path={paths.login} component={LoginPage} />
-          <AuthedRoute
-            path={paths.conversations}
-            component={ConversationsPage}
-          />
-          <AuthedRoute
-            path={`${paths.conversations}/:conversationId`}
-            component={ConversationsPage}
-          />
-        </Switch>
-      </ToastProvider>
-    </SessionContext.Provider>
+    <>
+      <FixedElement position="topLeft">
+        <h2 className={styles.brand}>
+          <Icon icon={["fas", "terminal"]} />
+          Chatters
+        </h2>
+      </FixedElement>
+      <SessionContext.Provider value={[session, setSession]}>
+        <ToastProvider>
+          <Switch>
+            <Route path={paths.index} component={RegisterPage} />
+            <Route path={paths.login} component={LoginPage} />
+            <AuthedRoute
+              path={paths.conversations}
+              component={ConversationsPage}
+            />
+            <AuthedRoute
+              path={`${paths.conversations}/:conversationId`}
+              component={ConversationsPage}
+            />
+          </Switch>
+        </ToastProvider>
+      </SessionContext.Provider>
+      <FixedElement position="bottomLeft">
+        <footer className={styles.footer}>
+          Built with Preact, TypeScript & SASS. Source code is available on{" "}
+          <a target="_blank" href="https://github.com/jasperhaward/chatters-ui">
+            GitHub
+          </a>
+          .
+        </footer>
+      </FixedElement>
+    </>
   );
 }
 
