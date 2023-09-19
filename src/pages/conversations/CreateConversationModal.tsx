@@ -174,6 +174,7 @@ export default function CreateConversationModal({
           <Input
             name="title"
             autoComplete="off"
+            disabled={contacts.isLoading}
             value={inputs.title}
             onInput={onInput}
           />
