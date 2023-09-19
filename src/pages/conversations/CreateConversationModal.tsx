@@ -115,7 +115,7 @@ export default function CreateConversationModal({
         recipientIds: recipients.map((recipient) => recipient.id),
       };
 
-      const result = await createConversation.mutate(params);
+      const result = await createConversation.execute(params);
 
       if (result.data) {
         onConversationCreated(result.data);

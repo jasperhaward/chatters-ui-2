@@ -99,7 +99,7 @@ export default function ConversationsPage({ params }: ChatProps) {
   }
 
   async function onLogoutClick() {
-    const result = await logout.mutate();
+    const result = await logout.execute();
 
     if (result.error) {
       toast({
@@ -125,7 +125,7 @@ export default function ConversationsPage({ params }: ChatProps) {
       content: inputs.message.trim(),
     };
 
-    const result = await createMessage.mutate(params);
+    const result = await createMessage.execute(params);
 
     if (result.error) {
       toast({

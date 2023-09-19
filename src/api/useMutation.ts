@@ -1,18 +1,17 @@
 import { useState } from "preact/hooks";
 
-export type MutateFunctionResult<Data> =
+export type ExecuteFunctionResult<Data> =
   | { data: null; error: Error }
   | { data: Data; error: null };
 
-export type MutateFunction<Data, Args extends unknown[]> = (
+export type ExecuteFunction<Data, Args extends unknown[]> = (
   ...args: Args
-) => Promise<MutateFunctionResult<Data>>;
+) => Promise<ExecuteFunctionResult<Data>>;
 
 export interface UseMutation<Data, Args extends unknown[]> {
   isLoading: boolean;
-  data: Data | null;
   error: Error | null;
-  mutate: MutateFunction<Data, Args>;
+  execute: ExecuteFunction<Data, Args>;
 }
 
 export function useMutation<Data, Args extends unknown[]>(
@@ -20,15 +19,12 @@ export function useMutation<Data, Args extends unknown[]>(
 ): UseMutation<Data, Args> {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
-  const [data, setData] = useState<Data | null>(null);
 
-  const mutate: MutateFunction<Data, Args> = async (...args) => {
+  const execute: ExecuteFunction<Data, Args> = async (...args) => {
     try {
       setIsLoading(true);
 
       const data = await func(...args);
-
-      setData(data);
 
       return { data, error: null };
     } catch (caughtError) {
@@ -45,10 +41,5 @@ export function useMutation<Data, Args extends unknown[]>(
     }
   };
 
-  return {
-    isLoading,
-    data,
-    error,
-    mutate,
-  };
+  return { isLoading, error, execute };
 }

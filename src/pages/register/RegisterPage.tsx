@@ -71,7 +71,7 @@ export default function RegisterPage() {
     setHasSubmitted(true);
 
     if (!hasErrors) {
-      const result = await register.mutate(inputs);
+      const result = await register.execute(inputs);
 
       if (result.data) {
         setLocation(`${paths.login}?username=${result.data.username}`);

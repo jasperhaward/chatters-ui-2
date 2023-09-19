@@ -45,7 +45,7 @@ export default function LoginPage() {
     setHasSubmitted(true);
 
     if (!hasErrors) {
-      const result = await login.mutate(inputs);
+      const result = await login.execute(inputs);
 
       if (result.data) {
         // setting the session will automatically redirect the user to the conversations page
