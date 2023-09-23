@@ -59,7 +59,7 @@ export default function ConversationsPage({ params }: ChatProps) {
     });
   }, [conversations.data, params.conversationId]);
 
-  const messages = useMessages(selectedConversation);
+  const messages = useMessages(selectedConversation?.id || null);
 
   useEffect(() => {
     if (
@@ -88,6 +88,7 @@ export default function ConversationsPage({ params }: ChatProps) {
         ]);
         break;
       case "message/created":
+        messages.setData((messages) => [event.payload, ...messages]);
         updateConversationLatestMessage(event.payload);
         break;
       case "error":
