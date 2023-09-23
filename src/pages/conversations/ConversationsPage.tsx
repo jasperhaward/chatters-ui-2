@@ -158,28 +158,27 @@ export default function ConversationsPage({ params }: ChatProps) {
     setLocation(`${paths.conversations}/${conversation.id}`);
   }
 
-  /**
-   * Update a conversation's `latestMessage` and moves the updated conversation
-   * to the first position as it will have the most recent message.
-   */
   function updateConversationLatestMessage(message: Message) {
-    conversations.setData((conversations) =>
-      conversations
-        .map((conversation) => {
-          if (conversation.id === message.conversationId) {
-            return { ...conversation, latestMessage: message };
-          }
+    conversations.setData((conversations) => {
+      const conversation = conversations.find((conversation) => {
+        return conversation.id === message.conversationId;
+      })!;
 
-          return conversation;
-        })
-        .sort((a, b) => {
-          return a.id === message.conversationId
-            ? -1
-            : b.id === message.conversationId
-            ? 1
-            : 0;
-        })
-    );
+      const updatedConversation: Conversation = {
+        ...conversation,
+        latestMessage: message,
+      };
+
+      const isNotUpdatedConversation = (conversation: Conversation) => {
+        return conversation.id !== updatedConversation.id;
+      };
+
+      // move to first position as the updated conversation will have the most recent message
+      return [
+        updatedConversation,
+        ...conversations.filter(isNotUpdatedConversation),
+      ];
+    });
   }
 
   return (
