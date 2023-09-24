@@ -17,12 +17,6 @@ export default function Message({
   isDisplayAuthor,
   isDisplayTimestamp,
 }: MessageProps) {
-  function formatTimestamp(timestamp: string) {
-    const date = new Date(timestamp);
-
-    return format(date, "HH:mm");
-  }
-
   return (
     <div
       className={`${styles.messageContainer} ${
@@ -40,7 +34,7 @@ export default function Message({
       </div>
       {isDisplayTimestamp && (
         <time className={styles.timestamp}>
-          {formatTimestamp(message.createdAt)}
+          {format(new Date(message.createdAt), "HH:mm")}
         </time>
       )}
     </div>
