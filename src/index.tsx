@@ -4,10 +4,12 @@ import {
   faUser,
   faUsers,
   faSearch,
-  faTimes,
   faPaperPlane,
   faTerminal,
   faCircleNotch,
+  faXmark,
+  faPenToSquare,
+  faUserGroup,
 } from "@fortawesome/free-solid-svg-icons";
 import "./index.scss";
 import App from "./App";
@@ -20,10 +22,12 @@ library.add({
   faUser,
   faUsers,
   faSearch,
-  faTimes,
   faPaperPlane,
   faTerminal,
   faCircleNotch,
+  faXmark,
+  faPenToSquare,
+  faUserGroup,
 });
 
 render(<App />, document.body);

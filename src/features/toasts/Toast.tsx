@@ -15,7 +15,7 @@ export function Toast({ toast, onCloseClick }: ToastProps) {
         <div className={styles.description}>{toast.description}</div>
       </div>
       {!toast.permanent && (
-        <IconButton icon={["fas", "times"]} onClick={onCloseClick} />
+        <IconButton icon={["fas", "xmark"]} onClick={onCloseClick} />
       )}
     </div>
   );

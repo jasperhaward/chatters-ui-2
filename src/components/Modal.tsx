@@ -18,7 +18,7 @@ export function Modal({ title, children, onClose }: ModalProps) {
       <div className={styles.modal} onClick={stopPropagation}>
         <div className={styles.title}>
           <h3>{title}</h3>
-          <IconButton icon={["fas", "times"]} onClick={onClose} />
+          <IconButton icon={["fas", "xmark"]} onClick={onClose} />
         </div>
         {children}
       </div>

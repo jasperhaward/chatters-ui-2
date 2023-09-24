@@ -27,7 +27,7 @@ export default function SearchBox({
       />
       {value !== "" && (
         <IconButton
-          icon={["fas", "times"]}
+          icon={["fas", "xmark"]}
           disabled={disabled}
           onClick={onClear}
         />

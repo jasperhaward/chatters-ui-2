@@ -163,7 +163,7 @@ export default function CreateConversationModal({
             onClick={() => onRecipientRemove(recipient)}
           >
             {recipient.username}
-            <Icon icon={["fas", "times"]} />
+            <Icon icon={["fas", "xmark"]} />
           </Button>
         ))}
       </div>
