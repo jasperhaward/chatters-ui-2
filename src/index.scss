@@ -134,6 +134,12 @@ textarea {
   outline: none;
 }
 
+hr {
+  border-color: var(--grey-dark);
+  border-top-width: 1px;
+  width: 100%;
+}
+
 ::-webkit-scrollbar {
   width: 16px;
 }
