@@ -19,12 +19,12 @@ import { FixedElement, Button, Card } from "@/components";
 import { useSession } from "@/features/auth";
 import { useToasts } from "@/features/toasts";
 
-import { buildConversationTitle } from "./utils";
 import ConversationsPane from "./ConversationsPane";
 import SearchBox from "./SearchBox";
 import MessageBox from "./MessageBox";
 import MessagesPane from "./MessagesPane";
 import CreateConversationModal from "./CreateConversationModal";
+import MessagesPaneHeader from "./MessagesPaneHeader";
 
 export interface ChatProps {
   params: {
@@ -158,6 +158,8 @@ export default function ConversationsPage({ params }: ChatProps) {
     setLocation(`${paths.conversations}/${conversation.id}`);
   }
 
+  function onEditConversationClick() {}
+
   function updateConversationLatestMessage(message: Message) {
     conversations.setData((conversations) => {
       const conversation = conversations.find((conversation) => {
@@ -208,11 +210,10 @@ export default function ConversationsPage({ params }: ChatProps) {
           </Button>
         </span>
         <span className={styles.messagesPanel}>
-          <h2>
-            {selectedConversation
-              ? buildConversationTitle(selectedConversation)
-              : "Messages"}
-          </h2>
+          <MessagesPaneHeader
+            selectedConversation={selectedConversation}
+            onEditConversationClick={onEditConversationClick}
+          />
           <MessagesPane
             messages={messages}
             selectedConversation={selectedConversation}

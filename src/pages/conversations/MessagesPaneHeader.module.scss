@@ -1,0 +1,32 @@
+.messagesPaneHeader {
+  .title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--padding-lg);
+
+    h2 {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    .buttons {
+      display: flex;
+
+      button {
+        padding: 0 var(--padding-sm);
+      }
+
+      .editConversation {
+        font-size: calc(var(--font-size-sm) + 4px);
+      }
+    }
+  }
+
+  .description {
+    margin-bottom: var(--padding-sm);
+    color: var(--grey);
+    font-size: var(--font-size-xs);
+  }
+}
