@@ -2,14 +2,24 @@ import styles from "./IconButton.module.scss";
 import { IconTuple, Icon } from ".";
 
 export interface IconButtonProps {
+  className?: string;
   icon: IconTuple;
   disabled?: boolean;
   onClick: () => void;
 }
 
-export function IconButton({ icon, disabled, onClick }: IconButtonProps) {
+export function IconButton({
+  className = "",
+  icon,
+  disabled,
+  onClick,
+}: IconButtonProps) {
   return (
-    <button className={styles.iconButton} disabled={disabled} onClick={onClick}>
+    <button
+      className={`${styles.iconButton} ${className}`}
+      disabled={disabled}
+      onClick={onClick}
+    >
       <Icon icon={icon} />
     </button>
   );
