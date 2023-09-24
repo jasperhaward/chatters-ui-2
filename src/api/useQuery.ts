@@ -48,6 +48,11 @@ export function useQuery<Data>(
 
   useEffect(() => {
     if (options.enabled) {
+      if (!isLoading || data) {
+        setIsLoading(true);
+        setData(null);
+      }
+
       query();
     }
   }, dependencies);
