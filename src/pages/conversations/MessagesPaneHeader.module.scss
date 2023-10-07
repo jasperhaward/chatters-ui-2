@@ -1,32 +1,45 @@
-.messagesPaneHeader {
-  .title {
+.title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--padding-lg);
+
+  h2 {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .menu {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: var(--padding-lg);
 
-    h2 {
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-    }
+    .recipientsIcon {
+      color: var(--grey);
+      transition: color var(--transition-duration);
 
-    .buttons {
-      display: flex;
-
-      button {
-        padding: 0 var(--padding-sm);
-      }
-
-      .editConversation {
-        font-size: calc(var(--font-size-sm) + 4px);
+      &:hover {
+        color: var(--foreground);
       }
     }
-  }
 
-  .description {
-    margin-bottom: var(--padding-sm);
-    color: var(--grey);
-    font-size: var(--font-size-xs);
+    .recipientsContainer {
+      margin-top: var(--padding-sm);
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    .editConversation {
+      font-size: calc(var(--font-size-sm) + 4px);
+    }
+
+    .recipientsIcon,
+    .editConversation {
+      padding: 0 var(--padding-sm);
+    }
   }
+}
+
+.description {
+  margin-top: 0;
 }
