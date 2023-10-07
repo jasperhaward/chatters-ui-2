@@ -17,6 +17,7 @@
     .recipientsIcon {
       color: var(--grey);
       transition: color var(--transition-duration);
+      font-size: 17px;
 
       &:hover {
         color: var(--foreground);
@@ -30,7 +31,7 @@
     }
 
     .editConversation {
-      font-size: calc(var(--font-size-sm) + 4px);
+      font-size: 21px;
     }
 
     .recipientsIcon,
