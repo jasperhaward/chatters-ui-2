@@ -10,6 +10,7 @@ export * from "./InputGroup";
 export * from "./Link";
 export * from "./Modal";
 export * from "./Panel";
+export * from "./Popover";
 export * from "./Skeleton";
 export * from "./Spinner";
 export * from "./Textarea";
