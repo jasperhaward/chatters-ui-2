@@ -119,6 +119,10 @@ export default function ConversationsPage({ params }: ChatProps) {
   }
 
   function onConversationClick(conversation: Conversation) {
+    if (inputs.search !== "") {
+      setInputs({ search: "" });
+    }
+
     setLocation(`${paths.conversations}/${conversation.id}`);
   }
 
