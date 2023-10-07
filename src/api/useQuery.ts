@@ -1,4 +1,4 @@
-import { StateUpdater, useEffect, useState } from "preact/hooks";
+import { StateUpdater, useEffect, useMemo, useState } from "preact/hooks";
 
 export interface UseQueryLoadingState<Data> {
   isLoading: true;
@@ -80,11 +80,15 @@ export function useQuery<Data>(
     await query();
   }
 
-  return {
-    isLoading,
-    error,
-    data,
-    retry,
-    setData,
-  } as UseQuery<Data>;
+  return useMemo(
+    () =>
+      ({
+        isLoading,
+        error,
+        data,
+        retry,
+        setData,
+      } as UseQuery<Data>),
+    [isLoading, error, data]
+  );
 }

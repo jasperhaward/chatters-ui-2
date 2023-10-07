@@ -36,7 +36,7 @@ export default function MessagesPane({
     if (ref.current) {
       ref.current.scrollIntoView({ behavior: "smooth" });
     }
-  }, [messages]);
+  }, [messages.data]);
 
   const layout = useMemo(() => {
     if (!messages.data) {
