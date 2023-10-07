@@ -1,0 +1,20 @@
+.popoverContainer {
+  position: relative;
+
+  &:hover .popover {
+    display: block;
+  }
+
+  .popover {
+    display: none;
+    position: absolute;
+    right: 0;
+    width: max-content;
+    min-width: 275px;
+    padding: var(--padding-lg);
+    border-color: var(--grey-dark);
+    border-width: var(--border-width);
+    border-radius: var(--border-radius);
+    background-color: var(--background);
+  }
+}
