@@ -44,7 +44,7 @@ export default function MessagesPane({
     }
 
     return messages.data.slice().reverse().map(buildLayout);
-  }, [messages]);
+  }, [messages.data]);
 
   function buildLayout(message: IMessage, index: number, messages: IMessage[]) {
     const prevMessage = messages[index - 1];
