@@ -28,7 +28,7 @@ export default function ConversationsPane({
     }
 
     return conversations.data.filter(filterConversationBySearch);
-  }, [conversations, search]);
+  }, [conversations.data, search]);
 
   /**
    * Should return true if a conversation's title or any
