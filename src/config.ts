@@ -1,5 +1,3 @@
-import { parseEnv } from "./utils";
-
 export interface Config {
   httpApiUrl: string;
   websocketApiUrl: string;
@@ -12,8 +10,8 @@ export interface Config {
 }
 
 const config: Readonly<Config> = {
-  httpApiUrl: parseEnv("VITE_API_HTTP_URL"),
-  websocketApiUrl: parseEnv("VITE_API_WS_URL"),
+  httpApiUrl: "${CHATTERS_SERVER_HTTP_URL}",
+  websocketApiUrl: "${CHATTERS_SERVER_WS_URL}",
   // below variables based on backend config
   minUsernameLength: 5,
   maxUsernameLength: 25,
