@@ -5,7 +5,7 @@ echo "Building static files"
 npm run build
 
 # get version from package.json
-version=$(cat package.json | grep -o '"version": "[^"]*' | grep -o '[^"]*$')
+version=$(grep -o '"version": "[^"]*' package.json | grep -o '[^"]*$')
 echo "Building docker image version '$version'"
 
 tag_latest="jasperhaward/chatters-ui:latest"
