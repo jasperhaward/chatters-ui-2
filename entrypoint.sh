@@ -1,3 +1,5 @@
+#!/bin/bash
+
 config="assets/config-*.js"
 
 # 1st grep - extract placeholders of the format "${VARIABLE_1}" ... "${VARIABLE_2}" from JavaScript config bundle
