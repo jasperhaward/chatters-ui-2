@@ -1,6 +1,6 @@
 #!/bin/bash
 
-config="assets/config-*.js"
+config="/app/assets/config-*.js"
 
 # 1st grep - extract placeholders of the format "${VARIABLE_1}" ... "${VARIABLE_2}" from JavaScript config bundle
 # 2nd grep - extract variable names from placeholders eg: VARIABLE_1, VARIABLE_2
@@ -19,6 +19,4 @@ specified_placeholders=$(IFS='$'; echo "\$${variables[*]}")
 
 # substitutes ONLY the specified_placeholders' placeholders with environment variables, reducing the 
 # risk of replacing other non-placeholder but similiarly formatted strings with environment variables
-envsubst "$specified_placeholders" < $config | tee $config
-
-source /docker-entrypoint.sh "$@"
+envsubst "$specified_placeholders" < $config | tee $config > /dev/null
