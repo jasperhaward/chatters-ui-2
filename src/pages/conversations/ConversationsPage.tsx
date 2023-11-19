@@ -88,7 +88,9 @@ export default function ConversationsPage({ params }: ChatProps) {
         ]);
         break;
       case "message/created":
-        messages.setData((messages) => [event.payload, ...messages]);
+        if (event.payload.conversationId === selectedConversation?.id) {
+          messages.setData((messages) => [event.payload, ...messages]);
+        }
         updateConversationLatestMessage(event.payload);
         break;
       case "error":
