@@ -52,15 +52,14 @@ export default function CreateConversationModal({
   onConversationCreated,
 }: CreateConversationModalProps) {
   const [recipients, setRecipients] = useState<User[]>([]);
-  // prettier-ignore
-  const { 
-    inputs, 
-    hasErrors, 
-    errors, 
+  const {
+    inputs,
+    hasErrors,
+    errors,
     hasSubmitted,
-    onInput, 
+    onInput,
     setInputs,
-    setHasSubmitted 
+    setHasSubmitted,
   } = useForm(initialInputs, validation);
 
   const createConversation = useCreateConversation();
@@ -167,22 +166,18 @@ export default function CreateConversationModal({
           </Button>
         ))}
       </div>
-      {recipients.length > 1 && (
-        <>
-          <label>Title</label>
-          <Input
-            name="title"
-            autoComplete="off"
-            disabled={contacts.isLoading}
-            value={inputs.title}
-            onInput={onInput}
-          />
-          {hasSubmitted && errors.title ? (
-            <ErrorMessage>{errors.title}</ErrorMessage>
-          ) : (
-            <p>Set an optional title</p>
-          )}
-        </>
+      <label>Title</label>
+      <Input
+        name="title"
+        autoComplete="off"
+        disabled={contacts.isLoading}
+        value={inputs.title}
+        onInput={onInput}
+      />
+      {hasSubmitted && errors.title ? (
+        <ErrorMessage>{errors.title}</ErrorMessage>
+      ) : (
+        <p>Set an optional title</p>
       )}
       {createConversation.error && (
         <ErrorMessage>
