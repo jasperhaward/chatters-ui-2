@@ -43,7 +43,7 @@ export function useServerEvents(dispatch: (event: ServerEvent) => void) {
   const [session] = useSession();
 
   const websocket = useMemo(() => {
-    const websocket = new WebSocket(`${config.websocketApiUrl}/api/v1/socket`);
+    const websocket = new WebSocket(`${config.websocketApiUrl}/api/v1/events`);
 
     // authenticate once WS connection is established
     websocket.addEventListener("open", () => {
