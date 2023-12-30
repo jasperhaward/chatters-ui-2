@@ -19,8 +19,6 @@ export default function MessagesPaneHeader({
 }: MessagesPaneHeaderProps) {
   const [session] = useSession();
 
-  const isGroupConversation =
-    selectedConversation && selectedConversation.recipients.length > 1;
   const isConversationCreatedByUser =
     selectedConversation?.createdBy.id === session.user.id;
 
@@ -42,44 +40,42 @@ export default function MessagesPaneHeader({
 
   return (
     <div>
-      <div className={styles.title}>
-        <h2>
-          {selectedConversation
-            ? buildConversationTitle(selectedConversation)
-            : "Messages"}
-        </h2>
-        {isGroupConversation && (
-          <div className={styles.menu}>
-            <PopoverContainer>
-              <Icon
-                className={styles.recipientsIcon}
-                icon={["fas", "user-group"]}
+      {selectedConversation ? (
+        <>
+          <div className={styles.title}>
+            <h2>{buildConversationTitle(selectedConversation)}</h2>
+            <div className={styles.menu}>
+              <PopoverContainer>
+                <Icon
+                  className={styles.recipientsIcon}
+                  icon={["fas", "user-group"]}
+                />
+                <Popover>
+                  <h3>Recipients</h3>
+                  <div className={styles.recipientsContainer}>
+                    {selectedConversation.recipients.map((recipient) => (
+                      <Recipient key={recipient.id} recipient={recipient} />
+                    ))}
+                  </div>
+                </Popover>
+              </PopoverContainer>
+              <IconButton
+                className={styles.editConversation}
+                icon={["fas", "pen-to-square"]}
+                onClick={onEditConversationClick}
               />
-              <Popover>
-                <h3>Recipients</h3>
-                <div className={styles.recipientsContainer}>
-                  {selectedConversation.recipients.map((recipient) => (
-                    <Recipient key={recipient.id} recipient={recipient} />
-                  ))}
-                </div>
-              </Popover>
-            </PopoverContainer>
-            <IconButton
-              className={styles.editConversation}
-              icon={["fas", "pen-to-square"]}
-              onClick={onEditConversationClick}
-            />
+            </div>
           </div>
-        )}
-      </div>
-      {selectedConversation && (
-        <p className={styles.description}>
-          Conversation created by
-          {isConversationCreatedByUser
-            ? " you "
-            : ` ${selectedConversation.createdBy.username} `}
-          {formatConversationCreatedAt(selectedConversation.createdAt)}.
-        </p>
+          <p className={styles.description}>
+            Conversation created by
+            {isConversationCreatedByUser
+              ? " you "
+              : ` ${selectedConversation.createdBy.username} `}
+            {formatConversationCreatedAt(selectedConversation.createdAt)}.
+          </p>
+        </>
+      ) : (
+        <h2>Messages</h2>
       )}
       <hr />
     </div>
