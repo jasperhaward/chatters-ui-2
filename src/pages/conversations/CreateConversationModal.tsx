@@ -64,6 +64,8 @@ export default function CreateConversationModal({
 
   const createConversation = useCreateConversation();
 
+  const isNoRecipientsSelected = recipients.length === 0;
+
   const typeaheadOptions = useMemo<TypeaheadOption[]>(() => {
     if (!contacts.data) {
       return [];
@@ -107,7 +109,7 @@ export default function CreateConversationModal({
   async function onCreateConversationClick() {
     setHasSubmitted(true);
 
-    if (!hasErrors && recipients.length > 0) {
+    if (!hasErrors && !isNoRecipientsSelected) {
       const params: CreateConversationParams = {
         title: inputs.title === "" ? undefined : inputs.title,
         recipientIds: recipients.map((recipient) => recipient.id),
@@ -148,7 +150,7 @@ export default function CreateConversationModal({
         <ErrorMessage>
           Failed to load contacts, please refresh the page
         </ErrorMessage>
-      ) : hasSubmitted && recipients.length === 0 ? (
+      ) : hasSubmitted && isNoRecipientsSelected ? (
         <ErrorMessage>Must select at least 1 recipient</ErrorMessage>
       ) : (
         <p>Chose from your contacts</p>
@@ -166,7 +168,7 @@ export default function CreateConversationModal({
           </Button>
         ))}
       </div>
-      <label>Title</label>
+      <label>Title (optional)</label>
       <Input
         name="title"
         autoComplete="off"
@@ -174,10 +176,8 @@ export default function CreateConversationModal({
         value={inputs.title}
         onInput={onInput}
       />
-      {hasSubmitted && errors.title ? (
+      {hasSubmitted && errors.title && (
         <ErrorMessage>{errors.title}</ErrorMessage>
-      ) : (
-        <p>Set an optional title</p>
       )}
       {createConversation.error && (
         <ErrorMessage>
