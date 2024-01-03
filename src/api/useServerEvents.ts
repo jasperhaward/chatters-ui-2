@@ -1,4 +1,4 @@
-import { useMemo } from "preact/hooks";
+import { useEffect, useMemo } from "preact/hooks";
 
 import config from "@/config";
 import { Conversation, Message, UserWithCreatedAt } from "@/types";
@@ -42,7 +42,7 @@ export type ServerEvent =
 export function useServerEvents(dispatch: (event: ServerEvent) => void) {
   const [session] = useSession();
 
-  const websocket = useMemo(() => {
+  const authedWebsocket = useMemo(() => {
     const websocket = new WebSocket(`${config.websocketApiUrl}/api/v1/events`);
 
     // authenticate once WS connection is established
@@ -50,39 +50,50 @@ export function useServerEvents(dispatch: (event: ServerEvent) => void) {
       websocket.send(`Bearer ${session.token}`);
     });
 
-    websocket.addEventListener("message", (event) => {
-      try {
-        const serverEvent: ServerEvent = JSON.parse(`${event.data}`);
-        dispatch(serverEvent);
-      } catch (error) {
-        if (error instanceof SyntaxError) {
-          dispatch({
-            type: "error",
-            payload: {
-              code: "SyntaxError",
-              message: "Server event is not valid JSON.",
-            },
-          });
-        } else {
-          throw error;
-        }
-      }
-    });
-
-    websocket.addEventListener("error", (event) => {
-      dispatch({
-        type: "error",
-        payload: {
-          code: event.type,
-          message: "Unknown connection error.",
-        },
-      });
-    });
-
-    websocket.addEventListener("close", onClose);
-
     return websocket;
   }, []);
+
+  useEffect(() => {
+    authedWebsocket.addEventListener("message", onMessage);
+    authedWebsocket.addEventListener("error", onError);
+    authedWebsocket.addEventListener("close", onClose);
+
+    return () => {
+      authedWebsocket.removeEventListener("message", onMessage);
+      authedWebsocket.removeEventListener("error", onError);
+      authedWebsocket.removeEventListener("close", onClose);
+    };
+  }, [dispatch]);
+
+  function onMessage(event: MessageEvent<string>) {
+    try {
+      const serverEvent: ServerEvent = JSON.parse(event.data);
+
+      dispatch(serverEvent);
+    } catch (error) {
+      if (error instanceof SyntaxError) {
+        dispatch({
+          type: "error",
+          payload: {
+            code: "SyntaxError",
+            message: "Server event is not valid JSON.",
+          },
+        });
+      } else {
+        throw error;
+      }
+    }
+  }
+
+  function onError(event: Event) {
+    dispatch({
+      type: "error",
+      payload: {
+        code: event.type,
+        message: "Unknown connection error.",
+      },
+    });
+  }
 
   function onClose(event: CloseEvent) {
     dispatch({
@@ -97,7 +108,7 @@ export function useServerEvents(dispatch: (event: ServerEvent) => void) {
   return () => {
     // when we close the connection ourselves make sure we don't trigger the onClose event
     // listener, we dont want to display the "Connection closed unexpectedly." toast
-    websocket.removeEventListener("close", onClose);
-    websocket.close();
+    authedWebsocket.removeEventListener("close", onClose);
+    authedWebsocket.close();
   };
 }
