@@ -15,7 +15,7 @@ import {
 } from "@/api";
 import { Conversation, Message } from "@/types";
 import { useInputs } from "@/hooks";
-import { FixedElement, Button, Card } from "@/components";
+import { FixedElement, Button, Card, Modal } from "@/components";
 import { useSession } from "@/features/auth";
 import { useToasts } from "@/features/toasts";
 
@@ -23,8 +23,11 @@ import ConversationsPane from "./ConversationsPane";
 import SearchBox from "./SearchBox";
 import MessageBox from "./MessageBox";
 import MessagesPane from "./MessagesPane";
-import CreateConversationModal from "./CreateConversationModal";
+import CreateConversationForm from "./CreateConversationForm";
+import EditConversationForm from "./EditConversationForm";
 import MessagesPaneHeader from "./MessagesPaneHeader";
+
+type Modal = "CreateConversation" | "EditConversation";
 
 export interface ChatProps {
   params: {
@@ -37,7 +40,7 @@ export default function ConversationsPage({ params }: ChatProps) {
   const [location, setLocation] = useLocation();
   const [toast, clearToasts] = useToasts();
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [activeModal, setActiveModal] = useState<Modal | null>(null);
   const [inputs, onInput, setInputs] = useInputs({
     search: "",
     message: "",
@@ -151,20 +154,32 @@ export default function ConversationsPage({ params }: ChatProps) {
   }
 
   function onCreateConversationClick() {
-    setIsModalOpen(true);
+    setActiveModal("CreateConversation");
   }
 
-  function onCreateConversationModalClose() {
-    setIsModalOpen(false);
+  function onEditConversationClick() {
+    setActiveModal("EditConversation");
+  }
+
+  function onModalClose() {
+    setActiveModal(null);
   }
 
   function onConversationCreated(conversation: Conversation) {
     conversations.setData((conversations) => [conversation, ...conversations]);
-    setIsModalOpen(false);
+    setActiveModal(null);
     setLocation(`${paths.conversations}/${conversation.id}`);
   }
 
-  function onEditConversationClick() {}
+  function onConversationUpdated(updatedConversation: Conversation) {
+    conversations.setData((conversations) =>
+      conversations.map((conversation) =>
+        conversation.id === updatedConversation.id
+          ? updatedConversation
+          : conversation
+      )
+    );
+  }
 
   function updateConversationLatestMessage(message: Message) {
     conversations.setData((conversations) => {
@@ -188,6 +203,37 @@ export default function ConversationsPage({ params }: ChatProps) {
       ];
     });
   }
+
+  const modal = useMemo(() => {
+    switch (activeModal) {
+      case "CreateConversation":
+        return {
+          title: "Create conversation",
+          body: (
+            <CreateConversationForm
+              contacts={contacts}
+              onConversationCreated={onConversationCreated}
+            />
+          ),
+        };
+      case "EditConversation":
+        return {
+          title: "Edit conversation",
+          body: (
+            <EditConversationForm
+              conversation={selectedConversation!}
+              contacts={contacts}
+              onConversationUpdated={onConversationUpdated}
+            />
+          ),
+        };
+    }
+  }, [
+    contacts,
+    selectedConversation,
+    onConversationCreated,
+    onConversationUpdated,
+  ]);
 
   return (
     <div className={styles.conversations}>
@@ -249,12 +295,10 @@ export default function ConversationsPage({ params }: ChatProps) {
           Logout
         </Button>
       </FixedElement>
-      {isModalOpen && (
-        <CreateConversationModal
-          contacts={contacts}
-          onClose={onCreateConversationModalClose}
-          onConversationCreated={onConversationCreated}
-        />
+      {modal && (
+        <Modal title={modal.title} onClose={onModalClose}>
+          {modal.body}
+        </Modal>
       )}
     </div>
   );
