@@ -9,6 +9,7 @@ export * from "./Input";
 export * from "./InputGroup";
 export * from "./Link";
 export * from "./Modal";
+export * from "./Multiselect";
 export * from "./Panel";
 export * from "./Popover";
 export * from "./Skeleton";
