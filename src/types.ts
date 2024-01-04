@@ -23,3 +23,8 @@ export interface Conversation {
   recipients: UserWithCreatedAt[];
   latestMessage: Message | null;
 }
+
+export type ConversationWithoutRecipientsLatestMessage = Omit<
+  Conversation,
+  "recipients" | "latestMessage"
+>;

@@ -1,7 +1,7 @@
 import config from "@/config";
 
 export interface UseFetchRequestInit extends Omit<RequestInit, "body"> {
-  method: "GET" | "POST" | "DELETE";
+  method: "GET" | "POST" | "PATCH" | "DELETE";
   body?: object;
 }
 
