@@ -330,8 +330,7 @@ export default function ConversationsPage({ params }: ChatProps) {
             disabled={
               conversations.isLoading ||
               !!conversations.error ||
-              messages.isLoading ||
-              !!messages.error
+              messages.isLoading
             }
             value={inputs.message}
             onInput={onInput}
