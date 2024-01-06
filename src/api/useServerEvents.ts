@@ -1,12 +1,22 @@
 import { useEffect, useMemo } from "preact/hooks";
 
 import config from "@/config";
-import { Conversation, Message, UserWithCreatedAt } from "@/types";
+import {
+  Conversation,
+  ConversationWithoutRecipientsLatestMessage,
+  Message,
+  Recipient,
+} from "@/types";
 import { useSession } from "@/features/auth";
 
 export interface ConversationCreatedEvent {
   type: "conversation/created";
   payload: Conversation;
+}
+
+export interface ConversationUpdatedEvent {
+  type: "conversation/updated";
+  payload: ConversationWithoutRecipientsLatestMessage;
 }
 
 export interface MessageCreatedEvent {
@@ -16,12 +26,12 @@ export interface MessageCreatedEvent {
 
 export interface RecipientAddedEvent {
   type: "recipient/added";
-  payload: UserWithCreatedAt;
+  payload: Recipient;
 }
 
 export interface RecipientRemovedEvent {
   type: "recipient/removed";
-  payload: UserWithCreatedAt;
+  payload: Recipient;
 }
 
 export interface ErrorEvent {
@@ -34,6 +44,7 @@ export interface ErrorEvent {
 
 export type ServerEvent =
   | ConversationCreatedEvent
+  | ConversationUpdatedEvent
   | MessageCreatedEvent
   | RecipientAddedEvent
   | RecipientRemovedEvent

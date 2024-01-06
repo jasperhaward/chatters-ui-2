@@ -4,7 +4,6 @@ import styles from "./ConversationsPage.module.scss";
 
 import { paths } from "@/App";
 import {
-  CreateMessageParams,
   useConversations,
   useMessages,
   useLogout,
@@ -13,12 +12,21 @@ import {
   useServerEvents,
   useContacts,
 } from "@/api";
-import { Conversation, Message } from "@/types";
+import {
+  Conversation,
+  ConversationWithoutRecipientsLatestMessage,
+  Message,
+  Recipient,
+} from "@/types";
 import { useInputs } from "@/hooks";
 import { FixedElement, Button, Card, Modal } from "@/components";
 import { useSession } from "@/features/auth";
 import { useToasts } from "@/features/toasts";
 
+import {
+  sortConversationsByLatestMessageOrCreatedAt,
+  sortUsersByUsername,
+} from "./utils";
 import ConversationsPane from "./ConversationsPane";
 import SearchBox from "./SearchBox";
 import MessageBox from "./MessageBox";
@@ -85,16 +93,19 @@ export default function ConversationsPage({ params }: ChatProps) {
   function onServerEvent(event: ServerEvent) {
     switch (event.type) {
       case "conversation/created":
-        conversations.setData((conversations) => [
-          event.payload,
-          ...conversations,
-        ]);
+        onConversationCreated(event.payload);
+        break;
+      case "conversation/updated":
+        onConversationUpdated(event.payload);
         break;
       case "message/created":
-        if (event.payload.conversationId === selectedConversation?.id) {
-          messages.setData((messages) => [event.payload, ...messages]);
-        }
-        updateConversationLatestMessage(event.payload);
+        onMessageCreated(event.payload);
+        break;
+      case "recipient/added":
+        onRecipientAdded(event.payload);
+        break;
+      case "recipient/removed":
+        onRecipientRemoved(event.payload);
         break;
       case "error":
         toast({
@@ -132,12 +143,10 @@ export default function ConversationsPage({ params }: ChatProps) {
   }
 
   async function onMessageSubmit() {
-    const params: CreateMessageParams = {
+    const result = await createMessage.execute({
       conversationId: selectedConversation!.id,
       content: inputs.message.trim(),
-    };
-
-    const result = await createMessage.execute(params);
+    });
 
     if (result.error) {
       toast({
@@ -145,10 +154,7 @@ export default function ConversationsPage({ params }: ChatProps) {
         description: result.error.message,
       });
     } else {
-      const message = result.data;
-
-      messages.setData((messages) => [message, ...messages]);
-      updateConversationLatestMessage(message);
+      onMessageCreated(result.data);
       setInputs({ message: "" });
     }
   }
@@ -167,40 +173,84 @@ export default function ConversationsPage({ params }: ChatProps) {
 
   function onConversationCreated(conversation: Conversation) {
     conversations.setData((conversations) => [conversation, ...conversations]);
+  }
+
+  function onConversationCreatedSubmit(conversation: Conversation) {
+    onConversationCreated(conversation);
     setActiveModal(null);
     setLocation(`${paths.conversations}/${conversation.id}`);
   }
 
-  function onConversationUpdated(updatedConversation: Conversation) {
-    conversations.setData((conversations) =>
-      conversations.map((conversation) =>
-        conversation.id === updatedConversation.id
-          ? updatedConversation
-          : conversation
-      )
-    );
+  function onConversationUpdated(
+    updatedConversation: ConversationWithoutRecipientsLatestMessage
+  ) {
+    conversations.setData((conversations) => {
+      return conversations.map((conversation) => {
+        if (conversation.id === updatedConversation.id) {
+          return { ...conversation, ...updatedConversation };
+        }
+
+        return conversation;
+      });
+    });
   }
 
-  function updateConversationLatestMessage(message: Message) {
+  function onMessageCreated(message: Message) {
+    if (message.conversationId === selectedConversation?.id) {
+      messages.setData((messages) => [message, ...messages]);
+    }
+
     conversations.setData((conversations) => {
-      const conversation = conversations.find((conversation) => {
-        return conversation.id === message.conversationId;
-      })!;
+      return conversations
+        .map((conversation) => {
+          if (conversation.id === message.conversationId) {
+            return { ...conversation, latestMessage: message };
+          }
 
-      const updatedConversation: Conversation = {
-        ...conversation,
-        latestMessage: message,
-      };
+          return conversation;
+        })
+        .sort(sortConversationsByLatestMessageOrCreatedAt);
+    });
+  }
 
-      const isNotUpdatedConversation = (conversation: Conversation) => {
-        return conversation.id !== updatedConversation.id;
-      };
+  function onRecipientAdded(recipient: Recipient) {
+    conversations.setData((conversations) => {
+      return conversations.map((conversation) => {
+        if (conversation.id === recipient.conversationId) {
+          const updatedRecipients = [...conversation.recipients, recipient];
 
-      // move to first position as the updated conversation will have the most recent message
-      return [
-        updatedConversation,
-        ...conversations.filter(isNotUpdatedConversation),
-      ];
+          return {
+            ...conversation,
+            recipients: updatedRecipients.sort(sortUsersByUsername),
+          };
+        }
+
+        return conversation;
+      });
+    });
+  }
+
+  function onRecipientRemoved(removedRecipient: Recipient) {
+    conversations.setData((conversations) => {
+      // if the current user is the recipient being removed, remove the conversation
+      if (removedRecipient.id === session.user.id) {
+        return conversations.filter((conversation) => {
+          return conversation.id !== removedRecipient.conversationId;
+        });
+      }
+
+      return conversations.map((conversation) => {
+        if (conversation.id === removedRecipient.conversationId) {
+          return {
+            ...conversation,
+            recipients: conversation.recipients.filter((recipient) => {
+              return recipient.id !== removedRecipient.id;
+            }),
+          };
+        }
+
+        return conversation;
+      });
     });
   }
 
@@ -212,7 +262,7 @@ export default function ConversationsPage({ params }: ChatProps) {
           body: (
             <CreateConversationForm
               contacts={contacts}
-              onConversationCreated={onConversationCreated}
+              onConversationCreated={onConversationCreatedSubmit}
             />
           ),
         };
@@ -224,6 +274,8 @@ export default function ConversationsPage({ params }: ChatProps) {
               conversation={selectedConversation!}
               contacts={contacts}
               onConversationUpdated={onConversationUpdated}
+              onRecipientAdded={onRecipientAdded}
+              onRecipientRemoved={onRecipientRemoved}
             />
           ),
         };
@@ -231,8 +283,10 @@ export default function ConversationsPage({ params }: ChatProps) {
   }, [
     contacts,
     selectedConversation,
-    onConversationCreated,
+    onConversationCreatedSubmit,
     onConversationUpdated,
+    onRecipientAdded,
+    onRecipientRemoved,
   ]);
 
   return (

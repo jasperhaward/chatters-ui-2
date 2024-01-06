@@ -7,6 +7,10 @@ export interface UserWithCreatedAt extends User {
   createdAt: string;
 }
 
+export interface Recipient extends UserWithCreatedAt {
+  conversationId: string;
+}
+
 export interface Message {
   id: string;
   conversationId: string;
@@ -20,7 +24,7 @@ export interface Conversation {
   createdAt: string;
   createdBy: User;
   title: string | null;
-  recipients: UserWithCreatedAt[];
+  recipients: Recipient[];
   latestMessage: Message | null;
 }
 

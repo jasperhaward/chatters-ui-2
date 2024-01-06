@@ -1,11 +1,11 @@
 import { format, isToday, isYesterday, isThisWeek, isThisYear } from "date-fns";
 import styles from "./Recipient.module.scss";
 
-import { UserWithCreatedAt } from "@/types";
+import { Recipient as IRecipient } from "@/types";
 import { Icon } from "@/components";
 
 export interface RecipientProps {
-  recipient: UserWithCreatedAt;
+  recipient: IRecipient;
 }
 
 export default function Recipient({ recipient }: RecipientProps) {

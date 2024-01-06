@@ -15,9 +15,11 @@ import {
   Multiselect,
   MultiselectOption,
 } from "@/components";
-import { Conversation, User } from "@/types";
+import { Conversation, Recipient, User } from "@/types";
 import { useToasts } from "@/features/toasts";
+
 import { titleValidation } from "./CreateConversationForm";
+import { sortUsersByUsername } from "./utils";
 
 interface EditConversationInputs {
   title: string;
@@ -31,12 +33,15 @@ export interface EditConversationFormProps {
   conversation: Conversation;
   contacts: UseQuery<User[]>;
   onConversationUpdated: (conversation: Conversation) => void;
+  onRecipientAdded: (recipient: Recipient) => void;
+  onRecipientRemoved: (recipient: Recipient) => void;
 }
 
 export default function EditConversationForm({
   conversation,
   contacts,
   onConversationUpdated,
+  ...props
 }: EditConversationFormProps) {
   const [toast] = useToasts();
   const [recipients, setRecipients] = useState<User[]>(conversation.recipients);
@@ -71,13 +76,11 @@ export default function EditConversationForm({
         description: result.error.message,
       });
     } else {
-      const updatedConversation: Conversation = {
-        ...conversation,
-        recipients: [...conversation.recipients, result.data],
-      };
+      const recipient = result.data;
+      const updatedRecipients = [...recipients, recipient];
 
-      setRecipients(updatedConversation.recipients);
-      onConversationUpdated(updatedConversation);
+      setRecipients(updatedRecipients.sort(sortUsersByUsername));
+      props.onRecipientAdded(recipient);
     }
   }
 
@@ -93,15 +96,16 @@ export default function EditConversationForm({
         description: result.error.message,
       });
     } else {
-      const updatedConversation: Conversation = {
-        ...conversation,
-        recipients: conversation.recipients.filter(
-          (recipient) => recipient.id !== option.id
-        ),
-      };
+      const recipient = conversation.recipients.find(
+        (recipient) => recipient.id === option.id
+      )!;
 
-      setRecipients(updatedConversation.recipients);
-      onConversationUpdated(updatedConversation);
+      const updatedRecipients = conversation.recipients.filter(
+        (recipient) => recipient.id !== option.id
+      );
+
+      setRecipients(updatedRecipients);
+      props.onRecipientRemoved(recipient);
     }
   }
 

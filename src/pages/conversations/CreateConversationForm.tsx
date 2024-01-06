@@ -2,12 +2,7 @@ import { useState } from "preact/hooks";
 import styles from "./CreateConversationForm.module.scss";
 
 import config from "@/config";
-import {
-  ApiResponseError,
-  CreateConversationParams,
-  UseQuery,
-  useCreateConversation,
-} from "@/api";
+import { ApiResponseError, UseQuery, useCreateConversation } from "@/api";
 import { ValidationRules, useForm } from "@/hooks";
 import {
   Button,
@@ -18,6 +13,7 @@ import {
 } from "@/components";
 import { Conversation, User } from "@/types";
 import { useToasts } from "@/features/toasts";
+import { sortUsersByUsername } from "./utils";
 
 interface CreateConversationInputs {
   title: string;
@@ -68,7 +64,9 @@ export default function CreateConversationForm({
       return contact.id === option.id;
     })!;
 
-    setRecipients([...recipients, contact]);
+    const updatedRecipients = [...recipients, contact];
+
+    setRecipients(updatedRecipients.sort(sortUsersByUsername));
   }
 
   function onRecipientRemoved(option: MultiselectOption) {
@@ -83,12 +81,10 @@ export default function CreateConversationForm({
     setHasSubmitted(true);
 
     if (!hasErrors && !isNoRecipientsSelected) {
-      const params: CreateConversationParams = {
+      const result = await createConversation.execute({
         title: inputs.title === "" ? undefined : inputs.title,
         recipientIds: recipients.map((recipient) => recipient.id),
-      };
-
-      const result = await createConversation.execute(params);
+      });
 
       if (result.error) {
         toast({

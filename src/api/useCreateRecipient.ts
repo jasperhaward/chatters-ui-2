@@ -1,4 +1,4 @@
-import { UserWithCreatedAt } from "@/types";
+import { Recipient } from "@/types";
 import { useAuthorizedFetch } from "./useAuthorizedFetch";
 import { useMutation } from "./useMutation";
 
@@ -13,7 +13,7 @@ export function useCreateRecipient() {
   return useMutation((params: CreateRecipientParams) => {
     const { conversationId, recipientId } = params;
 
-    return fetch<UserWithCreatedAt>(
+    return fetch<Recipient>(
       `/api/v1/conversations/${conversationId}/recipients`,
       { method: "POST", body: { recipientId } }
     );
