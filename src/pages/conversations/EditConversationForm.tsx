@@ -17,6 +17,7 @@ import {
 } from "@/components";
 import { Conversation, Recipient, User } from "@/types";
 import { useToasts } from "@/features/toasts";
+import { useSession } from "@/features/auth";
 
 import { titleValidation } from "./CreateConversationForm";
 import { sortUsersByUsername } from "./utils";
@@ -44,7 +45,13 @@ export default function EditConversationForm({
   ...props
 }: EditConversationFormProps) {
   const [toast] = useToasts();
-  const [recipients, setRecipients] = useState<User[]>(conversation.recipients);
+  const [session] = useSession();
+
+  const nonUserRecipients = conversation.recipients.filter(
+    (recipient) => recipient.id !== session.user.id
+  );
+
+  const [recipients, setRecipients] = useState<User[]>(nonUserRecipients);
   // prettier-ignore
   const {
     inputs,
@@ -96,11 +103,11 @@ export default function EditConversationForm({
         description: result.error.message,
       });
     } else {
-      const recipient = conversation.recipients.find(
+      const recipient = nonUserRecipients.find(
         (recipient) => recipient.id === option.id
       )!;
 
-      const updatedRecipients = conversation.recipients.filter(
+      const updatedRecipients = nonUserRecipients.filter(
         (recipient) => recipient.id !== option.id
       );
 
