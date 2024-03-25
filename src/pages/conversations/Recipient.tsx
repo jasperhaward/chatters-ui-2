@@ -3,12 +3,15 @@ import styles from "./Recipient.module.scss";
 
 import { Recipient as IRecipient } from "@/types";
 import { Icon } from "@/components";
+import { useSession } from "@/features/auth";
 
 export interface RecipientProps {
   recipient: IRecipient;
 }
 
 export default function Recipient({ recipient }: RecipientProps) {
+  const [session] = useSession();
+
   function formatCreatedAt(createdAt: string) {
     const date = new Date(createdAt);
 
@@ -29,7 +32,9 @@ export default function Recipient({ recipient }: RecipientProps) {
     <div className={styles.recipient}>
       <Icon className={styles.avatar} icon={["fas", "user"]} />
       <div>
-        <div>{recipient.username}</div>
+        <div>
+          {recipient.id === session.user.id ? "You" : recipient.username}
+        </div>
         <time className={styles.timestamp}>
           Added {formatCreatedAt(recipient.createdAt)}
         </time>

@@ -91,7 +91,7 @@ interface ApiErrorResponse {
 }
 
 function isApiErrorResponse(json: unknown): json is ApiErrorResponse {
-  if (
+  return (
     typeof json === "object" &&
     json !== null &&
     "statusCode" in json &&
@@ -102,9 +102,5 @@ function isApiErrorResponse(json: unknown): json is ApiErrorResponse {
     typeof json.error === "string" &&
     "message" in json &&
     typeof json.message === "string"
-  ) {
-    return true;
-  }
-
-  return false;
+  );
 }

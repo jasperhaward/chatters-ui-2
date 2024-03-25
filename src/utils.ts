@@ -1,3 +1,3 @@
-export function caseInsensitiveIncludes(string: string, search: string) {
-  return string.toUpperCase().includes(search.toUpperCase());
+export function caseInsensitiveIncludes(string: string, substring: string) {
+  return string.toUpperCase().includes(substring.toUpperCase());
 }

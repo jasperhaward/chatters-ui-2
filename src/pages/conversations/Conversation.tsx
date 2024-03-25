@@ -23,7 +23,7 @@ export default function Conversation({
   const ref = useScrollIntoView<HTMLButtonElement>(isSelected);
   const [session] = useSession();
 
-  const isGroupConversation = conversation.recipients.length > 1;
+  const isGroupConversation = conversation.recipients.length > 2;
   const isLatestMessageCreatedByUser =
     conversation.latestMessage?.createdBy.id === session.user.id;
 
@@ -55,7 +55,7 @@ export default function Conversation({
       />
       <div className={styles.details}>
         <HighlightedText className={styles.title} query={search}>
-          {buildConversationTitle(conversation)}
+          {buildConversationTitle(conversation, session.user.id)}
         </HighlightedText>
         {conversation.latestMessage ? (
           <div className={styles.message}>

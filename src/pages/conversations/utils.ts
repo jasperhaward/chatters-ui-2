@@ -1,9 +1,15 @@
 import { Conversation, User } from "@/types";
 
-export function buildConversationTitle(conversation: Conversation) {
+export function buildConversationTitle(
+  conversation: Conversation,
+  userId: string
+) {
   return (
     conversation.title ??
-    conversation.recipients.map((recipient) => recipient.username).join(", ")
+    conversation.recipients
+      .filter((recipient) => recipient.id !== userId)
+      .map((recipient) => recipient.username)
+      .join(", ")
   );
 }
 

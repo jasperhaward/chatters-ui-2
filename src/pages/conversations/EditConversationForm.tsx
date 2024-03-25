@@ -62,7 +62,7 @@ export default function EditConversationForm({
   const createRecipient = useCreateRecipient();
   const deleteRecipient = useDeleteRecipient();
 
-  const isGroupConversation = conversation.recipients.length > 1;
+  const isGroupConversation = conversation.recipients.length > 2;
 
   async function onRecipientAdded(option: MultiselectOption) {
     const result = await createRecipient.execute({

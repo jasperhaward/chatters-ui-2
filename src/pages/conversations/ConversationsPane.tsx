@@ -4,6 +4,7 @@ import styles from "./ConversationsPane.module.scss";
 import { UseQuery } from "@/api";
 import { Conversation as IConversation } from "@/types";
 import { caseInsensitiveIncludes } from "@/utils";
+import { useSession } from "@/features/auth";
 
 import Conversation from "./Conversation";
 import ConversationSkeleton from "./ConversationSkeleton";
@@ -22,6 +23,8 @@ export default function ConversationsPane({
   selectedConversation,
   onConversationClick,
 }: ConversationsPaneProps) {
+  const [session] = useSession();
+
   const filteredConversations = useMemo(() => {
     if (!conversations.data) {
       return null;
@@ -42,9 +45,9 @@ export default function ConversationsPane({
       return true;
     }
 
-    return conversation.recipients.some((recipient) => {
-      return caseInsensitiveIncludes(recipient.username, search);
-    });
+    return conversation.recipients
+      .filter((recipient) => recipient.id !== session.user.id)
+      .some((recipient) => caseInsensitiveIncludes(recipient.username, search));
   }
 
   return (

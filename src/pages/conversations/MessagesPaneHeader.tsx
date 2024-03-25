@@ -43,7 +43,9 @@ export default function MessagesPaneHeader({
       {selectedConversation ? (
         <>
           <div className={styles.title}>
-            <h2>{buildConversationTitle(selectedConversation)}</h2>
+            <h2>
+              {buildConversationTitle(selectedConversation, session.user.id)}
+            </h2>
             <div className={styles.menu}>
               <PopoverContainer>
                 <Icon
