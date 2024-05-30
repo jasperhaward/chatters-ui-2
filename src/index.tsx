@@ -10,6 +10,7 @@ import {
   faXmark,
   faPenToSquare,
   faUserGroup,
+  faRightFromBracket,
 } from "@fortawesome/free-solid-svg-icons";
 import "./index.scss";
 import App from "./App";
@@ -28,6 +29,7 @@ library.add({
   faXmark,
   faPenToSquare,
   faUserGroup,
+  faRightFromBracket,
 });
 
 render(<App />, document.body);

@@ -3,21 +3,27 @@ import styles from "./MessagesPaneHeader.module.scss";
 
 import { Conversation as IConversation } from "@/types";
 import { Icon, IconButton, Popover, PopoverContainer } from "@/components";
+import { useDeleteRecipient } from "@/api";
 import { useSession } from "@/features/auth";
+import { useToasts } from "@/features/toasts";
 
 import { buildConversationTitle } from "./utils";
 import Recipient from "./Recipient";
 
 export interface MessagesPaneHeaderProps {
   selectedConversation: IConversation | undefined;
+  onLeaveSelectedConversation: () => void;
   onEditConversationClick: () => void;
 }
 
 export default function MessagesPaneHeader({
   selectedConversation,
+  onLeaveSelectedConversation,
   onEditConversationClick,
 }: MessagesPaneHeaderProps) {
   const [session] = useSession();
+  const [toast] = useToasts();
+  const deleteRecipient = useDeleteRecipient();
 
   const isConversationCreatedByUser =
     selectedConversation?.createdBy.id === session.user.id;
@@ -35,6 +41,22 @@ export default function MessagesPaneHeader({
       return `in ${format(date, "MMMM")}`;
     } else {
       return "last year";
+    }
+  }
+
+  async function onLeaveConversationClick() {
+    const result = await deleteRecipient.execute({
+      conversationId: selectedConversation!.id,
+      recipientId: session.user.id,
+    });
+
+    if (result.error) {
+      toast({
+        title: "Failed to leave conversation, please try again.",
+        description: result.error.message,
+      });
+    } else {
+      onLeaveSelectedConversation();
     }
   }
 
@@ -66,6 +88,13 @@ export default function MessagesPaneHeader({
                 icon={["fas", "pen-to-square"]}
                 onClick={onEditConversationClick}
               />
+              {selectedConversation.recipients.length > 3 && (
+                <IconButton
+                  className={styles.leaveConversation}
+                  icon={["fas", "right-from-bracket"]}
+                  onClick={onLeaveConversationClick}
+                />
+              )}
             </div>
           </div>
           <p className={styles.description}>

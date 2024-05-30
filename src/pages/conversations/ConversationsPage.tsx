@@ -195,6 +195,14 @@ export default function ConversationsPage({ params }: ChatProps) {
     });
   }
 
+  function onLeaveSelectedConversation() {
+    conversations.setData((conversations) => {
+      return conversations.filter((conversation) => {
+        return conversation.id !== selectedConversation!.id;
+      });
+    });
+  }
+
   function onMessageCreated(message: Message) {
     if (message.conversationId === selectedConversation?.id) {
       messages.setData((messages) => [message, ...messages]);
@@ -318,6 +326,7 @@ export default function ConversationsPage({ params }: ChatProps) {
         <span className={styles.messagesPanel}>
           <MessagesPaneHeader
             selectedConversation={selectedConversation}
+            onLeaveSelectedConversation={onLeaveSelectedConversation}
             onEditConversationClick={onEditConversationClick}
           />
           <MessagesPane
