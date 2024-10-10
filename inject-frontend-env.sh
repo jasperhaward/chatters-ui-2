@@ -1,6 +1,11 @@
 #!/bin/bash
 
-config="/app/assets/config-*.js"
+config=($(find assets -name 'config-*.js' -type f))
+
+if [ -z "${config}" ]; then
+    echo "JavaScript config bundle not found"
+    exit 1
+fi
 
 # 1st grep - extract placeholders of the format "${VARIABLE_1}" ... "${VARIABLE_2}" from JavaScript config bundle
 # 2nd grep - extract variable names from placeholders eg: VARIABLE_1, VARIABLE_2
