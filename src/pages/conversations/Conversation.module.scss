@@ -58,7 +58,6 @@
   .timestamp {
     color: var(--grey);
     font-size: var(--font-size-xs);
-    // needed to keep conversation details width consistent
-    min-width: 45px;
+    white-space: nowrap;
   }
 }
