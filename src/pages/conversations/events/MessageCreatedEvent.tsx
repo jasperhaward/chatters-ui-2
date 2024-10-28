@@ -1,18 +1,18 @@
 import { format } from "date-fns";
-import styles from "./Message.module.scss";
+import styles from "./MessageCreatedEvent.module.scss";
 
-import { Message as IMessage } from "@/types";
+import { MessageCreatedEvent as IMessageCreatedEventa } from "@/types";
 import { Icon } from "@/components";
 
 export interface MessageProps {
-  message: IMessage;
+  event: IMessageCreatedEventa;
   isCreatedByUser: boolean;
   isDisplayAuthor: boolean;
   isDisplayTimestamp: boolean;
 }
 
-export default function Message({
-  message,
+export default function MessageCreatedEvent({
+  event,
   isCreatedByUser,
   isDisplayAuthor,
   isDisplayTimestamp,
@@ -24,17 +24,17 @@ export default function Message({
       }`}
     >
       {isDisplayAuthor && (
-        <div className={styles.author}>{message.createdBy.username}</div>
+        <div className={styles.author}>{event.createdBy.username}</div>
       )}
       <div className={styles.message}>
         <div className={styles.avatar}>
           {isDisplayAuthor && <Icon icon={["fas", "user"]} />}
         </div>
-        <div className={styles.content}>{message.content}</div>
+        <div className={styles.content}>{event.message}</div>
       </div>
       {isDisplayTimestamp && (
         <time className={styles.timestamp}>
-          {format(new Date(message.createdAt), "HH:mm")}
+          {format(new Date(event.createdAt), "HH:mm")}
         </time>
       )}
     </div>

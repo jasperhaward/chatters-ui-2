@@ -3,9 +3,9 @@ import styles from "./EditConversationForm.module.scss";
 
 import {
   UseQuery,
-  useUpdateConversation,
+  useUpdateTitle,
   useCreateRecipient,
-  useDeleteRecipient,
+  useRemoveRecipient,
 } from "@/api";
 import { ValidationRules, useForm } from "@/hooks";
 import {
@@ -33,16 +33,11 @@ const validation: ValidationRules<EditConversationInputs> = {
 export interface EditConversationFormProps {
   conversation: Conversation;
   contacts: UseQuery<User[]>;
-  onConversationUpdated: (conversation: Conversation) => void;
-  onRecipientAdded: (recipient: Recipient) => void;
-  onRecipientRemoved: (recipient: Recipient) => void;
 }
 
 export default function EditConversationForm({
   conversation,
   contacts,
-  onConversationUpdated,
-  ...props
 }: EditConversationFormProps) {
   const [toast] = useToasts();
   const [session] = useSession();
@@ -65,15 +60,13 @@ export default function EditConversationForm({
     validation
   );
 
-  const updateConversation = useUpdateConversation();
+  const updateTitle = useUpdateTitle();
   const createRecipient = useCreateRecipient();
-  const deleteRecipient = useDeleteRecipient();
-
-  const isGroupConversation = conversation.recipients.length > 2;
+  const removeRecipient = useRemoveRecipient();
 
   async function onRecipientAdded(option: MultiselectOption) {
     const result = await createRecipient.execute({
-      conversationId: conversation.id,
+      conversationId: conversation.conversationId,
       recipientId: option.id,
     });
 
@@ -83,17 +76,21 @@ export default function EditConversationForm({
         description: result.error.message,
       });
     } else {
-      const recipient = result.data;
-      const updatedRecipients = [...recipients, recipient];
+      const addedRecipient = contacts.data!.find(
+        (contact) => contact.id === option.id
+      )!;
 
-      setRecipients(updatedRecipients.sort(sortUsersByUsername));
-      props.onRecipientAdded(recipient);
+      const updatedRecipients = [...recipients, addedRecipient].sort(
+        sortUsersByUsername
+      );
+
+      setRecipients(updatedRecipients);
     }
   }
 
   async function onRecipientRemoved(option: MultiselectOption) {
-    const result = await deleteRecipient.execute({
-      conversationId: conversation.id,
+    const result = await removeRecipient.execute({
+      conversationId: conversation.conversationId,
       recipientId: option.id,
     });
 
@@ -103,16 +100,11 @@ export default function EditConversationForm({
         description: result.error.message,
       });
     } else {
-      const recipient = nonUserRecipients.find(
-        (recipient) => recipient.id === option.id
-      )!;
-
       const updatedRecipients = nonUserRecipients.filter(
         (recipient) => recipient.id !== option.id
       );
 
       setRecipients(updatedRecipients);
-      props.onRecipientRemoved(recipient);
     }
   }
 
@@ -120,8 +112,8 @@ export default function EditConversationForm({
     setHasSubmitted(true);
 
     if (!hasErrors) {
-      const result = await updateConversation.execute({
-        conversationId: conversation.id,
+      const result = await updateTitle.execute({
+        conversationId: conversation.conversationId,
         title: inputs.title === "" ? null : inputs.title,
       });
 
@@ -130,13 +122,6 @@ export default function EditConversationForm({
           title: "Failed to update title, please try again.",
           description: result.error.message,
         });
-      } else {
-        const updatedConversation: Conversation = {
-          ...conversation,
-          ...result.data,
-        };
-
-        onConversationUpdated(updatedConversation);
       }
     }
   }
@@ -153,53 +138,48 @@ export default function EditConversationForm({
     return {
       ...toMultiselectOption(user),
       // disallow removing a recipient when the conversation contains only 2 recipients
-      // as users should not be able to create a direct conversation from a group conversation
-      disabled: recipients.length === 2,
+      disabled: recipients.length === 1,
     };
   }
 
   return (
     <>
-      {isGroupConversation && (
-        <>
-          <label>Recipients</label>
-          <Multiselect
-            placeholder="Enter a username..."
-            disabled={
-              contacts.isLoading ||
-              !!contacts.error ||
-              createRecipient.isLoading ||
-              deleteRecipient.isLoading
-            }
-            description={
-              contacts.error ? (
-                <ErrorMessage>
-                  Failed to load contacts, please refresh the page.
-                </ErrorMessage>
-              ) : (
-                <p>Chose from your contacts</p>
-              )
-            }
-            value={recipients.map(toMultiselectValue)}
-            options={contacts.data?.map(toMultiselectOption) || []}
-            onAdd={onRecipientAdded}
-            onRemove={onRecipientRemoved}
-          />
-        </>
-      )}
+      <label>Recipients</label>
+      <Multiselect
+        placeholder="Enter a username..."
+        disabled={
+          contacts.isLoading ||
+          !!contacts.error ||
+          createRecipient.isLoading ||
+          removeRecipient.isLoading
+        }
+        description={
+          contacts.error ? (
+            <ErrorMessage>
+              Failed to load contacts, please refresh the page.
+            </ErrorMessage>
+          ) : (
+            <p>Chose from your contacts</p>
+          )
+        }
+        value={recipients.map(toMultiselectValue)}
+        options={contacts.data?.map(toMultiselectOption) || []}
+        onAdd={onRecipientAdded}
+        onRemove={onRecipientRemoved}
+      />
       <label>Title (optional)</label>
       <div className={styles.title}>
         <Input
           name="title"
           autoComplete="off"
-          disabled={updateConversation.isLoading}
+          disabled={updateTitle.isLoading}
           value={inputs.title}
           onInput={onInput}
         />
         <Button
           color="foreground"
-          disabled={updateConversation.isLoading}
-          spinner={updateConversation.isLoading}
+          disabled={updateTitle.isLoading}
+          spinner={updateTitle.isLoading}
           onClick={onUpdateTitleClick}
         >
           Save

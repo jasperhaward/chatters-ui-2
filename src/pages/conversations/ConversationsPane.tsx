@@ -69,7 +69,7 @@ export default function ConversationsPane({
       ) : filteredConversations && filteredConversations.length > 0 ? (
         filteredConversations.map((conversation) => (
           <Conversation
-            key={conversation.id}
+            key={conversation.conversationId}
             isSelected={conversation === selectedConversation}
             search={search}
             conversation={conversation}

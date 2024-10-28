@@ -36,7 +36,7 @@
       text-overflow: ellipsis;
     }
 
-    .message {
+    .event {
       color: var(--grey-light);
       font-size: var(--font-size-xs);
       overflow: hidden;
@@ -47,11 +47,6 @@
         color: var(--grey);
         margin-right: var(--padding-xs);
       }
-    }
-
-    .created {
-      color: var(--grey);
-      font-size: var(--font-size-xs);
     }
   }
 

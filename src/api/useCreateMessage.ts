@@ -1,4 +1,4 @@
-import { Message } from "@/types";
+import { MessageCreatedEvent } from "@/types";
 import { useAuthorizedFetch } from "./useAuthorizedFetch";
 import { useMutation } from "./useMutation";
 
@@ -13,9 +13,9 @@ export function useCreateMessage() {
   return useMutation((params: CreateMessageParams) => {
     const { conversationId, content } = params;
 
-    return fetch<Message>(`/api/v1/conversations/${conversationId}/messages`, {
-      method: "POST",
-      body: { content },
-    });
+    return fetch<MessageCreatedEvent>(
+      `/api/v1/conversations/${conversationId}/messages`,
+      { method: "POST", body: { content } }
+    );
   });
 }

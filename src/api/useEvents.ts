@@ -1,17 +1,16 @@
-import { Message } from "@/types";
+import { ConversationEvent } from "@/types";
 import { useAuthorizedFetch } from "./useAuthorizedFetch";
 import { useQuery } from "./useQuery";
 
-export function useMessages(conversationId: string | null) {
+export function useEvents(conversationId: string | null) {
   const fetch = useAuthorizedFetch();
 
   return useQuery(
-    () => {
-      return fetch<Message[]>(
-        `/api/v1/conversations/${conversationId!}/messages`,
+    () =>
+      fetch<ConversationEvent[]>(
+        `/api/v1/conversations/${conversationId!}/events`,
         { method: "GET" }
-      );
-    },
+      ),
     [conversationId],
     { enabled: conversationId !== null }
   );

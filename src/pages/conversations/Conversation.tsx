@@ -1,7 +1,11 @@
 import { format, isToday, isYesterday, isThisWeek, isThisYear } from "date-fns";
 import styles from "./Conversation.module.scss";
 
-import { Conversation as IConversation } from "@/types";
+import {
+  ConversationEvent,
+  ConversationEventType,
+  Conversation as IConversation,
+} from "@/types";
 import { useScrollIntoView } from "@/hooks";
 import { Icon, HighlightedText } from "@/components";
 import { useSession } from "@/features/auth";
@@ -24,11 +28,11 @@ export default function Conversation({
   const [session] = useSession();
 
   const isGroupConversation = conversation.recipients.length > 2;
-  const isLatestMessageCreatedByUser =
-    conversation.latestMessage?.createdBy.id === session.user.id;
+  const isLatestEventCreatedByUser =
+    conversation.latestEvent.createdBy.id === session.user.id;
 
-  function formatTimestamp(timestamp: string) {
-    const date = new Date(timestamp);
+  function formatLatestEventCreatedAt(event: ConversationEvent) {
+    const date = new Date(event.createdAt);
 
     if (isToday(date)) {
       return format(date, "HH:mm");
@@ -40,6 +44,19 @@ export default function Conversation({
       return format(date, "d LLL");
     } else {
       return format(date, "LLL yyyy");
+    }
+  }
+
+  function formatLatestEventContent(event: ConversationEvent) {
+    switch (event.type) {
+      case ConversationEventType.TitleUpdated:
+        return `Changed the title to '${event.title}'`;
+      case ConversationEventType.MessageCreated:
+        return event.message;
+      case ConversationEventType.RecipientCreated:
+        return `Added ${event.recipient.username}`;
+      case ConversationEventType.RecipientRemoved:
+        return `Removed ${event.recipient.username}`;
     }
   }
 
@@ -57,25 +74,19 @@ export default function Conversation({
         <HighlightedText className={styles.title} query={search}>
           {buildConversationTitle(conversation, session.user.id)}
         </HighlightedText>
-        {conversation.latestMessage ? (
-          <div className={styles.message}>
-            {(isLatestMessageCreatedByUser || isGroupConversation) && (
-              <span>
-                {isLatestMessageCreatedByUser
-                  ? "You:"
-                  : `${conversation.latestMessage.createdBy.username}:`}
-              </span>
-            )}
-            {conversation.latestMessage.content}
-          </div>
-        ) : (
-          <div className={styles.created}>Conversation created</div>
-        )}
+        <div className={styles.event}>
+          {(isLatestEventCreatedByUser || isGroupConversation) && (
+            <span>
+              {isLatestEventCreatedByUser
+                ? "You:"
+                : `${conversation.latestEvent.createdBy.username}:`}
+            </span>
+          )}
+          {formatLatestEventContent(conversation.latestEvent)}
+        </div>
       </div>
       <time className={styles.timestamp}>
-        {formatTimestamp(
-          conversation.latestMessage?.createdAt || conversation.createdAt
-        )}
+        {formatLatestEventCreatedAt(conversation.latestEvent)}
       </time>
     </button>
   );

@@ -8,27 +8,67 @@ export interface UserWithCreatedAt extends User {
 }
 
 export interface Recipient extends UserWithCreatedAt {
-  conversationId: string;
-}
-
-export interface Message {
-  id: string;
-  conversationId: string;
-  content: string;
-  createdAt: string;
   createdBy: User;
 }
 
 export interface Conversation {
-  id: string;
+  conversationId: string;
   createdAt: string;
   createdBy: User;
   title: string | null;
   recipients: Recipient[];
-  latestMessage: Message | null;
+  latestEvent: ConversationEvent;
 }
 
-export type ConversationWithoutRecipientsLatestMessage = Omit<
-  Conversation,
-  "recipients" | "latestMessage"
->;
+export enum ConversationEventType {
+  ConversationCreated = "ConversationCreated",
+  TitleUpdated = "TitleUpdated",
+  MessageCreated = "MessageCreated",
+  RecipientCreated = "RecipientCreated",
+  RecipientRemoved = "RecipientRemoved",
+  AddedToConversation = "AddedToConversation",
+}
+
+export interface ConversationEventCommon {
+  id: number;
+  conversationId: string;
+  type: ConversationEventType;
+  createdAt: string;
+  createdBy: User;
+}
+
+export interface ConversationCreatedEvent extends ConversationEventCommon {
+  type: ConversationEventType.ConversationCreated;
+}
+
+export interface TitleUpdatedEvent extends ConversationEventCommon {
+  type: ConversationEventType.TitleUpdated;
+  title: string | null;
+}
+
+export interface MessageCreatedEvent extends ConversationEventCommon {
+  type: ConversationEventType.MessageCreated;
+  message: string;
+}
+
+export interface RecipientCreatedEvent extends ConversationEventCommon {
+  type: ConversationEventType.RecipientCreated;
+  recipient: User;
+}
+
+export interface RecipientRemovedEvent extends ConversationEventCommon {
+  type: ConversationEventType.RecipientRemoved;
+  recipient: User;
+}
+
+export interface AddedToConversationEvent extends Conversation {
+  type: ConversationEventType.AddedToConversation;
+}
+
+export type ConversationEvent =
+  | ConversationCreatedEvent
+  | TitleUpdatedEvent
+  | MessageCreatedEvent
+  | RecipientCreatedEvent
+  | RecipientRemovedEvent
+  | AddedToConversationEvent;

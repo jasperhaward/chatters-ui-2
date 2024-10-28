@@ -1,18 +1,19 @@
+import { RecipientRemovedEvent } from "@/types";
 import { useAuthorizedFetch } from "./useAuthorizedFetch";
 import { useMutation } from "./useMutation";
 
-export interface DeleteRecipientParams {
+export interface RemoveRecipientParams {
   conversationId: string;
   recipientId: string;
 }
 
-export function useDeleteRecipient() {
+export function useRemoveRecipient() {
   const fetch = useAuthorizedFetch();
 
-  return useMutation((params: DeleteRecipientParams) => {
+  return useMutation((params: RemoveRecipientParams) => {
     const { conversationId, recipientId } = params;
 
-    return fetch<never>(
+    return fetch<RecipientRemovedEvent>(
       `/api/v1/conversations/${conversationId}/recipients/${recipientId}`,
       { method: "DELETE" }
     );

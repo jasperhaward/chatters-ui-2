@@ -36,7 +36,7 @@ const validation: ValidationRules<CreateConversationInputs> = {
 
 export interface CreateConversationFormProps {
   contacts: UseQuery<User[]>;
-  onConversationCreated: (conversation: Conversation) => void;
+  onConversationCreated: () => void;
 }
 
 export default function CreateConversationForm({
@@ -92,7 +92,7 @@ export default function CreateConversationForm({
           description: formatConversationCreationError(result.error),
         });
       } else {
-        onConversationCreated(result.data);
+        onConversationCreated();
       }
     }
   }

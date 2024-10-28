@@ -1,29 +1,29 @@
 import { format, isToday, isYesterday, isThisWeek, isThisYear } from "date-fns";
-import styles from "./MessagesPaneHeader.module.scss";
+import styles from "./ConversationHeader.module.scss";
 
 import { Conversation as IConversation } from "@/types";
 import { Icon, IconButton, Popover, PopoverContainer } from "@/components";
-import { useDeleteRecipient } from "@/api";
+import { useRemoveRecipient } from "@/api";
 import { useSession } from "@/features/auth";
 import { useToasts } from "@/features/toasts";
 
 import { buildConversationTitle } from "./utils";
 import Recipient from "./Recipient";
 
-export interface MessagesPaneHeaderProps {
+export interface ConversationHeaderProps {
   selectedConversation: IConversation | undefined;
   onLeaveSelectedConversation: () => void;
   onEditConversationClick: () => void;
 }
 
-export default function MessagesPaneHeader({
+export default function ConversationHeader({
   selectedConversation,
   onLeaveSelectedConversation,
   onEditConversationClick,
-}: MessagesPaneHeaderProps) {
+}: ConversationHeaderProps) {
   const [session] = useSession();
   const [toast] = useToasts();
-  const deleteRecipient = useDeleteRecipient();
+  const deleteRecipient = useRemoveRecipient();
 
   const isConversationCreatedByUser =
     selectedConversation?.createdBy.id === session.user.id;
@@ -46,7 +46,7 @@ export default function MessagesPaneHeader({
 
   async function onLeaveConversationClick() {
     const result = await deleteRecipient.execute({
-      conversationId: selectedConversation!.id,
+      conversationId: selectedConversation!.conversationId,
       recipientId: session.user.id,
     });
 
@@ -88,7 +88,7 @@ export default function MessagesPaneHeader({
                 icon={["fas", "pen-to-square"]}
                 onClick={onEditConversationClick}
               />
-              {selectedConversation.recipients.length > 3 && (
+              {selectedConversation.recipients.length > 2 && (
                 <IconButton
                   className={styles.leaveConversation}
                   icon={["fas", "right-from-bracket"]}

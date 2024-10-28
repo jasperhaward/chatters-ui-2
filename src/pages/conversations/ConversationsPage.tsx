@@ -5,35 +5,36 @@ import styles from "./ConversationsPage.module.scss";
 import { paths } from "@/App";
 import {
   useConversations,
-  useMessages,
+  useEvents,
   useLogout,
   useCreateMessage,
-  ServerEvent,
-  useServerEvents,
+  useConversationEventUpdates,
   useContacts,
+  ErrorEvent,
 } from "@/api";
 import {
+  AddedToConversationEvent,
   Conversation,
-  ConversationWithoutRecipientsLatestMessage,
-  Message,
+  ConversationEvent,
+  MessageCreatedEvent,
   Recipient,
+  RecipientCreatedEvent,
+  RecipientRemovedEvent,
+  TitleUpdatedEvent,
 } from "@/types";
 import { useInputs } from "@/hooks";
 import { FixedElement, Button, Card, Modal } from "@/components";
 import { useSession } from "@/features/auth";
 import { useToasts } from "@/features/toasts";
 
-import {
-  sortConversationsByLatestMessageOrCreatedAt,
-  sortUsersByUsername,
-} from "./utils";
+import { sortConversationsByLatestEvent, sortUsersByUsername } from "./utils";
 import ConversationsPane from "./ConversationsPane";
 import SearchBox from "./SearchBox";
 import MessageBox from "./MessageBox";
-import MessagesPane from "./MessagesPane";
+import EventsPane from "./EventsPane";
 import CreateConversationForm from "./CreateConversationForm";
 import EditConversationForm from "./EditConversationForm";
-import MessagesPaneHeader from "./MessagesPaneHeader";
+import ConversationHeader from "./ConversationHeader";
 
 type Modal = "CreateConversation" | "EditConversation";
 
@@ -58,7 +59,10 @@ export default function ConversationsPage({ params }: ChatProps) {
   const conversations = useConversations();
   const contacts = useContacts();
   const createMessage = useCreateMessage();
-  const disconnectServerEvents = useServerEvents(onServerEvent);
+  const disconnectServerEvents = useConversationEventUpdates({
+    onEvent: onConversationEvent,
+    onError: onConversationError,
+  });
 
   const selectedConversation = useMemo(() => {
     if (!conversations.data || !params.conversationId) {
@@ -66,11 +70,11 @@ export default function ConversationsPage({ params }: ChatProps) {
     }
 
     return conversations.data.find((conversation) => {
-      return conversation.id === params.conversationId;
+      return conversation.conversationId === params.conversationId;
     });
   }, [conversations.data, params.conversationId]);
 
-  const messages = useMessages(selectedConversation?.id || null);
+  const events = useEvents(selectedConversation?.conversationId || null);
 
   useEffect(() => {
     if (
@@ -78,7 +82,9 @@ export default function ConversationsPage({ params }: ChatProps) {
       conversations.data.length > 0 &&
       !selectedConversation
     ) {
-      setLocation(`${paths.conversations}/${conversations.data[0]!.id}`);
+      const firstConversation = conversations.data[0]!;
+
+      setLocation(`${paths.conversations}/${firstConversation.conversationId}`);
     }
   }, [conversations.data, selectedConversation]);
 
@@ -90,31 +96,142 @@ export default function ConversationsPage({ params }: ChatProps) {
     };
   }, []);
 
-  function onServerEvent(event: ServerEvent) {
+  function onConversationEvent(event: ConversationEvent) {
     switch (event.type) {
-      case "conversation/created":
-        onConversationCreated(event.payload);
+      case "AddedToConversation":
+        onAddedToConversation(event);
         break;
-      case "conversation/updated":
-        onConversationUpdated(event.payload);
+      case "TitleUpdated":
+        onTitleUpdated(event);
         break;
-      case "message/created":
-        onMessageCreated(event.payload);
+      case "MessageCreated":
+        onMessageCreated(event);
         break;
-      case "recipient/added":
-        onRecipientAdded(event.payload);
+      case "RecipientCreated":
+        onRecipientCreated(event);
         break;
-      case "recipient/removed":
-        onRecipientRemoved(event.payload);
-        break;
-      case "error":
-        toast({
-          permanent: true,
-          title: "Failed to subscribe to updates, please refresh the page.",
-          description: event.payload.message,
-        });
+      case "RecipientRemoved":
+        onRecipientRemoved(event);
         break;
     }
+  }
+
+  function onAddedToConversation(event: AddedToConversationEvent) {
+    // if the conversation was created by the current user, select the conversation
+    if (event.createdBy.id === session.user.id) {
+      setLocation(`${paths.conversations}/${event.conversationId}`);
+    }
+
+    conversations.setData((conversations) => [event, ...conversations]);
+  }
+
+  function onTitleUpdated(event: TitleUpdatedEvent) {
+    if (event.conversationId === selectedConversation?.conversationId) {
+      events.setData((events) => [event, ...events]);
+    }
+
+    conversations.setData((conversations) => {
+      return conversations
+        .map((conversation) => {
+          if (conversation.conversationId === event.conversationId) {
+            return {
+              ...conversation,
+              title: event.title,
+              latestEvent: event,
+            };
+          }
+
+          return conversation;
+        })
+        .sort(sortConversationsByLatestEvent);
+    });
+  }
+
+  function onMessageCreated(event: MessageCreatedEvent) {
+    if (event.conversationId === selectedConversation?.conversationId) {
+      events.setData((events) => [event, ...events]);
+    }
+
+    conversations.setData((conversations) => {
+      return conversations
+        .map((conversation) => {
+          if (conversation.conversationId === event.conversationId) {
+            return { ...conversation, latestEvent: event };
+          }
+
+          return conversation;
+        })
+        .sort(sortConversationsByLatestEvent);
+    });
+  }
+
+  function onRecipientCreated(event: RecipientCreatedEvent) {
+    if (event.conversationId === selectedConversation?.conversationId) {
+      events.setData((events) => [event, ...events]);
+    }
+
+    conversations.setData((conversations) => {
+      return conversations
+        .map((conversation) => {
+          if (conversation.conversationId === event.conversationId) {
+            const recipient: Recipient = {
+              ...event.recipient,
+              createdAt: event.createdAt,
+              createdBy: event.createdBy,
+            };
+
+            const updatedRecipients = [...conversation.recipients, recipient];
+
+            return {
+              ...conversation,
+              recipients: updatedRecipients.sort(sortUsersByUsername),
+              latestEvent: event,
+            };
+          }
+
+          return conversation;
+        })
+        .sort(sortConversationsByLatestEvent);
+    });
+  }
+
+  function onRecipientRemoved(event: RecipientRemovedEvent) {
+    if (event.conversationId === selectedConversation?.conversationId) {
+      events.setData((events) => [event, ...events]);
+    }
+
+    conversations.setData((conversations) => {
+      // if the current user is the recipient being removed, remove the conversation
+      if (event.recipient.id === session.user.id) {
+        return conversations.filter((conversation) => {
+          return conversation.conversationId !== event.conversationId;
+        });
+      }
+
+      return conversations
+        .map((conversation) => {
+          if (conversation.conversationId === event.conversationId) {
+            return {
+              ...conversation,
+              recipients: conversation.recipients.filter((recipient) => {
+                return recipient.id !== event.recipient.id;
+              }),
+              latestEvent: event,
+            };
+          }
+
+          return conversation;
+        })
+        .sort(sortConversationsByLatestEvent);
+    });
+  }
+
+  function onConversationError(event: ErrorEvent) {
+    toast({
+      permanent: true,
+      title: "Failed to subscribe to updates, please refresh the page.",
+      description: event.message,
+    });
   }
 
   async function onLogoutClick() {
@@ -139,12 +256,12 @@ export default function ConversationsPage({ params }: ChatProps) {
       setInputs({ search: "" });
     }
 
-    setLocation(`${paths.conversations}/${conversation.id}`);
+    setLocation(`${paths.conversations}/${conversation.conversationId}`);
   }
 
-  async function onMessageSubmit() {
+  async function onMessageCreationSubmit() {
     const result = await createMessage.execute({
-      conversationId: selectedConversation!.id,
+      conversationId: selectedConversation!.conversationId,
       content: inputs.message.trim(),
     });
 
@@ -154,7 +271,6 @@ export default function ConversationsPage({ params }: ChatProps) {
         description: result.error.message,
       });
     } else {
-      onMessageCreated(result.data);
       setInputs({ message: "" });
     }
   }
@@ -171,93 +287,12 @@ export default function ConversationsPage({ params }: ChatProps) {
     setActiveModal(null);
   }
 
-  function onConversationCreated(conversation: Conversation) {
-    conversations.setData((conversations) => [conversation, ...conversations]);
-  }
-
-  function onConversationCreatedSubmit(conversation: Conversation) {
-    onConversationCreated(conversation);
-    setActiveModal(null);
-    setLocation(`${paths.conversations}/${conversation.id}`);
-  }
-
-  function onConversationUpdated(
-    updatedConversation: ConversationWithoutRecipientsLatestMessage
-  ) {
-    conversations.setData((conversations) => {
-      return conversations.map((conversation) => {
-        if (conversation.id === updatedConversation.id) {
-          return { ...conversation, ...updatedConversation };
-        }
-
-        return conversation;
-      });
-    });
-  }
-
   function onLeaveSelectedConversation() {
     conversations.setData((conversations) => {
       return conversations.filter((conversation) => {
-        return conversation.id !== selectedConversation!.id;
-      });
-    });
-  }
-
-  function onMessageCreated(message: Message) {
-    if (message.conversationId === selectedConversation?.id) {
-      messages.setData((messages) => [message, ...messages]);
-    }
-
-    conversations.setData((conversations) => {
-      return conversations
-        .map((conversation) => {
-          if (conversation.id === message.conversationId) {
-            return { ...conversation, latestMessage: message };
-          }
-
-          return conversation;
-        })
-        .sort(sortConversationsByLatestMessageOrCreatedAt);
-    });
-  }
-
-  function onRecipientAdded(recipient: Recipient) {
-    conversations.setData((conversations) => {
-      return conversations.map((conversation) => {
-        if (conversation.id === recipient.conversationId) {
-          const updatedRecipients = [...conversation.recipients, recipient];
-
-          return {
-            ...conversation,
-            recipients: updatedRecipients.sort(sortUsersByUsername),
-          };
-        }
-
-        return conversation;
-      });
-    });
-  }
-
-  function onRecipientRemoved(removedRecipient: Recipient) {
-    conversations.setData((conversations) => {
-      // if the current user is the recipient being removed, remove the conversation
-      if (removedRecipient.id === session.user.id) {
-        return conversations.filter((conversation) => {
-          return conversation.id !== removedRecipient.conversationId;
-        });
-      }
-
-      return conversations.map((conversation) => {
-        if (conversation.id === removedRecipient.conversationId) {
-          return {
-            ...conversation,
-            recipients: conversation.recipients.filter((recipient) => {
-              return recipient.id !== removedRecipient.id;
-            }),
-          };
-        }
-
-        return conversation;
+        return (
+          conversation.conversationId !== selectedConversation!.conversationId
+        );
       });
     });
   }
@@ -270,7 +305,7 @@ export default function ConversationsPage({ params }: ChatProps) {
           body: (
             <CreateConversationForm
               contacts={contacts}
-              onConversationCreated={onConversationCreatedSubmit}
+              onConversationCreated={onModalClose}
             />
           ),
         };
@@ -281,21 +316,11 @@ export default function ConversationsPage({ params }: ChatProps) {
             <EditConversationForm
               conversation={selectedConversation!}
               contacts={contacts}
-              onConversationUpdated={onConversationUpdated}
-              onRecipientAdded={onRecipientAdded}
-              onRecipientRemoved={onRecipientRemoved}
             />
           ),
         };
     }
-  }, [
-    contacts,
-    selectedConversation,
-    onConversationCreatedSubmit,
-    onConversationUpdated,
-    onRecipientAdded,
-    onRecipientRemoved,
-  ]);
+  }, [activeModal, contacts, selectedConversation]);
 
   return (
     <div className={styles.conversations}>
@@ -324,26 +349,23 @@ export default function ConversationsPage({ params }: ChatProps) {
           </Button>
         </span>
         <span className={styles.messagesPanel}>
-          <MessagesPaneHeader
+          <ConversationHeader
             selectedConversation={selectedConversation}
             onLeaveSelectedConversation={onLeaveSelectedConversation}
             onEditConversationClick={onEditConversationClick}
           />
-          <MessagesPane
-            messages={messages}
-            selectedConversation={selectedConversation}
-          />
+          <EventsPane events={events} />
           <MessageBox
             isLoading={createMessage.isLoading}
             name="message"
             disabled={
               conversations.isLoading ||
               !!conversations.error ||
-              messages.isLoading
+              events.isLoading
             }
             value={inputs.message}
             onInput={onInput}
-            onSubmit={onMessageSubmit}
+            onSubmit={onMessageCreationSubmit}
           />
         </span>
       </Card>

@@ -13,18 +13,18 @@ export function buildConversationTitle(
   );
 }
 
-export function sortConversationsByLatestMessageOrCreatedAt(
+export function sortConversationsByLatestEvent(
   a: Conversation,
   b: Conversation
 ) {
-  const aTimestamp = new Date(a.latestMessage?.createdAt || a.createdAt);
-  const bTimestamp = new Date(b.latestMessage?.createdAt || b.createdAt);
+  const aCreatedAt = new Date(a.latestEvent.createdAt);
+  const bCreatedAt = new Date(b.latestEvent.createdAt);
 
-  if (aTimestamp.getTime() === bTimestamp.getTime()) {
+  if (aCreatedAt.getTime() === bCreatedAt.getTime()) {
     return 0;
   }
 
-  return aTimestamp < bTimestamp ? 1 : -1;
+  return aCreatedAt < bCreatedAt ? 1 : -1;
 }
 
 export function sortUsersByUsername(a: User, b: User) {
