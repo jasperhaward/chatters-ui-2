@@ -11,7 +11,7 @@ export function useAuthorizedFetch(): UseFetch {
         ...init,
         headers: {
           Authorization: `Bearer ${session.token}`,
-          ...init.headers,
+          ...init?.headers,
         },
       });
     } catch (error) {

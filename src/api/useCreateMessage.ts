@@ -12,10 +12,11 @@ export function useCreateMessage() {
 
   return useMutation((params: CreateMessageParams) => {
     const { conversationId, content } = params;
+    const url = `/api/v1/conversations/${conversationId}/messages`;
 
-    return fetch<MessageCreatedEvent>(
-      `/api/v1/conversations/${conversationId}/messages`,
-      { method: "POST", body: { content } }
-    );
+    return fetch<MessageCreatedEvent>(url, {
+      method: "POST",
+      body: { content },
+    });
   });
 }

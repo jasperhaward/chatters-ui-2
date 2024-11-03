@@ -12,10 +12,11 @@ export function useUpdateTitle() {
 
   return useMutation((params: UpdateTitleParams) => {
     const { conversationId, title } = params;
+    const url = `/api/v1/conversations/${conversationId}/title`;
 
-    return fetch<TitleUpdatedEvent>(
-      `/api/v1/conversations/${conversationId}/title`,
-      { method: "PATCH", body: { title } }
-    );
+    return fetch<TitleUpdatedEvent>(url, {
+      method: "PATCH",
+      body: { title },
+    });
   });
 }

@@ -1,22 +1,22 @@
 import config from "@/config";
 
 export interface UseFetchRequestInit extends Omit<RequestInit, "body"> {
-  method: "GET" | "POST" | "PATCH" | "DELETE";
+  method?: "GET" | "POST" | "PATCH" | "DELETE";
   body?: object;
 }
 
 export type UseFetch = <T>(
   path: string,
-  init: UseFetchRequestInit
+  init?: UseFetchRequestInit
 ) => Promise<T>;
 
 export function useFetch(): UseFetch {
   return async (path, init) => {
     const url = config.httpApiUrl + path;
 
-    const headers = new Headers(init.headers);
+    const headers = new Headers(init?.headers);
 
-    if (init.body) {
+    if (init?.body) {
       headers.append("Content-Type", "application/json");
     }
 
@@ -24,7 +24,7 @@ export function useFetch(): UseFetch {
       const response = await fetch(url, {
         ...init,
         headers,
-        body: JSON.stringify(init.body),
+        body: JSON.stringify(init?.body),
       });
 
       if (response.status === 401) {

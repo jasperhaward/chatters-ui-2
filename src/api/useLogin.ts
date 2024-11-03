@@ -9,11 +9,12 @@ export interface LoginParams {
 
 export function useLogin() {
   const fetch = useFetch();
+  const url = "/api/v1/auth/login";
 
-  return useMutation((params: LoginParams) => {
-    return fetch<Session>("/api/v1/auth/login", {
+  return useMutation((params: LoginParams) =>
+    fetch<Session>(url, {
       method: "POST",
       body: params,
-    });
-  });
+    })
+  );
 }

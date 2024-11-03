@@ -4,10 +4,7 @@ import { useQuery } from "./useQuery";
 
 export function useConversations() {
   const fetch = useAuthorizedFetch();
+  const url = "/api/v1/conversations";
 
-  return useQuery(() => {
-    return fetch<Conversation[]>("/api/v1/conversations", {
-      method: "GET",
-    });
-  }, []);
+  return useQuery(() => fetch<Conversation[]>(url), []);
 }

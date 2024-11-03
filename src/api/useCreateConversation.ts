@@ -9,11 +9,12 @@ export interface CreateConversationParams {
 
 export function useCreateConversation() {
   const fetch = useAuthorizedFetch();
+  const url = "/api/v1/conversations";
 
-  return useMutation((params: CreateConversationParams) => {
-    return fetch<ConversationEvent[]>("/api/v1/conversations", {
+  return useMutation((params: CreateConversationParams) =>
+    fetch<ConversationEvent[]>(url, {
       method: "POST",
       body: params,
-    });
-  });
+    })
+  );
 }

@@ -12,10 +12,8 @@ export function useRemoveRecipient() {
 
   return useMutation((params: RemoveRecipientParams) => {
     const { conversationId, recipientId } = params;
+    const url = `/api/v1/conversations/${conversationId}/recipients/${recipientId}`;
 
-    return fetch<RecipientRemovedEvent>(
-      `/api/v1/conversations/${conversationId}/recipients/${recipientId}`,
-      { method: "DELETE" }
-    );
+    return fetch<RecipientRemovedEvent>(url, { method: "DELETE" });
   });
 }

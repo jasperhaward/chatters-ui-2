@@ -12,10 +12,11 @@ export function useCreateRecipient() {
 
   return useMutation((params: CreateRecipientParams) => {
     const { conversationId, recipientId } = params;
+    const url = `/api/v1/conversations/${conversationId}/recipients`;
 
-    return fetch<RecipientCreatedEvent>(
-      `/api/v1/conversations/${conversationId}/recipients`,
-      { method: "POST", body: { recipientId } }
-    );
+    return fetch<RecipientCreatedEvent>(url, {
+      method: "POST",
+      body: { recipientId },
+    });
   });
 }
