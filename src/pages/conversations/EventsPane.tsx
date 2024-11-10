@@ -1,4 +1,4 @@
-import { useRef, useEffect, useMemo } from "preact/hooks";
+import { useMemo } from "preact/hooks";
 import { Fragment } from "preact/jsx-runtime";
 import {
   isSameDay,
@@ -11,79 +11,31 @@ import {
 import styles from "./EventsPane.module.scss";
 
 import { UseQuery } from "@/api";
-import {
-  ConversationEvent,
-  ConversationEventType,
-  RecipientCreatedEvent,
-} from "@/types";
+import { ConversationEvent } from "@/types";
+import { useScrollIntoView } from "@/hooks";
 
 import EventSkeleton from "./EventSkeleton";
 import RetryableApiError from "./RetryableApiError";
 import Event from "./events/Event";
-import { isWithinFiveMinutes } from "./utils";
-
-export interface EventWithMetadata {
-  previousEvent: ConversationEvent;
-  event: ConversationEvent | RecipientCreatedEvent[];
-  nextEvent: ConversationEvent;
-}
 
 export interface EventsPaneProps {
   events: UseQuery<ConversationEvent[]>;
 }
 
 export default function EventsPane({ events }: EventsPaneProps) {
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (ref.current) {
-      ref.current.scrollIntoView({ behavior: "smooth" });
-    }
-  }, [events.data]);
+  const ref = useScrollIntoView<HTMLDivElement>([events.data]);
 
   const layout = useMemo(() => {
     if (!events.data) {
       return null;
     }
 
-    const reversedEvents = events.data.slice().reverse();
-
-    const resultingEvents: EventWithMetadata[] = [];
-    let groupedEvents: RecipientCreatedEvent[] = [];
-
-    for (let index = 0; index < reversedEvents.length - 1; index++) {
-      const previousEvent = reversedEvents[index - 1];
-      const event = reversedEvents[index];
-      const nextEvent = reversedEvents[index + 1];
-
-      if (
-        event.type === ConversationEventType.RecipientCreated &&
-        nextEvent?.type === ConversationEventType.RecipientCreated &&
-        event.createdBy.id === nextEvent?.createdBy.id &&
-        isWithinFiveMinutes(event, nextEvent)
-      ) {
-        groupedEvents.push(event);
-      } else if (
-        event.type === ConversationEventType.RecipientCreated &&
-        groupedEvents.length > 0
-      ) {
-        groupedEvents.push(event);
-
-        resultingEvents.push({
-          previousEvent,
-          event: groupedEvents,
-          nextEvent,
-        });
-      } else {
-        groupedEvents = [];
-        resultingEvents.push({ previousEvent, event, nextEvent });
-      }
-    }
-
-    return resultingEvents;
+    return events.data.map((event, index, events) => ({
+      previousEvent: events[index + 1],
+      event,
+      nextEvent: events[index - 1],
+    }));
   }, [events.data]);
-
-  console.log(layout);
 
   return (
     <div className={styles.eventsPane}>
@@ -104,31 +56,20 @@ export default function EventsPane({ events }: EventsPaneProps) {
           Failed to load conversation, please try again.
         </RetryableApiError>
       ) : (
-        layout!.map(({ previousEvent, event, nextEvent }, index) =>
-          Array.isArray(event) ? (
-            <Fragment key={index}>
-              {isDisplayDatestamp(previousEvent, event[0]!) && (
-                <EventCreatedDatestamp event={event[0]!} />
-              )}
+        <div className={styles.events}>
+          {layout!.map(({ previousEvent, event, nextEvent }) => (
+            <Fragment key={event.id}>
               <Event
                 previousEvent={previousEvent}
                 event={event}
                 nextEvent={nextEvent}
               />
-            </Fragment>
-          ) : (
-            <Fragment key={index}>
               {isDisplayDatestamp(previousEvent, event) && (
                 <EventCreatedDatestamp event={event} />
               )}
-              <Event
-                previousEvent={previousEvent}
-                event={event}
-                nextEvent={nextEvent}
-              />
             </Fragment>
-          )
-        )
+          ))}
+        </div>
       )}
       <div ref={ref} />
     </div>

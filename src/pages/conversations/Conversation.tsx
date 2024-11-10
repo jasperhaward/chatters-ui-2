@@ -24,7 +24,7 @@ export default function Conversation({
   conversation,
   onClick,
 }: ConversationProps) {
-  const ref = useScrollIntoView<HTMLButtonElement>(isSelected);
+  const ref = useScrollIntoView<HTMLButtonElement>([isSelected]);
   const [session] = useSession();
 
   const isGroupConversation = conversation.recipients.length > 2;

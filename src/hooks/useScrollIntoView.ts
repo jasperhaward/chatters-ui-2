@@ -2,15 +2,15 @@ import { Ref } from "preact";
 import { useEffect, useRef } from "preact/hooks";
 
 export function useScrollIntoView<T extends HTMLElement>(
-  enabled: boolean
+  dependencies: unknown[]
 ): Ref<T> {
   const ref = useRef<T>(null);
 
   useEffect(() => {
-    if (ref.current && enabled && !isElementFullyVisible(ref.current)) {
+    if (ref.current && !isElementFullyVisible(ref.current)) {
       ref.current.scrollIntoView({ behavior: "smooth" });
     }
-  }, [enabled]);
+  }, dependencies);
 
   return ref;
 }
