@@ -12,22 +12,6 @@ export interface RecipientProps {
 export default function Recipient({ recipient }: RecipientProps) {
   const [session] = useSession();
 
-  function formatCreatedAt(createdAt: string) {
-    const date = new Date(createdAt);
-
-    if (isToday(date)) {
-      return "today";
-    } else if (isYesterday(date)) {
-      return "yesterday";
-    } else if (isThisWeek(date)) {
-      return `on ${format(date, "EEEE")}`;
-    } else if (isThisYear(date)) {
-      return `on ${format(date, "do MMMM")}`;
-    } else {
-      return `on ${format(date, "do MMMM YYY")}`;
-    }
-  }
-
   return (
     <div className={styles.recipient}>
       <Icon className={styles.avatar} icon={["fas", "user"]} />
@@ -36,9 +20,25 @@ export default function Recipient({ recipient }: RecipientProps) {
           {recipient.id === session.user.id ? "You" : recipient.username}
         </div>
         <time className={styles.timestamp}>
-          Added {formatCreatedAt(recipient.createdAt)}
+          Added {formatRecipientCreatedAt(recipient.createdAt)}
         </time>
       </div>
     </div>
   );
+}
+
+function formatRecipientCreatedAt(createdAt: string) {
+  const date = new Date(createdAt);
+
+  if (isToday(date)) {
+    return "today";
+  } else if (isYesterday(date)) {
+    return "yesterday";
+  } else if (isThisWeek(date)) {
+    return `on ${format(date, "EEEE")}`;
+  } else if (isThisYear(date)) {
+    return `on ${format(date, "do MMMM")}`;
+  } else {
+    return `on ${format(date, "do MMMM YYY")}`;
+  }
 }

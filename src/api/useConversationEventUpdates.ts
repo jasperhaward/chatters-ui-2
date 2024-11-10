@@ -1,7 +1,7 @@
 import { useEffect, useMemo } from "preact/hooks";
 
 import config from "@/config";
-import { ConversationEvent } from "@/types";
+import { UiConversationEvent } from "@/types";
 import { useSession } from "@/features/auth";
 
 export interface ErrorEvent {
@@ -10,7 +10,7 @@ export interface ErrorEvent {
 }
 
 interface UseConversationEventUpdatesCallbacks {
-  onEvent: (event: ConversationEvent) => void;
+  onEvent: (event: UiConversationEvent) => void;
   onError: (event: ErrorEvent) => void;
 }
 
@@ -44,7 +44,7 @@ export function useConversationEventUpdates(
 
   function onMessage(rawEvent: MessageEvent<string>) {
     try {
-      const event: ConversationEvent = JSON.parse(rawEvent.data);
+      const event: UiConversationEvent = JSON.parse(rawEvent.data);
 
       callbacks.onEvent(event);
     } catch (error) {

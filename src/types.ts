@@ -70,5 +70,6 @@ export type ConversationEvent =
   | TitleUpdatedEvent
   | MessageCreatedEvent
   | RecipientCreatedEvent
-  | RecipientRemovedEvent
-  | AddedToConversationEvent;
+  | RecipientRemovedEvent;
+
+export type UiConversationEvent = ConversationEvent | AddedToConversationEvent;

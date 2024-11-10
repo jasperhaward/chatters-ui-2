@@ -21,6 +21,7 @@ import {
   RecipientCreatedEvent,
   RecipientRemovedEvent,
   TitleUpdatedEvent,
+  UiConversationEvent,
 } from "@/types";
 import { useInputs } from "@/hooks";
 import { FixedElement, Button, Card, Modal } from "@/components";
@@ -96,7 +97,7 @@ export default function ConversationsPage({ params }: ChatProps) {
     };
   }, []);
 
-  function onConversationEvent(event: ConversationEvent) {
+  function onConversationEvent(event: UiConversationEvent) {
     switch (event.type) {
       case "AddedToConversation":
         onAddedToConversation(event);

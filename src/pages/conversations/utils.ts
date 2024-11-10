@@ -1,16 +1,18 @@
-import { Conversation, User } from "@/types";
+import { Conversation, ConversationEvent, User } from "@/types";
+import { differenceInMinutes } from "date-fns";
 
 export function buildConversationTitle(
   conversation: Conversation,
   userId: string
 ) {
-  return (
-    conversation.title ??
-    conversation.recipients
-      .filter((recipient) => recipient.id !== userId)
-      .map((recipient) => recipient.username)
-      .join(", ")
-  );
+  if (conversation.title) {
+    return conversation.title;
+  }
+
+  return conversation.recipients
+    .filter((recipient) => recipient.id !== userId)
+    .map((recipient) => recipient.username)
+    .join(", ");
 }
 
 export function sortConversationsByLatestEvent(
@@ -33,4 +35,15 @@ export function sortUsersByUsername(a: User, b: User) {
   }
 
   return a.username < b.username ? -1 : 1;
+}
+
+export function isWithinFiveMinutes(
+  a: ConversationEvent,
+  b: ConversationEvent
+) {
+  return (
+    Math.abs(
+      differenceInMinutes(new Date(a.createdAt), new Date(b.createdAt))
+    ) <= 5
+  );
 }

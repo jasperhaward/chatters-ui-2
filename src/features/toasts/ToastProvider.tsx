@@ -7,10 +7,12 @@ import { Toast, ToastContext } from ".";
 import { Toast as IToast, ToastParameters } from "./types";
 
 export interface ToastProviderProps {
+  /** Toast duration in seconds. */
+  duration?: number;
   children: ComponentChildren;
 }
 
-export function ToastProvider({ children }: ToastProviderProps) {
+export function ToastProvider({ duration = 4, children }: ToastProviderProps) {
   const [toasts, setToasts] = useState<IToast[]>([]);
 
   useEffect(() => {
@@ -37,7 +39,7 @@ export function ToastProvider({ children }: ToastProviderProps) {
   function onDisplayToast(params: ToastParameters) {
     const toast: IToast = {
       ...params,
-      expiresAt: params.permanent ? null : addSeconds(new Date(), 4),
+      expiresAt: params.permanent ? null : addSeconds(new Date(), duration),
     };
     setToasts((prev) => [...prev, toast]);
   }

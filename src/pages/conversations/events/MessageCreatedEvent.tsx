@@ -1,11 +1,11 @@
 import { format } from "date-fns";
 import styles from "./MessageCreatedEvent.module.scss";
 
-import { MessageCreatedEvent as IMessageCreatedEventa } from "@/types";
+import { MessageCreatedEvent as IMessageCreatedEvent } from "@/types";
 import { Icon } from "@/components";
 
 export interface MessageProps {
-  event: IMessageCreatedEventa;
+  event: IMessageCreatedEvent;
   isCreatedByUser: boolean;
   isDisplayAuthor: boolean;
   isDisplayTimestamp: boolean;
