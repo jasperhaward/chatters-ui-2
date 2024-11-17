@@ -1,4 +1,4 @@
-export interface Config {
+interface Config {
   httpApiUrl: string;
   websocketApiUrl: string;
   minUsernameLength: number;

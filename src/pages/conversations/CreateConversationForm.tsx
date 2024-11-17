@@ -1,7 +1,6 @@
 import { useState } from "preact/hooks";
 import styles from "./CreateConversationForm.module.scss";
 
-import config from "@/config";
 import { ApiResponseError, UseQuery, useCreateConversation } from "@/api";
 import { ValidationRules, useForm } from "@/hooks";
 import {
@@ -11,30 +10,23 @@ import {
   Multiselect,
   MultiselectOption,
 } from "@/components";
-import { Conversation, User } from "@/types";
+import { User } from "@/types";
 import { useToasts } from "@/features/toasts";
-import { sortUsersByUsername } from "./utils";
+import {
+  sortUsersByUsername,
+  titleValidation,
+  toUserMultiselectOption,
+} from "./utils";
 
-interface CreateConversationInputs {
-  title: string;
-}
-
-const initialInputs: CreateConversationInputs = {
+const initialInputs = {
   title: "",
 };
 
-export const titleValidation = (value: string) =>
-  value.length > config.maxConversationTitleLength
-    ? `Must contain less than ${
-        config.maxConversationTitleLength + 1
-      } characters`
-    : null;
-
-const validation: ValidationRules<CreateConversationInputs> = {
+const validation: ValidationRules<typeof initialInputs> = {
   title: titleValidation,
 };
 
-export interface CreateConversationFormProps {
+interface CreateConversationFormProps {
   contacts: UseQuery<User[]>;
   onConversationCreated: () => void;
 }
@@ -82,7 +74,7 @@ export default function CreateConversationForm({
 
     if (!hasErrors && !isNoRecipientsSelected) {
       const result = await createConversation.execute({
-        title: inputs.title === "" ? undefined : inputs.title,
+        title: inputs.title === "" ? undefined : inputs.title.trim(),
         recipientIds: recipients.map((recipient) => recipient.id),
       });
 
@@ -95,25 +87,6 @@ export default function CreateConversationForm({
         onConversationCreated();
       }
     }
-  }
-
-  function formatConversationCreationError(error: Error) {
-    if (
-      error instanceof ApiResponseError &&
-      error.reponse.code === "ExistingDirectConversation"
-    ) {
-      return `Direct conversation with the selected recipient already exists`;
-    }
-
-    return error.message;
-  }
-
-  function toMultiselectOption(user: User): MultiselectOption {
-    return {
-      id: user.id,
-      value: user.username,
-      icon: ["fas", "user"],
-    };
   }
 
   return (
@@ -135,8 +108,8 @@ export default function CreateConversationForm({
             <p>Chose from your contacts</p>
           )
         }
-        value={recipients.map(toMultiselectOption)}
-        options={contacts.data?.map(toMultiselectOption) || []}
+        value={recipients.map(toUserMultiselectOption)}
+        options={contacts.data?.map(toUserMultiselectOption) || []}
         onAdd={onRecipientAdded}
         onRemove={onRecipientRemoved}
       />
@@ -162,4 +135,15 @@ export default function CreateConversationForm({
       </Button>
     </>
   );
+}
+
+function formatConversationCreationError(error: Error) {
+  if (
+    error instanceof ApiResponseError &&
+    error.reponse.code === "ExistingDirectConversation"
+  ) {
+    return `Direct conversation with the selected recipient already exists`;
+  }
+
+  return error.message;
 }

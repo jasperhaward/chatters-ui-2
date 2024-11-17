@@ -1,3 +1,4 @@
+import classNames from "classnames";
 import styles from "./EventSkeleton.module.scss";
 
 import { Skeleton } from "@/components";
@@ -15,7 +16,9 @@ export default function EventSkeleton({
 }: EventSkeletonProps) {
   return (
     <div
-      className={`${styles.eventSkeleton} ${isAlignRight ? styles.right : ""}`}
+      className={classNames(styles.eventSkeleton, {
+        [styles.right]: isAlignRight,
+      })}
     >
       <div className={styles.avatar}>
         {isDisplayAvatar && <Skeleton icon={["fas", "user"]} />}

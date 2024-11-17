@@ -1,14 +1,11 @@
-import { ConversationEvent, ConversationEventType } from "@/types";
+import { ConversationEvent, ConversationEventType, User } from "@/types";
 import { useSession } from "@/features/auth";
 
-import ConversationCreatedEvent from "./ConversationCreatedEvent";
+import { isWithinFiveMinutes } from "./utils";
+import GenericEvent from "./GenericEvent";
 import MessageCreatedEvent from "./MessageCreatedEvent";
-import RecipientCreatedEvent from "./RecipientCreatedEvent";
-import RecipientRemovedEvent from "./RecipientRemovedEvent";
-import TitleUpdatedEvent from "./TitleUpdatedEvent";
-import { isWithinFiveMinutes } from "../utils";
 
-export interface EventProps {
+interface EventProps {
   previousEvent: ConversationEvent;
   event: ConversationEvent;
   nextEvent: ConversationEvent;
@@ -17,27 +14,40 @@ export interface EventProps {
 export default function Event({ previousEvent, event, nextEvent }: EventProps) {
   const [session] = useSession();
 
-  const isCreatedByUser = event.createdBy.id === session.user.id;
-
   switch (event.type) {
     case "ConversationCreated":
-      return <ConversationCreatedEvent event={event} />;
+      return (
+        <GenericEvent event={event}>created the conversation</GenericEvent>
+      );
     case "TitleUpdated":
-      return <TitleUpdatedEvent event={event} />;
+      return (
+        <GenericEvent event={event}>
+          {event.title
+            ? `changed the title to ${event.title}`
+            : "removed the title"}
+        </GenericEvent>
+      );
     case "RecipientCreated":
-      return <RecipientCreatedEvent event={event} />;
+      return (
+        <GenericEvent event={event}>
+          added {event.recipient.username}
+        </GenericEvent>
+      );
     case "RecipientRemoved":
-      return <RecipientRemovedEvent event={event} />;
+      return (
+        <GenericEvent event={event}>
+          removed {event.recipient.username}
+        </GenericEvent>
+      );
     case "MessageCreated":
       return (
         <MessageCreatedEvent
           event={event}
-          isCreatedByUser={isCreatedByUser}
-          isDisplayAuthor={
-            isCreatedByUser
-              ? false
-              : isDisplayMessageAuthor(previousEvent, event)
-          }
+          isDisplayAuthor={isDisplayMessageAuthor(
+            previousEvent,
+            event,
+            session.user
+          )}
           isDisplayTimestamp={isDisplayMessageTimestamp(event, nextEvent)}
         />
       );
@@ -52,14 +62,20 @@ export default function Event({ previousEvent, event, nextEvent }: EventProps) {
  * @param prevEvent
  * @param event
  * @returns true if:
+ *  - the event was **not** created by the current user, and;
  *  - there is no `prevEvent` or;
  *  - `prevEvent` is not a `MessageCreated` event or;
  *  - `event` & `prevEvent` were created by different users
  */
 function isDisplayMessageAuthor(
   prevEvent: ConversationEvent | undefined,
-  event: ConversationEvent
+  event: ConversationEvent,
+  user: User
 ) {
+  if (event.createdBy.id === user.id) {
+    return false;
+  }
+
   return (
     !prevEvent ||
     prevEvent.type !== ConversationEventType.MessageCreated ||

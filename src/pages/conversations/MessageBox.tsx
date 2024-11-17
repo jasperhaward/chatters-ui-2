@@ -1,7 +1,7 @@
 import styles from "./MessageBox.module.scss";
 import { IconButton, InputGroup, Textarea, Spinner } from "@/components";
 
-export interface MessageBoxProps {
+interface MessageBoxProps {
   isLoading: boolean;
   name: string;
   value: string;

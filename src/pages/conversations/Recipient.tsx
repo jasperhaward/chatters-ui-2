@@ -5,7 +5,7 @@ import { Recipient as IRecipient } from "@/types";
 import { Icon } from "@/components";
 import { useSession } from "@/features/auth";
 
-export interface RecipientProps {
+interface RecipientProps {
   recipient: IRecipient;
 }
 
