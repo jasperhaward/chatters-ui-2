@@ -60,11 +60,6 @@ export interface RecipientRemovedEvent extends ConversationEventCommon {
   type: ConversationEventType.RecipientRemoved;
   recipient: User;
 }
-
-export interface AddedToConversationEvent extends Conversation {
-  type: ConversationEventType.AddedToConversation;
-}
-
 export type ConversationEvent =
   | ConversationCreatedEvent
   | TitleUpdatedEvent
@@ -72,4 +67,14 @@ export type ConversationEvent =
   | RecipientCreatedEvent
   | RecipientRemovedEvent;
 
-export type UiConversationEvent = ConversationEvent | AddedToConversationEvent;
+export interface AddedToConversationEvent extends Conversation {
+  type: ConversationEventType.AddedToConversation;
+}
+
+/**
+ * A superset of `TConversationEvent` events that includes
+ * programmatically created events for WebSocket consumption in the UI.
+ */
+export type WebSocketConversationEvent =
+  | ConversationEvent
+  | AddedToConversationEvent;

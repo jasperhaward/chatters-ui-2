@@ -12,5 +12,5 @@ export * from "./useEvents";
 export * from "./useMutation";
 export * from "./useQuery";
 export * from "./useRegister";
-export * from "./useConversationEventUpdates";
+export * from "./useConversationWebSocketEvents";
 export * from "./useUpdateTitle";

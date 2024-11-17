@@ -55,6 +55,8 @@ export default function Event({ previousEvent, event, nextEvent }: EventProps) {
           isDisplayTimestamp={isDisplayMessageTimestamp(event, nextEvent)}
         />
       );
+    default:
+      throw new Error(`Unknown event type '${event.type}'`);
   }
 }
 

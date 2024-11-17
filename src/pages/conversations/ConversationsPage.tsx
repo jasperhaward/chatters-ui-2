@@ -8,7 +8,7 @@ import {
   useEvents,
   useLogout,
   useCreateMessage,
-  useConversationEventUpdates,
+  useConversationWebSocketEvents,
   useContacts,
   ErrorEvent,
 } from "@/api";
@@ -20,7 +20,7 @@ import {
   RecipientCreatedEvent,
   RecipientRemovedEvent,
   TitleUpdatedEvent,
-  UiConversationEvent,
+  WebSocketConversationEvent,
 } from "@/types";
 import { useInputs } from "@/hooks";
 import { FixedElement, Button, Card, Modal } from "@/components";
@@ -59,9 +59,9 @@ export default function ConversationsPage({ params }: ChatProps) {
   const conversations = useConversations();
   const contacts = useContacts();
   const createMessage = useCreateMessage();
-  const disconnectServerEvents = useConversationEventUpdates({
-    onEvent: onConversationEvent,
-    onError: onConversationError,
+  const disconnectServerEvents = useConversationWebSocketEvents({
+    onEvent: onConversationWebSocketEvent,
+    onError: onConversationWebSocketError,
   });
 
   const selectedConversation = useMemo(() => {
@@ -96,7 +96,7 @@ export default function ConversationsPage({ params }: ChatProps) {
     };
   }, []);
 
-  function onConversationEvent(event: UiConversationEvent) {
+  function onConversationWebSocketEvent(event: WebSocketConversationEvent) {
     switch (event.type) {
       case "AddedToConversation":
         onAddedToConversation(event);
@@ -227,7 +227,7 @@ export default function ConversationsPage({ params }: ChatProps) {
     });
   }
 
-  function onConversationError(event: ErrorEvent) {
+  function onConversationWebSocketError(event: ErrorEvent) {
     toast({
       permanent: true,
       title: "Failed to subscribe to updates, please refresh the page.",
