@@ -34,6 +34,10 @@ export default function Event({ previousEvent, event, nextEvent }: EventProps) {
         </GenericEvent>
       );
     case "RecipientRemoved":
+      if (event.recipient.id === event.createdBy.id) {
+        return <GenericEvent event={event}>left the conversation</GenericEvent>;
+      }
+
       return (
         <GenericEvent event={event}>
           removed {event.recipient.username}

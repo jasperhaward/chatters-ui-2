@@ -59,7 +59,10 @@ export default function Conversation({
           {(isLatestEventCreatedByUser || isGroupConversation) && (
             <span>{author}:</span>
           )}
-          {formatLatestEventContent(conversation.latestEvent)}
+          {formatLatestEventContent(
+            conversation.latestEvent,
+            isGroupConversation
+          )}
         </div>
       </div>
       <time className={styles.timestamp}>
@@ -69,7 +72,10 @@ export default function Conversation({
   );
 }
 
-function formatLatestEventContent(event: ConversationEvent) {
+function formatLatestEventContent(
+  event: ConversationEvent,
+  isGroupConversation: boolean
+) {
   switch (event.type) {
     case ConversationEventType.TitleUpdated:
       return `Changed the title to '${event.title}'`;
@@ -78,6 +84,14 @@ function formatLatestEventContent(event: ConversationEvent) {
     case ConversationEventType.RecipientCreated:
       return `Added ${event.recipient.username}`;
     case ConversationEventType.RecipientRemoved:
+      if (event.recipient.id === event.createdBy.id) {
+        if (isGroupConversation) {
+          return `Left the conversation`;
+        } else {
+          return `${event.recipient.username} left the conversation`;
+        }
+      }
+
       return `Removed ${event.recipient.username}`;
   }
 }
