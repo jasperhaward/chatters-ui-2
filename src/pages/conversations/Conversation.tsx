@@ -1,4 +1,5 @@
 import { format, isToday, isYesterday, isThisWeek, isThisYear } from "date-fns";
+import classNames from "classnames";
 import styles from "./Conversation.module.scss";
 
 import {
@@ -7,11 +8,13 @@ import {
   Conversation as IConversation,
 } from "@/types";
 import { useScrollIntoView } from "@/hooks";
-import { Icon, HighlightedText } from "@/components";
-import { useSession } from "@/features/auth";
-import { buildConversationTitle } from "./utils";
+import { Icon } from "@/components";
 
-export interface ConversationProps {
+import { isConversationGroupConversation } from "./utils";
+import { useIsCreatedByUser } from "./useIsCreatedByUser";
+import ConversationTitle from "./ConversationTitle";
+
+interface ConversationProps {
   isSelected: boolean;
   search: string;
   conversation: IConversation;
@@ -24,46 +27,22 @@ export default function Conversation({
   conversation,
   onClick,
 }: ConversationProps) {
-  const ref = useScrollIntoView<HTMLButtonElement>(isSelected);
-  const [session] = useSession();
+  const ref = useScrollIntoView<HTMLButtonElement>([isSelected]);
+  const isLatestEventCreatedByUser = useIsCreatedByUser(
+    conversation.latestEvent
+  );
+  const isGroupConversation = isConversationGroupConversation(conversation);
 
-  const isGroupConversation = conversation.recipients.length > 2;
-  const isLatestEventCreatedByUser =
-    conversation.latestEvent.createdBy.id === session.user.id;
-
-  function formatLatestEventCreatedAt(event: ConversationEvent) {
-    const date = new Date(event.createdAt);
-
-    if (isToday(date)) {
-      return format(date, "HH:mm");
-    } else if (isYesterday(date)) {
-      return "Yesterday";
-    } else if (isThisWeek(date)) {
-      return format(date, "E");
-    } else if (isThisYear(date)) {
-      return format(date, "d LLL");
-    } else {
-      return format(date, "LLL yyyy");
-    }
-  }
-
-  function formatLatestEventContent(event: ConversationEvent) {
-    switch (event.type) {
-      case ConversationEventType.TitleUpdated:
-        return `Changed the title to '${event.title}'`;
-      case ConversationEventType.MessageCreated:
-        return event.message;
-      case ConversationEventType.RecipientCreated:
-        return `Added ${event.recipient.username}`;
-      case ConversationEventType.RecipientRemoved:
-        return `Removed ${event.recipient.username}`;
-    }
-  }
+  const author = isLatestEventCreatedByUser
+    ? "You"
+    : conversation.latestEvent.createdBy.username;
 
   return (
     <button
       ref={ref}
-      className={`${styles.conversation} ${isSelected ? styles.selected : ""}`}
+      className={classNames(styles.conversation, {
+        [styles.selected]: isSelected,
+      })}
       onClick={() => onClick(conversation)}
     >
       <Icon
@@ -71,16 +50,14 @@ export default function Conversation({
         icon={["fas", isGroupConversation ? "users" : "user"]}
       />
       <div className={styles.details}>
-        <HighlightedText className={styles.title} query={search}>
-          {buildConversationTitle(conversation, session.user.id)}
-        </HighlightedText>
+        <ConversationTitle
+          className={styles.title}
+          query={search}
+          conversation={conversation}
+        />
         <div className={styles.event}>
           {(isLatestEventCreatedByUser || isGroupConversation) && (
-            <span>
-              {isLatestEventCreatedByUser
-                ? "You:"
-                : `${conversation.latestEvent.createdBy.username}:`}
-            </span>
+            <span>{author}:</span>
           )}
           {formatLatestEventContent(conversation.latestEvent)}
         </div>
@@ -90,4 +67,33 @@ export default function Conversation({
       </time>
     </button>
   );
+}
+
+function formatLatestEventContent(event: ConversationEvent) {
+  switch (event.type) {
+    case ConversationEventType.TitleUpdated:
+      return `Changed the title to '${event.title}'`;
+    case ConversationEventType.MessageCreated:
+      return event.message;
+    case ConversationEventType.RecipientCreated:
+      return `Added ${event.recipient.username}`;
+    case ConversationEventType.RecipientRemoved:
+      return `Removed ${event.recipient.username}`;
+  }
+}
+
+function formatLatestEventCreatedAt(event: ConversationEvent) {
+  const date = new Date(event.createdAt);
+
+  if (isToday(date)) {
+    return format(date, "HH:mm");
+  } else if (isYesterday(date)) {
+    return "Yesterday";
+  } else if (isThisWeek(date)) {
+    return format(date, "E");
+  } else if (isThisYear(date)) {
+    return format(date, "d LLL");
+  } else {
+    return format(date, "LLL yyyy");
+  }
 }

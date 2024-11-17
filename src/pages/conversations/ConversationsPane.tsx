@@ -10,7 +10,7 @@ import Conversation from "./Conversation";
 import ConversationSkeleton from "./ConversationSkeleton";
 import RetryableApiError from "./RetryableApiError";
 
-export interface ConversationsPaneProps {
+interface ConversationsPaneProps {
   search: string;
   conversations: UseQuery<IConversation[]>;
   selectedConversation: IConversation | undefined;

@@ -2,11 +2,17 @@
   flex-grow: 1;
   overflow-y: auto;
 
-  .datestamp {
-    display: block;
-    margin-bottom: var(--padding-xs);
-    text-align: center;
-    color: var(--grey);
-    font-size: var(--font-size-xs);
+  .events {
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: flex-end;
   }
+}
+
+.datestamp {
+  display: block;
+  margin-bottom: var(--padding-xs);
+  text-align: center;
+  color: var(--grey);
+  font-size: var(--font-size-xs);
 }

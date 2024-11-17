@@ -1,27 +1,30 @@
 import { format } from "date-fns";
+import classNames from "classnames";
 import styles from "./MessageCreatedEvent.module.scss";
 
-import { MessageCreatedEvent as IMessageCreatedEventa } from "@/types";
+import { MessageCreatedEvent as IMessageCreatedEvent } from "@/types";
 import { Icon } from "@/components";
 
-export interface MessageProps {
-  event: IMessageCreatedEventa;
-  isCreatedByUser: boolean;
+import { useIsCreatedByUser } from "./useIsCreatedByUser";
+
+interface MessageCreatedEventProps {
+  event: IMessageCreatedEvent;
   isDisplayAuthor: boolean;
   isDisplayTimestamp: boolean;
 }
 
 export default function MessageCreatedEvent({
   event,
-  isCreatedByUser,
   isDisplayAuthor,
   isDisplayTimestamp,
-}: MessageProps) {
+}: MessageCreatedEventProps) {
+  const isEventCreatedByUser = useIsCreatedByUser(event);
+
   return (
     <div
-      className={`${styles.messageContainer} ${
-        isCreatedByUser ? styles.createdByUser : ""
-      }`}
+      className={classNames(styles.messageContainer, {
+        [styles.createdByUser]: isEventCreatedByUser,
+      })}
     >
       {isDisplayAuthor && (
         <div className={styles.author}>{event.createdBy.username}</div>

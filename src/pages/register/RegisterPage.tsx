@@ -14,19 +14,13 @@ import {
   Link,
 } from "@/components";
 
-interface RegisterInputs {
-  username: string;
-  password: string;
-  confirmPassword: string;
-}
-
-const initialInputs: RegisterInputs = {
+const initialInputs = {
   username: "",
   password: "",
   confirmPassword: "",
 };
 
-const validation: ValidationRules<RegisterInputs> = {
+const validation: ValidationRules<typeof initialInputs> = {
   username: (value) =>
     value === ""
       ? "Required"

@@ -2,31 +2,27 @@ import { Ref } from "preact";
 import { useEffect, useRef } from "preact/hooks";
 
 export function useScrollIntoView<T extends HTMLElement>(
-  enabled: boolean
+  dependencies: unknown[]
 ): Ref<T> {
   const ref = useRef<T>(null);
 
   useEffect(() => {
-    if (!ref.current) {
-      return;
-    }
-
-    if (enabled && !isFullyVisible(ref.current)) {
+    if (ref.current && !isElementFullyVisible(ref.current)) {
       ref.current.scrollIntoView({ behavior: "smooth" });
     }
-  }, [enabled]);
-
-  function isFullyVisible(element: T) {
-    const container = element.parentElement!;
-
-    const containerTop = container.offsetTop + container.scrollTop;
-    const containerBottom = containerTop + container.clientHeight;
-
-    const elementTop = element.offsetTop;
-    const elementBottom = elementTop + element.clientHeight;
-
-    return elementTop >= containerTop && elementBottom <= containerBottom;
-  }
+  }, dependencies);
 
   return ref;
+}
+
+function isElementFullyVisible<T extends HTMLElement>(element: T) {
+  const container = element.parentElement!;
+
+  const containerTop = container.offsetTop + container.scrollTop;
+  const containerBottom = containerTop + container.clientHeight;
+
+  const elementTop = element.offsetTop;
+  const elementBottom = elementTop + element.clientHeight;
+
+  return elementTop >= containerTop && elementBottom <= containerBottom;
 }

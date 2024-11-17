@@ -1,16 +1,28 @@
-import { Conversation, User } from "@/types";
+import { differenceInMinutes } from "date-fns";
+import config from "@/config";
+import { Conversation, ConversationEvent, User } from "@/types";
+import { MultiselectOption } from "@/components";
 
-export function buildConversationTitle(
-  conversation: Conversation,
-  userId: string
-) {
-  return (
-    conversation.title ??
-    conversation.recipients
-      .filter((recipient) => recipient.id !== userId)
-      .map((recipient) => recipient.username)
-      .join(", ")
-  );
+export function titleValidation(value: string) {
+  if (value.length <= config.maxConversationTitleLength) {
+    return null;
+  }
+
+  const maximumLength = config.maxConversationTitleLength + 1;
+
+  return `Must contain less than ${maximumLength} characters`;
+}
+
+export function toUserMultiselectOption(user: User): MultiselectOption {
+  return {
+    id: user.id,
+    value: user.username,
+    icon: ["fas", "user"],
+  };
+}
+
+export function isConversationGroupConversation(conversation: Conversation) {
+  return conversation.recipients.length > 2;
 }
 
 export function sortConversationsByLatestEvent(
@@ -33,4 +45,15 @@ export function sortUsersByUsername(a: User, b: User) {
   }
 
   return a.username < b.username ? -1 : 1;
+}
+
+export function isWithinFiveMinutes(
+  a: ConversationEvent,
+  b: ConversationEvent
+) {
+  return (
+    Math.abs(
+      differenceInMinutes(new Date(a.createdAt), new Date(b.createdAt))
+    ) <= 5
+  );
 }

@@ -1,4 +1,4 @@
-import { useRef, useEffect } from "preact/hooks";
+import { useMemo } from "preact/hooks";
 import { Fragment } from "preact/jsx-runtime";
 import {
   isSameDay,
@@ -12,57 +12,30 @@ import styles from "./EventsPane.module.scss";
 
 import { UseQuery } from "@/api";
 import { ConversationEvent } from "@/types";
+import { useScrollIntoView } from "@/hooks";
 
 import EventSkeleton from "./EventSkeleton";
 import RetryableApiError from "./RetryableApiError";
-import Event from "./events/Event";
+import Event from "./Event";
 
-export interface EventsPaneProps {
+interface EventsPaneProps {
   events: UseQuery<ConversationEvent[]>;
 }
 
 export default function EventsPane({ events }: EventsPaneProps) {
-  const ref = useRef<HTMLDivElement>(null);
+  const ref = useScrollIntoView<HTMLDivElement>([events.data]);
 
-  useEffect(() => {
-    if (ref.current) {
-      ref.current.scrollIntoView({ behavior: "smooth" });
+  const layout = useMemo(() => {
+    if (!events.data) {
+      return null;
     }
+
+    return events.data.map((event, index, events) => ({
+      previousEvent: events[index + 1],
+      event,
+      nextEvent: events[index - 1],
+    }));
   }, [events.data]);
-
-  /**
-   * Determines whether a datestamp between events should be shown.
-   * @param prevEvent
-   * @param event
-   * @returns true if:
-   *  - there is no `prevEvent`, ie `event` is the first event or;
-   *  - `event` & `prevEvent` were sent on different days
-   */
-  function isDisplayDatestamp(
-    prevEvent: ConversationEvent | undefined,
-    event: ConversationEvent
-  ) {
-    return (
-      !prevEvent ||
-      !isSameDay(new Date(event.createdAt), new Date(prevEvent.createdAt))
-    );
-  }
-
-  function formatDatestamp(timestamp: string) {
-    const date = new Date(timestamp);
-
-    if (isToday(date)) {
-      return "Today";
-    } else if (isYesterday(date)) {
-      return "Yesterday";
-    } else if (isThisWeek(date)) {
-      return format(date, "EEEE");
-    } else if (isThisYear(date)) {
-      return format(date, "d LLLL");
-    } else {
-      return format(date, "d LLLL yyyy");
-    }
-  }
 
   return (
     <div className={styles.eventsPane}>
@@ -83,30 +56,64 @@ export default function EventsPane({ events }: EventsPaneProps) {
           Failed to load conversation, please try again.
         </RetryableApiError>
       ) : (
-        events.data
-          .slice()
-          .reverse()
-          .map((event, index, events) => {
-            const prevEvent = events[index - 1];
-            const nextEvent = events[index + 1];
-
-            return (
-              <Fragment key={"id" in event ? event.id : index}>
-                {isDisplayDatestamp(prevEvent, event) && (
-                  <time className={styles.datestamp}>
-                    {formatDatestamp(event.createdAt)}
-                  </time>
-                )}
-                <Event
-                  prevEvent={prevEvent}
-                  event={event}
-                  nextEvent={nextEvent}
-                />
-              </Fragment>
-            );
-          })
+        <div className={styles.events}>
+          {layout!.map(({ previousEvent, event, nextEvent }) => (
+            <Fragment key={event.id}>
+              <Event
+                previousEvent={previousEvent}
+                event={event}
+                nextEvent={nextEvent}
+              />
+              {isDisplayDatestamp(previousEvent, event) && (
+                <EventCreatedDatestamp event={event} />
+              )}
+            </Fragment>
+          ))}
+        </div>
       )}
       <div ref={ref} />
     </div>
   );
+}
+
+/**
+ * Determines whether a datestamp between two events should be shown.
+ * @param previousEvent
+ * @param event
+ * @returns true if:
+ *  - there is no `prevEvent`, ie `event` is the first event or;
+ *  - `event` & `prevEvent` were sent on different days
+ */
+function isDisplayDatestamp(
+  previousEvent: ConversationEvent | undefined,
+  event: ConversationEvent
+) {
+  return (
+    !previousEvent ||
+    !isSameDay(new Date(event.createdAt), new Date(previousEvent.createdAt))
+  );
+}
+
+interface EventCreatedDatestampProps {
+  event: ConversationEvent;
+}
+
+function EventCreatedDatestamp({ event }: EventCreatedDatestampProps) {
+  const date = new Date(event.createdAt);
+
+  let datestamp;
+
+  if (isToday(date)) {
+    datestamp = "Today";
+  } else if (isYesterday(date)) {
+    datestamp = "Yesterday";
+  } else if (isThisWeek(date)) {
+    datestamp = format(date, "EEEE");
+  } else if (isThisYear(date)) {
+    datestamp = format(date, "d LLLL");
+  } else {
+    datestamp = format(date, "d LLLL yyyy");
+  }
+
+  return <time className={styles.datestamp}>{datestamp}</time>;
 }

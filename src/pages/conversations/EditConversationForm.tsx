@@ -15,12 +15,15 @@ import {
   Multiselect,
   MultiselectOption,
 } from "@/components";
-import { Conversation, Recipient, User } from "@/types";
+import { Conversation, User } from "@/types";
 import { useToasts } from "@/features/toasts";
 import { useSession } from "@/features/auth";
 
-import { titleValidation } from "./CreateConversationForm";
-import { sortUsersByUsername } from "./utils";
+import {
+  titleValidation,
+  sortUsersByUsername,
+  toUserMultiselectOption,
+} from "./utils";
 
 interface EditConversationInputs {
   title: string;
@@ -30,7 +33,7 @@ const validation: ValidationRules<EditConversationInputs> = {
   title: titleValidation,
 };
 
-export interface EditConversationFormProps {
+interface EditConversationFormProps {
   conversation: Conversation;
   contacts: UseQuery<User[]>;
 }
@@ -41,10 +44,13 @@ export default function EditConversationForm({
 }: EditConversationFormProps) {
   const [toast] = useToasts();
   const [session] = useSession();
+  const updateTitle = useUpdateTitle();
+  const createRecipient = useCreateRecipient();
+  const removeRecipient = useRemoveRecipient();
 
-  const nonUserRecipients = conversation.recipients.filter(
-    (recipient) => recipient.id !== session.user.id
-  );
+  const nonUserRecipients = conversation.recipients.filter((recipient) => {
+    return recipient.id !== session.user.id;
+  });
 
   const [recipients, setRecipients] = useState<User[]>(nonUserRecipients);
   // prettier-ignore
@@ -59,10 +65,6 @@ export default function EditConversationForm({
     { title: conversation.title || "" },
     validation
   );
-
-  const updateTitle = useUpdateTitle();
-  const createRecipient = useCreateRecipient();
-  const removeRecipient = useRemoveRecipient();
 
   async function onRecipientAdded(option: MultiselectOption) {
     const result = await createRecipient.execute({
@@ -80,11 +82,9 @@ export default function EditConversationForm({
         (contact) => contact.id === option.id
       )!;
 
-      const updatedRecipients = [...recipients, addedRecipient].sort(
-        sortUsersByUsername
-      );
+      const updatedRecipients = [...recipients, addedRecipient];
 
-      setRecipients(updatedRecipients);
+      setRecipients(updatedRecipients.sort(sortUsersByUsername));
     }
   }
 
@@ -126,17 +126,9 @@ export default function EditConversationForm({
     }
   }
 
-  function toMultiselectOption(user: User): MultiselectOption {
-    return {
-      id: user.id,
-      value: user.username,
-      icon: ["fas", "user"],
-    };
-  }
-
   function toMultiselectValue(user: User): MultiselectOption {
     return {
-      ...toMultiselectOption(user),
+      ...toUserMultiselectOption(user),
       // disallow removing a recipient when the conversation contains only 2 recipients
       disabled: recipients.length === 1,
     };
@@ -163,7 +155,7 @@ export default function EditConversationForm({
           )
         }
         value={recipients.map(toMultiselectValue)}
-        options={contacts.data?.map(toMultiselectOption) || []}
+        options={contacts.data?.map(toUserMultiselectOption) || []}
         onAdd={onRecipientAdded}
         onRemove={onRecipientRemoved}
       />

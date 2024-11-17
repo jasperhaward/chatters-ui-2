@@ -14,7 +14,11 @@ export function useLocalStorage<T>(key: string): UseLocalStorage<T> {
     if (!initialValue) {
       return null;
     } else {
-      return JSON.parse(initialValue) as T;
+      try {
+        return JSON.parse(initialValue) as T;
+      } catch {
+        return null;
+      }
     }
   }
 

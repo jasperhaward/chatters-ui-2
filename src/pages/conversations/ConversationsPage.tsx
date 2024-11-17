@@ -15,12 +15,12 @@ import {
 import {
   AddedToConversationEvent,
   Conversation,
-  ConversationEvent,
   MessageCreatedEvent,
   Recipient,
   RecipientCreatedEvent,
   RecipientRemovedEvent,
   TitleUpdatedEvent,
+  UiConversationEvent,
 } from "@/types";
 import { useInputs } from "@/hooks";
 import { FixedElement, Button, Card, Modal } from "@/components";
@@ -38,7 +38,7 @@ import ConversationHeader from "./ConversationHeader";
 
 type Modal = "CreateConversation" | "EditConversation";
 
-export interface ChatProps {
+interface ChatProps {
   params: {
     conversationId?: string;
   };
@@ -82,7 +82,7 @@ export default function ConversationsPage({ params }: ChatProps) {
       conversations.data.length > 0 &&
       !selectedConversation
     ) {
-      const firstConversation = conversations.data[0]!;
+      const firstConversation = conversations.data[0];
 
       setLocation(`${paths.conversations}/${firstConversation.conversationId}`);
     }
@@ -96,7 +96,7 @@ export default function ConversationsPage({ params }: ChatProps) {
     };
   }, []);
 
-  function onConversationEvent(event: ConversationEvent) {
+  function onConversationEvent(event: UiConversationEvent) {
     switch (event.type) {
       case "AddedToConversation":
         onAddedToConversation(event);
@@ -199,15 +199,16 @@ export default function ConversationsPage({ params }: ChatProps) {
     if (event.conversationId === selectedConversation?.conversationId) {
       events.setData((events) => [event, ...events]);
     }
-
-    conversations.setData((conversations) => {
-      // if the current user is the recipient being removed, remove the conversation
-      if (event.recipient.id === session.user.id) {
+    // if the current user is the recipient being removed, remove the conversation
+    if (event.recipient.id === session.user.id) {
+      return conversations.setData((conversations) => {
         return conversations.filter((conversation) => {
           return conversation.conversationId !== event.conversationId;
         });
-      }
+      });
+    }
 
+    conversations.setData((conversations) => {
       return conversations
         .map((conversation) => {
           if (conversation.conversationId === event.conversationId) {

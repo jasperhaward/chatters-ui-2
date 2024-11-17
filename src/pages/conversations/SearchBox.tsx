@@ -1,6 +1,6 @@
 import { InputGroup, IconButton, Input } from "@/components";
 
-export interface SearchBoxProps {
+interface SearchBoxProps {
   name: string;
   value: string;
   disabled: boolean;
