@@ -1,14 +1,19 @@
-import { ConversationEvent, ConversationEventType, User } from "@/types";
+import {
+  ConversationEventType,
+  ConversationEventWithAggregates,
+  User,
+} from "@/types";
 import { useSession } from "@/features/auth";
 
 import { isWithinFiveMinutes } from "./utils";
 import GenericEvent from "./GenericEvent";
 import MessageCreatedEvent from "./MessageCreatedEvent";
+import RecipientsCreatedAggregateEvent from "./RecipientsCreatedAggregateEvent";
 
 interface EventProps {
-  previousEvent: ConversationEvent;
-  event: ConversationEvent;
-  nextEvent: ConversationEvent;
+  previousEvent: ConversationEventWithAggregates;
+  event: ConversationEventWithAggregates;
+  nextEvent: ConversationEventWithAggregates;
 }
 
 export default function Event({ previousEvent, event, nextEvent }: EventProps) {
@@ -33,6 +38,8 @@ export default function Event({ previousEvent, event, nextEvent }: EventProps) {
           added {event.recipient.username}
         </GenericEvent>
       );
+    case "RecipientsCreatedAggregate":
+      return <RecipientsCreatedAggregateEvent event={event} />;
     case "RecipientRemoved":
       if (event.recipient.id === event.createdBy.id) {
         return <GenericEvent event={event}>left the conversation</GenericEvent>;
@@ -72,8 +79,8 @@ export default function Event({ previousEvent, event, nextEvent }: EventProps) {
  *  - `event` & `prevEvent` were created by different users
  */
 function isDisplayMessageAuthor(
-  prevEvent: ConversationEvent | undefined,
-  event: ConversationEvent,
+  prevEvent: ConversationEventWithAggregates | undefined,
+  event: ConversationEventWithAggregates,
   user: User
 ) {
   if (event.createdBy.id === user.id) {
@@ -98,8 +105,8 @@ function isDisplayMessageAuthor(
  *  - `event` and `nextEvent` were sent more than 5 minutes apart
  */
 function isDisplayMessageTimestamp(
-  event: ConversationEvent,
-  nextEvent: ConversationEvent | undefined
+  event: ConversationEventWithAggregates,
+  nextEvent: ConversationEventWithAggregates | undefined
 ) {
   return (
     !nextEvent ||

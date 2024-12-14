@@ -1,11 +1,12 @@
+import { ComponentChildren } from "preact";
 import styles from "./GenericEvent.module.scss";
 
-import { ConversationEvent } from "@/types";
+import { ConversationEventWithAggregates } from "@/types";
 import { useIsCreatedByUser } from "./useIsCreatedByUser";
 
 interface GenericEventProps {
-  event: ConversationEvent;
-  children: string | string[];
+  event: ConversationEventWithAggregates;
+  children: ComponentChildren;
 }
 
 export default function GenericEvent({ event, children }: GenericEventProps) {

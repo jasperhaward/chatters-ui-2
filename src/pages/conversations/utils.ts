@@ -1,6 +1,6 @@
 import { differenceInMinutes } from "date-fns";
 import config from "@/config";
-import { Conversation, ConversationEvent, User } from "@/types";
+import { Conversation, ConversationEventCommon, User } from "@/types";
 import { MultiselectOption } from "@/components";
 
 export function titleValidation(value: string) {
@@ -48,8 +48,8 @@ export function sortUsersByUsername(a: User, b: User) {
 }
 
 export function isWithinFiveMinutes(
-  a: ConversationEvent,
-  b: ConversationEvent
+  a: ConversationEventCommon,
+  b: ConversationEventCommon
 ) {
   return (
     Math.abs(

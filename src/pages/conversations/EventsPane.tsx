@@ -11,7 +11,10 @@ import {
 import styles from "./EventsPane.module.scss";
 
 import { UseQuery } from "@/api";
-import { ConversationEvent } from "@/types";
+import {
+  ConversationEventCommon,
+  ConversationEventWithAggregates,
+} from "@/types";
 import { useScrollIntoView } from "@/hooks";
 
 import EventSkeleton from "./EventSkeleton";
@@ -19,7 +22,7 @@ import RetryableApiError from "./RetryableApiError";
 import Event from "./Event";
 
 interface EventsPaneProps {
-  events: UseQuery<ConversationEvent[]>;
+  events: UseQuery<ConversationEventWithAggregates[]>;
 }
 
 export default function EventsPane({ events }: EventsPaneProps) {
@@ -85,8 +88,8 @@ export default function EventsPane({ events }: EventsPaneProps) {
  *  - `event` & `prevEvent` were sent on different days
  */
 function isDisplayDatestamp(
-  previousEvent: ConversationEvent | undefined,
-  event: ConversationEvent
+  previousEvent: ConversationEventCommon | undefined,
+  event: ConversationEventCommon
 ) {
   return (
     !previousEvent ||
@@ -95,7 +98,7 @@ function isDisplayDatestamp(
 }
 
 interface EventCreatedDatestampProps {
-  event: ConversationEvent;
+  event: ConversationEventCommon;
 }
 
 function EventCreatedDatestamp({ event }: EventCreatedDatestampProps) {

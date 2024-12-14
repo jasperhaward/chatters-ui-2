@@ -2,7 +2,7 @@
   display: flex;
   align-items: center;
   gap: var(--padding-md);
-  padding: var(--padding-xs);
+  padding: var(--padding-xs) var(--padding-md);
 
   .avatar {
     font-size: var(--font-size-md);

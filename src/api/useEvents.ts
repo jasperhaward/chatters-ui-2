@@ -1,4 +1,4 @@
-import { ConversationEvent } from "@/types";
+import { ConversationEventWithAggregates } from "@/types";
 import { useAuthorizedFetch } from "./useAuthorizedFetch";
 import { useQuery } from "./useQuery";
 
@@ -8,7 +8,7 @@ export function useEvents(conversationId: string | null) {
 
   // prettier-ignore
   return useQuery(
-    () => fetch<ConversationEvent[]>(url), 
+    () => fetch<ConversationEventWithAggregates[]>(url), 
     [conversationId], {
     enabled: conversationId !== null,
   });

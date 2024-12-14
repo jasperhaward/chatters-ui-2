@@ -25,6 +25,7 @@ export enum ConversationEventType {
   TitleUpdated = "TitleUpdated",
   MessageCreated = "MessageCreated",
   RecipientCreated = "RecipientCreated",
+  RecipientsCreatedAggregate = "RecipientsCreatedAggregate",
   RecipientRemoved = "RecipientRemoved",
   AddedToConversation = "AddedToConversation",
 }
@@ -66,6 +67,16 @@ export type ConversationEvent =
   | MessageCreatedEvent
   | RecipientCreatedEvent
   | RecipientRemovedEvent;
+
+export interface RecipientsCreatedAggregateEvent
+  extends ConversationEventCommon {
+  type: ConversationEventType.RecipientsCreatedAggregate;
+  recipients: User[];
+}
+
+export type ConversationEventWithAggregates =
+  | ConversationEvent
+  | RecipientsCreatedAggregateEvent;
 
 export interface AddedToConversationEvent extends Conversation {
   type: ConversationEventType.AddedToConversation;
