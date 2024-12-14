@@ -1,6 +1,8 @@
 export * from "./useAuthorizedFetch";
+export * from "./useAuthorizedWebSocket";
 export * from "./useConversations";
 export * from "./useContacts";
+export * from "./useConversationEvents";
 export * from "./useCreateConversation";
 export * from "./useCreateMessage";
 export * from "./useCreateRecipient";
@@ -12,5 +14,4 @@ export * from "./useEvents";
 export * from "./useMutation";
 export * from "./useQuery";
 export * from "./useRegister";
-export * from "./useConversationWebSocketEvents";
 export * from "./useUpdateTitle";

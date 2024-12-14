@@ -1,7 +1,4 @@
 import { useEffect, useMemo } from "preact/hooks";
-
-import config from "@/config";
-import { WebSocketConversationEvent } from "@/types";
 import { useSession } from "@/features/auth";
 
 export interface ErrorEvent {
@@ -9,18 +6,19 @@ export interface ErrorEvent {
   message: string;
 }
 
-interface UseConversationWebSocketEventsCallbacks {
-  onEvent: (event: WebSocketConversationEvent) => void;
+interface UseAuthorizedWebSocketParams<T> {
+  url: string;
+  onEvent: (event: T) => void;
   onError: (event: ErrorEvent) => void;
 }
 
-export function useConversationWebSocketEvents(
-  callbacks: UseConversationWebSocketEventsCallbacks
+export function useAuthorizedWebSocket<T>(
+  params: UseAuthorizedWebSocketParams<T>
 ) {
   const [session] = useSession();
 
   const authedWebsocket = useMemo(() => {
-    const websocket = new WebSocket(`${config.websocketApiUrl}/api/v1/events`);
+    const websocket = new WebSocket(params.url);
 
     // authenticate once WS connection is established
     websocket.addEventListener("open", () => {
@@ -40,13 +38,11 @@ export function useConversationWebSocketEvents(
       authedWebsocket.removeEventListener("error", onError);
       authedWebsocket.removeEventListener("close", onClose);
     };
-  }, [callbacks.onEvent]);
+  }, [params.onEvent]);
 
-  function onMessage(rawEvent: MessageEvent<string>) {
+  function onMessage({ data }: MessageEvent<string>) {
     try {
-      const event: WebSocketConversationEvent = JSON.parse(rawEvent.data);
-
-      callbacks.onEvent(event);
+      params.onEvent(JSON.parse(data));
     } catch (error) {
       console.error(error);
       onError(error);
@@ -54,23 +50,25 @@ export function useConversationWebSocketEvents(
   }
 
   function onError(error: unknown) {
-    callbacks.onError({
+    params.onError({
       code: error instanceof Error ? error.name : "UnknownError",
       message: error instanceof Error ? error.message : `${error}`,
     });
   }
 
   function onClose(event: CloseEvent) {
-    callbacks.onError({
+    params.onError({
       code: `${event.code}`,
       message: event.reason || "Connection closed unexpectedly.",
     });
   }
 
-  return () => {
+  function cleanup() {
     // when we close the connection ourselves make sure we don't trigger the onClose event
     // listener, we dont want to display the "Connection closed unexpectedly." toast
     authedWebsocket.removeEventListener("close", onClose);
     authedWebsocket.close();
-  };
+  }
+
+  return cleanup;
 }

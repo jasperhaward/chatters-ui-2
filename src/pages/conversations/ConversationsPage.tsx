@@ -8,9 +8,8 @@ import {
   useEvents,
   useLogout,
   useCreateMessage,
-  useConversationWebSocketEvents,
   useContacts,
-  ErrorEvent,
+  useConversationEvents,
 } from "@/api";
 import {
   AddedToConversationEvent,
@@ -59,10 +58,7 @@ export default function ConversationsPage({ params }: ChatProps) {
   const conversations = useConversations();
   const contacts = useContacts();
   const createMessage = useCreateMessage();
-  const disconnectServerEvents = useConversationWebSocketEvents({
-    onEvent: onConversationWebSocketEvent,
-    onError: onConversationWebSocketError,
-  });
+  const disconnectWebsocket = useConversationEvents(onConversationEvent);
 
   const selectedConversation = useMemo(() => {
     if (!conversations.data || !params.conversationId) {
@@ -89,14 +85,14 @@ export default function ConversationsPage({ params }: ChatProps) {
   }, [conversations.data, selectedConversation]);
 
   useEffect(() => {
-    // clear toasts & disconnect from server events on unmount
+    // clear toasts & disconnect from conversation websocket events on unmount
     return () => {
-      disconnectServerEvents();
+      disconnectWebsocket();
       clearToasts();
     };
   }, []);
 
-  function onConversationWebSocketEvent(event: WebSocketConversationEvent) {
+  function onConversationEvent(event: WebSocketConversationEvent) {
     switch (event.type) {
       case "AddedToConversation":
         onAddedToConversation(event);
@@ -227,14 +223,6 @@ export default function ConversationsPage({ params }: ChatProps) {
     });
   }
 
-  function onConversationWebSocketError(event: ErrorEvent) {
-    toast({
-      permanent: true,
-      title: "Failed to subscribe to updates, please refresh the page.",
-      description: event.message,
-    });
-  }
-
   async function onLogoutClick() {
     const result = await logout.execute();
 
@@ -246,18 +234,6 @@ export default function ConversationsPage({ params }: ChatProps) {
     } else {
       setSession(null);
     }
-  }
-
-  function onSearchClearClick() {
-    setInputs({ search: "" });
-  }
-
-  function onConversationClick(conversation: Conversation) {
-    if (inputs.search !== "") {
-      setInputs({ search: "" });
-    }
-
-    setLocation(`${paths.conversations}/${conversation.conversationId}`);
   }
 
   async function onMessageCreationSubmit() {
@@ -276,16 +252,16 @@ export default function ConversationsPage({ params }: ChatProps) {
     }
   }
 
-  function onCreateConversationClick() {
-    setActiveModal("CreateConversation");
+  function onSearchClearClick() {
+    setInputs({ search: "" });
   }
 
-  function onEditConversationClick() {
-    setActiveModal("EditConversation");
-  }
+  function onConversationClick(conversation: Conversation) {
+    if (inputs.search !== "") {
+      setInputs({ search: "" });
+    }
 
-  function onModalClose() {
-    setActiveModal(null);
+    setLocation(`${paths.conversations}/${conversation.conversationId}`);
   }
 
   function onLeaveSelectedConversation() {
@@ -296,6 +272,18 @@ export default function ConversationsPage({ params }: ChatProps) {
         );
       });
     });
+  }
+
+  function onCreateConversationClick() {
+    setActiveModal("CreateConversation");
+  }
+
+  function onEditConversationClick() {
+    setActiveModal("EditConversation");
+  }
+
+  function onModalClose() {
+    setActiveModal(null);
   }
 
   const modal = useMemo(() => {
