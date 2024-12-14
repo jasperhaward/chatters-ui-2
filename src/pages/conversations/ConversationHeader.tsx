@@ -2,7 +2,7 @@ import { format, isToday, isYesterday, isThisWeek, isThisYear } from "date-fns";
 import styles from "./ConversationHeader.module.scss";
 
 import { Conversation, Conversation as IConversation } from "@/types";
-import { Icon, IconButton, Popover, PopoverContainer } from "@/components";
+import { Icon, IconButton, Popover } from "@/components";
 import { useRemoveRecipient } from "@/api";
 import { useSession } from "@/features/auth";
 import { useToasts } from "@/features/toasts";
@@ -64,20 +64,23 @@ export default function ConversationHeader({
           <ConversationTitle conversation={selectedConversation} />
         </h2>
         <div className={styles.menu}>
-          <PopoverContainer>
+          <Popover
+            content={
+              <>
+                <h3>Recipients</h3>
+                <div className={styles.recipientsContainer}>
+                  {selectedConversation.recipients.map((recipient) => (
+                    <Recipient key={recipient.id} recipient={recipient} />
+                  ))}
+                </div>
+              </>
+            }
+          >
             <Icon
               className={styles.recipientsIcon}
               icon={["fas", "user-group"]}
             />
-            <Popover>
-              <h3>Recipients</h3>
-              <div className={styles.recipientsContainer}>
-                {selectedConversation.recipients.map((recipient) => (
-                  <Recipient key={recipient.id} recipient={recipient} />
-                ))}
-              </div>
-            </Popover>
-          </PopoverContainer>
+          </Popover>
           <IconButton
             className={styles.editConversation}
             icon={["fas", "pen-to-square"]}
