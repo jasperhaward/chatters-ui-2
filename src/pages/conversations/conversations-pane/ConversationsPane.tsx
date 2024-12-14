@@ -6,9 +6,9 @@ import { Conversation as IConversation } from "@/types";
 import { caseInsensitiveIncludes } from "@/utils";
 import { useSession } from "@/features/auth";
 
+import RetryableApiError from "../RetryableApiError";
 import Conversation from "./Conversation";
 import ConversationSkeleton from "./ConversationSkeleton";
-import RetryableApiError from "./RetryableApiError";
 
 interface ConversationsPaneProps {
   search: string;

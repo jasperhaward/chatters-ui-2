@@ -2,7 +2,7 @@ import { ComponentChildren } from "preact";
 import styles from "./GenericEvent.module.scss";
 
 import { ConversationEventWithAggregates } from "@/types";
-import { useIsCreatedByUser } from "./useIsCreatedByUser";
+import { useIsCreatedByUser } from "../useIsCreatedByUser";
 
 interface GenericEventProps {
   event: ConversationEventWithAggregates;

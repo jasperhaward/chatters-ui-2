@@ -5,7 +5,7 @@ import styles from "./MessageCreatedEvent.module.scss";
 import { MessageCreatedEvent as IMessageCreatedEvent } from "@/types";
 import { Icon } from "@/components";
 
-import { useIsCreatedByUser } from "./useIsCreatedByUser";
+import { useIsCreatedByUser } from "../useIsCreatedByUser";
 
 interface MessageCreatedEventProps {
   event: IMessageCreatedEvent;

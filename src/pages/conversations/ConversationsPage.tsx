@@ -28,10 +28,10 @@ import { useSession } from "@/features/auth";
 import { useToasts } from "@/features/toasts";
 
 import { sortConversationsByLatestEvent, sortUsersByUsername } from "./utils";
-import ConversationsPane from "./ConversationsPane";
+import ConversationsPane from "./conversations-pane/ConversationsPane";
+import EventsPane from "./events-pane/EventsPane";
 import SearchBox from "./SearchBox";
 import MessageBox from "./MessageBox";
-import EventsPane from "./EventsPane";
 import CreateConversationForm from "./CreateConversationForm";
 import EditConversationForm from "./EditConversationForm";
 import ConversationHeader from "./ConversationHeader";

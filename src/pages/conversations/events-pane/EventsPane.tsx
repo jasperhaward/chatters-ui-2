@@ -17,9 +17,9 @@ import {
 } from "@/types";
 import { useScrollIntoView } from "@/hooks";
 
-import EventSkeleton from "./EventSkeleton";
-import RetryableApiError from "./RetryableApiError";
+import RetryableApiError from "../RetryableApiError";
 import Event from "./Event";
+import EventSkeleton from "./EventSkeleton";
 
 interface EventsPaneProps {
   events: UseQuery<ConversationEventWithAggregates[]>;

@@ -10,9 +10,9 @@ import {
 import { useScrollIntoView } from "@/hooks";
 import { Icon } from "@/components";
 
-import { isConversationGroupConversation } from "./utils";
-import { useIsCreatedByUser } from "./useIsCreatedByUser";
-import ConversationTitle from "./ConversationTitle";
+import { isConversationGroupConversation } from "../utils";
+import { useIsCreatedByUser } from "../useIsCreatedByUser";
+import ConversationTitle from "../ConversationTitle";
 
 interface ConversationProps {
   isSelected: boolean;

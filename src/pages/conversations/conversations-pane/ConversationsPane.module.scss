@@ -1,0 +1,11 @@
+.conversationsPane {
+  flex-grow: 1;
+  overflow-y: auto;
+
+  .noConversations {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }
+}

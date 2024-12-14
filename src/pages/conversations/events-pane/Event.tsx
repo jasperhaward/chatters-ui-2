@@ -5,7 +5,7 @@ import {
 } from "@/types";
 import { useSession } from "@/features/auth";
 
-import { isWithinFiveMinutes } from "./utils";
+import { isWithinFiveMinutes } from "../utils";
 import GenericEvent from "./GenericEvent";
 import MessageCreatedEvent from "./MessageCreatedEvent";
 import RecipientsCreatedAggregateEvent from "./RecipientsCreatedAggregateEvent";
