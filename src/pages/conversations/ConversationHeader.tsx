@@ -68,7 +68,7 @@ export default function ConversationHeader({
             content={
               <>
                 <h3>Recipients</h3>
-                <div className={styles.recipientsContainer}>
+                <div className={styles.recipients}>
                   {selectedConversation.recipients.map((recipient) => (
                     <Recipient key={recipient.id} recipient={recipient} />
                   ))}
@@ -76,19 +76,19 @@ export default function ConversationHeader({
               </>
             }
           >
-            <Icon
-              className={styles.recipientsIcon}
+            <IconButton
+              className={`${styles.buttons} ${styles.recipientsButton}`}
               icon={["fas", "user-group"]}
             />
           </Popover>
           <IconButton
-            className={styles.editConversation}
+            className={styles.buttons}
             icon={["fas", "pen-to-square"]}
             onClick={onEditConversationClick}
           />
           {isConversationGroupConversation(selectedConversation) && (
             <IconButton
-              className={styles.leaveConversation}
+              className={styles.buttons}
               icon={["fas", "right-from-bracket"]}
               onClick={onLeaveConversationClick}
             />

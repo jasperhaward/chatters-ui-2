@@ -14,30 +14,18 @@
     display: flex;
     align-items: center;
 
-    .recipientsIcon {
-      color: var(--grey);
-      transition: color var(--transition-duration);
-      font-size: 16px;
-
-      &:hover {
-        color: var(--foreground);
-      }
-    }
-
-    .recipientsContainer {
+    .recipients {
       margin-top: var(--padding-sm);
       max-height: 300px;
       overflow-y: auto;
     }
 
-    .editConversation,
-    .leaveConversation {
-      font-size: 20px;
+    .recipientsButton {
+      font-size: 16px !important;
     }
 
-    .recipientsIcon,
-    .editConversation,
-    .leaveConversation {
+    .buttons {
+      font-size: 20px;
       padding: 0 var(--padding-sm);
     }
   }

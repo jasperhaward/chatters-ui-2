@@ -64,7 +64,7 @@ function App() {
       </ThemeProvider>
       <FixedElement position="bottomLeft">
         <footer className={styles.footer}>
-          Built with Preact, TypeScript & SASS. Source code is available on{" "}
+          Built with Preact, TypeScript & SASS. Source code on
           <a target="_blank" href="https://github.com/jasperhaward/chatters-ui">
             GitHub
           </a>

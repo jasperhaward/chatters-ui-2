@@ -41,7 +41,7 @@ export default function MessageBox({
         <Spinner className={styles.spinner} color="grey" />
       ) : (
         <IconButton
-          icon={["fas", "paper-plane"]}
+          icon={["fas", "arrow-right"]}
           disabled={disabled || !isValueValid}
           onClick={onSubmit}
         />

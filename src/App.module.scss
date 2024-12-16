@@ -11,6 +11,7 @@
   font-size: var(--font-size-xs);
 
   a {
+    margin-left: var(--padding-xs);
     color: inherit;
     text-underline-offset: 4px;
     transition: color var(--transition-duration-long);

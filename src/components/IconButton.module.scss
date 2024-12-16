@@ -1,6 +1,6 @@
 .iconButton {
   padding: var(--padding-sm) var(--padding-lg);
-  color: var(--grey);
+  color: var(--foreground);
   background-color: var(--background);
   font-size: var(--font-size-sm);
   border-radius: var(--border-radius);
@@ -10,7 +10,7 @@
   &:hover,
   &:focus {
     cursor: pointer;
-    color: var(--foreground);
+    color: var(--grey);
   }
 
   &:disabled {
