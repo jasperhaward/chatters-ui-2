@@ -1,12 +1,11 @@
 import { useEffect, useMemo, useState } from "preact/hooks";
-import { useLocation } from "wouter";
+import { useLocation } from "wouter-preact";
 import styles from "./ConversationsPage.module.scss";
 
 import { paths } from "@/App";
 import {
   useConversations,
   useEvents,
-  useLogout,
   useCreateMessage,
   useContacts,
   useConversationEvents,
@@ -22,7 +21,7 @@ import {
   WebSocketConversationEvent,
 } from "@/types";
 import { useInputs } from "@/hooks";
-import { FixedElement, Button, Card, Modal } from "@/components";
+import { Button, Card, Modal } from "@/components";
 import { useSession } from "@/features/auth";
 import { useToasts } from "@/features/toasts";
 
@@ -37,14 +36,14 @@ import ConversationHeader from "./ConversationHeader";
 
 type Modal = "CreateConversation" | "EditConversation";
 
-interface ChatProps {
-  params: {
-    conversationId?: string;
-  };
+interface ConversationsPageProps {
+  conversationId?: string;
 }
 
-export default function ConversationsPage({ params }: ChatProps) {
-  const [session, setSession] = useSession();
+export default function ConversationsPage({
+  conversationId,
+}: ConversationsPageProps) {
+  const [session] = useSession();
   const [location, setLocation] = useLocation();
   const [toast, clearToasts] = useToasts();
 
@@ -54,21 +53,20 @@ export default function ConversationsPage({ params }: ChatProps) {
     message: "",
   });
 
-  const logout = useLogout();
   const conversations = useConversations();
   const contacts = useContacts();
   const createMessage = useCreateMessage();
   const disconnectWebsocket = useConversationEvents(onConversationEvent);
 
   const selectedConversation = useMemo(() => {
-    if (!conversations.data || !params.conversationId) {
+    if (!conversations.data || !conversationId) {
       return;
     }
 
     return conversations.data.find((conversation) => {
-      return conversation.conversationId === params.conversationId;
+      return conversation.conversationId === conversationId;
     });
-  }, [conversations.data, params.conversationId]);
+  }, [conversations.data, conversationId]);
 
   const events = useEvents(selectedConversation?.conversationId || null);
 
@@ -223,19 +221,6 @@ export default function ConversationsPage({ params }: ChatProps) {
     });
   }
 
-  async function onLogoutClick() {
-    const result = await logout.execute();
-
-    if (result.error) {
-      toast({
-        title: "Failed to logout, please try again.",
-        description: result.error.message,
-      });
-    } else {
-      setSession(null);
-    }
-  }
-
   async function onMessageCreationSubmit() {
     const result = await createMessage.execute({
       conversationId: selectedConversation!.conversationId,
@@ -358,16 +343,6 @@ export default function ConversationsPage({ params }: ChatProps) {
           />
         </span>
       </Card>
-      <FixedElement position="topRight">
-        <Button
-          color="ghost"
-          disabled={logout.isLoading}
-          spinner={logout.isLoading}
-          onClick={onLogoutClick}
-        >
-          Logout
-        </Button>
-      </FixedElement>
       {modal && (
         <Modal title={modal.title} onClose={onModalClose}>
           {modal.body}

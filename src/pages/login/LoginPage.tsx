@@ -1,4 +1,4 @@
-import { useSearch } from "wouter/use-location";
+import { useSearch } from "wouter-preact";
 import styles from "./LoginPage.module.scss";
 
 import { useLogin } from "@/api";

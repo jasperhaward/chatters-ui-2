@@ -1,4 +1,4 @@
-import { useLocation } from "wouter";
+import { useLocation } from "wouter-preact";
 import styles from "./RegisterPage.module.scss";
 
 import config from "@/config";

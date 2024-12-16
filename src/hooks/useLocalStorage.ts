@@ -1,28 +1,28 @@
 import { useState } from "preact/hooks";
 
-export type UseLocalStorage<T> = [
-  value: T | null,
-  setStoredValue: (value: T | null) => void
-];
+export type UseLocalStorage<T> = [value: T, setValue: (value: T) => void];
 
-export function useLocalStorage<T>(key: string): UseLocalStorage<T> {
+export function useLocalStorage<T>(
+  key: string,
+  defaultValue: T
+): UseLocalStorage<T> {
   const [value, setValue] = useState(initialiser);
 
   function initialiser() {
     const initialValue = localStorage.getItem(key);
 
     if (!initialValue) {
-      return null;
+      return defaultValue;
     } else {
       try {
         return JSON.parse(initialValue) as T;
       } catch {
-        return null;
+        return defaultValue;
       }
     }
   }
 
-  function setStoredValue(value: T | null) {
+  function setStoredValue(value: T) {
     if (value) {
       localStorage.setItem(key, JSON.stringify(value));
     } else {

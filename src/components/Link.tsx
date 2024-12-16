@@ -1,5 +1,5 @@
 import { ComponentChildren } from "preact";
-import { Link as WouterLink } from "wouter";
+import { Link as WouterLink } from "wouter-preact";
 import styles from "./Link.module.scss";
 
 export interface LinkProps {

@@ -11,6 +11,7 @@ import {
   faPenToSquare,
   faUserGroup,
   faRightFromBracket,
+  faCircleHalfStroke,
 } from "@fortawesome/free-solid-svg-icons";
 import "./index.scss";
 import App from "./App";
@@ -30,6 +31,7 @@ library.add({
   faPenToSquare,
   faUserGroup,
   faRightFromBracket,
+  faCircleHalfStroke,
 });
 
 render(<App />, document.body);

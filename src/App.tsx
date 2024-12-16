@@ -1,10 +1,16 @@
-import { Redirect, Route, Switch, useLocation } from "wouter";
+import { Redirect, Route, Switch, useLocation } from "wouter-preact";
 import styles from "./App.module.scss";
 
 import { Icon, FixedElement } from "./components";
 import { useLocalStorage } from "./hooks";
-import { Session, SessionContext, AuthedRoute } from "./features/auth";
+import {
+  Session,
+  SessionContext,
+  AuthedRoute,
+  AuthedLayout,
+} from "./features/auth";
 import { ToastProvider } from "./features/toasts";
+import { ThemeProvider } from "./features/theme";
 
 import ConversationsPage from "./pages/conversations/ConversationsPage";
 import LoginPage from "./pages/login/LoginPage";
@@ -17,8 +23,11 @@ export const paths = {
 } as const;
 
 function App() {
-  const [session, setSession] = useLocalStorage<Session>("session");
   const [location] = useLocation();
+  const [session, setSession] = useLocalStorage<Session | null>(
+    "session",
+    null
+  );
 
   if (location === paths.login && session) {
     return <Redirect to={paths.conversations} />;
@@ -32,22 +41,27 @@ function App() {
           Chatters
         </h2>
       </FixedElement>
-      <SessionContext.Provider value={[session, setSession]}>
+      <ThemeProvider>
         <ToastProvider>
-          <Switch>
-            <Route path={paths.index} component={RegisterPage} />
-            <Route path={paths.login} component={LoginPage} />
-            <AuthedRoute
-              path={paths.conversations}
-              component={ConversationsPage}
-            />
-            <AuthedRoute
-              path={`${paths.conversations}/:conversationId`}
-              component={ConversationsPage}
-            />
-          </Switch>
+          <SessionContext.Provider value={[session, setSession]}>
+            <Switch>
+              <Route path={paths.index}>
+                <RegisterPage />
+              </Route>
+              <Route path={paths.login}>
+                <LoginPage />
+              </Route>
+              <AuthedRoute path={`${paths.conversations}/:conversationId?`}>
+                {(params) => (
+                  <AuthedLayout>
+                    <ConversationsPage conversationId={params.conversationId} />
+                  </AuthedLayout>
+                )}
+              </AuthedRoute>
+            </Switch>
+          </SessionContext.Provider>
         </ToastProvider>
-      </SessionContext.Provider>
+      </ThemeProvider>
       <FixedElement position="bottomLeft">
         <footer className={styles.footer}>
           Built with Preact, TypeScript & SASS. Source code is available on{" "}
