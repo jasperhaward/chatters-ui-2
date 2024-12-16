@@ -14,19 +14,21 @@
     display: flex;
     align-items: center;
 
-    .recipients {
-      margin-top: var(--padding-sm);
-      max-height: 300px;
-      overflow-y: auto;
+    .recipientsIcon {
+      padding-right: var(--padding-sm);
+      font-size: 16px;
+      transition: color var(--transition-duration),
+        opacity var(--transition-duration);
+
+      &:hover {
+        color: var(--grey);
+      }
     }
 
-    .recipientsButton {
-      font-size: 16px !important;
-    }
-
-    .buttons {
+    .button {
+      padding-left: var(--padding-sm);
+      padding-right: var(--padding-sm);
       font-size: 20px;
-      padding: 0 var(--padding-sm);
     }
   }
 }

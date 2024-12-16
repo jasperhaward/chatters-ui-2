@@ -78,7 +78,9 @@ function formatLatestEventContent(
 ) {
   switch (event.type) {
     case ConversationEventType.TitleUpdated:
-      return `Changed the title to '${event.title}'`;
+      return event.title === null
+        ? "Removed the title"
+        : `Changed the title to '${event.title}'`;
     case ConversationEventType.MessageCreated:
       return event.message;
     case ConversationEventType.RecipientCreated:

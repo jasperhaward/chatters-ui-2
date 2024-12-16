@@ -1,0 +1,21 @@
+.recipients {
+  margin-top: var(--padding-sm);
+  max-height: 300px;
+  overflow-y: auto;
+
+  .recipient {
+    display: flex;
+    align-items: center;
+    gap: var(--padding-md);
+    padding: var(--padding-xs) var(--padding-md);
+
+    .avatar {
+      font-size: var(--avatar-size);
+    }
+
+    .timestamp {
+      font-size: var(--font-size-xs);
+      color: var(--grey);
+    }
+  }
+}

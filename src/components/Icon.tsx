@@ -27,8 +27,8 @@ export function Icon({ className = "", icon: [prefix, iconName] }: IconProps) {
 
   return (
     <svg
-      className={`${styles.icon} ${element.attributes.class} ${className}`}
       {...element.attributes}
+      className={`${styles.icon} ${element.attributes.class} ${className}`}
     >
       {element.children!.map((child, index) => (
         <path key={index} {...child.attributes} />

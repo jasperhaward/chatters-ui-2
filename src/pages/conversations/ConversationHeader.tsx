@@ -9,7 +9,7 @@ import { useToasts } from "@/features/toasts";
 
 import { isConversationGroupConversation } from "./utils";
 import { useIsCreatedByUser } from "./useIsCreatedByUser";
-import Recipient from "./Recipient";
+import RecipientsPopover from "./RecipientsPopover";
 import ConversationTitle from "./ConversationTitle";
 
 interface ConversationHeaderProps {
@@ -64,31 +64,20 @@ export default function ConversationHeader({
           <ConversationTitle conversation={selectedConversation} />
         </h2>
         <div className={styles.menu}>
-          <Popover
-            content={
-              <>
-                <h3>Recipients</h3>
-                <div className={styles.recipients}>
-                  {selectedConversation.recipients.map((recipient) => (
-                    <Recipient key={recipient.id} recipient={recipient} />
-                  ))}
-                </div>
-              </>
-            }
-          >
-            <IconButton
-              className={`${styles.buttons} ${styles.recipientsButton}`}
+          <Popover content={<RecipientsPopover {...selectedConversation} />}>
+            <Icon
+              className={styles.recipientsIcon}
               icon={["fas", "user-group"]}
             />
           </Popover>
           <IconButton
-            className={styles.buttons}
+            className={styles.button}
             icon={["fas", "pen-to-square"]}
             onClick={onEditConversationClick}
           />
           {isConversationGroupConversation(selectedConversation) && (
             <IconButton
-              className={styles.buttons}
+              className={styles.button}
               icon={["fas", "right-from-bracket"]}
               onClick={onLeaveConversationClick}
             />

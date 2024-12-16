@@ -5,7 +5,7 @@ export interface IconButtonProps {
   className?: string;
   icon: IconTuple;
   disabled?: boolean;
-  onClick?: () => void;
+  onClick: () => void;
 }
 
 export function IconButton({

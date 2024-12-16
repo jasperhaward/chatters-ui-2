@@ -24,7 +24,7 @@ export default function ConversationTitle({
     );
   }
 
-  return <span className={className}>{title}</span>;
+  return <div className={className}>{title}</div>;
 }
 
 function buildTitle(conversation: Conversation, userId: string) {
