@@ -15,7 +15,7 @@ import { useIsCreatedByUser } from "./useIsCreatedByUser";
 import { useConversationTitle } from "./useConversationTitle";
 import RecipientsPopover from "./RecipientsPopover";
 
-interface ConversationHeaderProps {
+export interface ConversationHeaderProps {
   selectedConversation: IConversation | undefined;
   onLeaveSelectedConversation: () => void;
   onEditConversationClick: () => void;

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "preact/hooks";
+import { useEffect, useMemo } from "preact/hooks";
 import { useLocation } from "wouter-preact";
 import styles from "./ConversationsPage.module.scss";
 
@@ -21,20 +21,16 @@ import {
   WebSocketConversationEvent,
 } from "@/types";
 import { useInputs, useIsMobile } from "@/hooks";
-import { Button, Card, Modal } from "@/components";
+import { Card } from "@/components";
 import { useSession } from "@/features/auth";
 import { useToasts } from "@/features/toasts";
+import { useModal } from "@/features/modal";
 
 import { sortConversationsByLatestEvent, sortUsersByUsername } from "./utils";
-import ConversationsPane from "./conversations-pane/ConversationsPane";
-import EventsPane from "./events-pane/EventsPane";
-import SearchBox from "./SearchBox";
-import MessageBox from "./MessageBox";
 import CreateConversationForm from "./CreateConversationForm";
 import EditConversationForm from "./EditConversationForm";
-import ConversationHeader from "./ConversationHeader";
-
-type Modal = "create-conversation" | "edit-conversation";
+import EventsPanel from "./EventsPanel";
+import ConversationsPanel from "./ConversationsPanel";
 
 interface ConversationsPageProps {
   conversationId?: string;
@@ -47,8 +43,8 @@ export default function ConversationsPage({
   const [location, setLocation] = useLocation();
   const [session] = useSession();
   const [toast, clearToasts] = useToasts();
+  const modal = useModal();
 
-  const [activeModal, setActiveModal] = useState<Modal | null>(null);
   const [inputs, onInput, setInputs] = useInputs({
     search: "",
     message: "",
@@ -262,94 +258,100 @@ export default function ConversationsPage({
   }
 
   function onCreateConversationClick() {
-    setActiveModal("create-conversation");
+    modal({
+      title: "Create conversation",
+      content: (onClose) => (
+        <CreateConversationForm
+          contacts={contacts}
+          onConversationCreated={onClose}
+        />
+      ),
+    });
   }
 
   function onEditConversationClick() {
-    setActiveModal("edit-conversation");
+    modal({
+      title: "Edit conversation",
+      content: () => (
+        <EditConversationForm
+          conversation={selectedConversation!}
+          contacts={contacts}
+        />
+      ),
+    });
   }
 
-  function onModalClose() {
-    setActiveModal(null);
-  }
-
-  const modal = useMemo(() => {
-    switch (activeModal) {
-      case "create-conversation":
-        return {
-          title: "Create conversation",
-          body: (
-            <CreateConversationForm
-              contacts={contacts}
-              onConversationCreated={onModalClose}
-            />
-          ),
-        };
-      case "edit-conversation":
-        return {
-          title: "Edit conversation",
-          body: (
-            <EditConversationForm
-              conversation={selectedConversation!}
-              contacts={contacts}
-            />
-          ),
-        };
+  if (isMobile) {
+    if (selectedConversation) {
+      return (
+        <div className={styles.mobilePanel}>
+          <EventsPanel
+            disabled={
+              conversations.isLoading ||
+              !!conversations.error ||
+              events.isLoading
+            }
+            message={inputs.message}
+            isMessageLoading={createMessage.isLoading}
+            selectedConversation={selectedConversation}
+            events={events}
+            onInput={onInput}
+            onLeaveSelectedConversation={onLeaveSelectedConversation}
+            onEditConversationClick={onEditConversationClick}
+            onMessageCreationSubmit={onMessageCreationSubmit}
+          />
+        </div>
+      );
+    } else {
+      return (
+        <div className={styles.mobilePanel}>
+          <ConversationsPanel
+            search={inputs.search}
+            selectedConversation={selectedConversation}
+            conversations={conversations}
+            onInput={onInput}
+            onSearchClearClick={onSearchClearClick}
+            onConversationClick={onConversationClick}
+            onCreateConversationClick={onCreateConversationClick}
+          />
+        </div>
+      );
     }
-  }, [activeModal, contacts, selectedConversation]);
+  }
 
   return (
     <div className={styles.conversations}>
       <Card>
         <span className={styles.conversationsPanel}>
           <h2>Conversations</h2>
-          <SearchBox
-            name="search"
-            disabled={conversations.isLoading || !!conversations.error}
-            value={inputs.search}
-            onInput={onInput}
-            onClear={onSearchClearClick}
-          />
-          <ConversationsPane
+          <ConversationsPanel
             search={inputs.search}
+            selectedConversation={selectedConversation}
             conversations={conversations}
-            selectedConversation={selectedConversation}
+            onInput={onInput}
+            onSearchClearClick={onSearchClearClick}
             onConversationClick={onConversationClick}
+            onCreateConversationClick={onCreateConversationClick}
           />
-          <Button
-            color="foreground"
-            disabled={conversations.isLoading || !!conversations.error}
-            onClick={onCreateConversationClick}
-          >
-            Create conversation
-          </Button>
         </span>
-        <span className={styles.messagesPanel}>
-          <ConversationHeader
-            selectedConversation={selectedConversation}
-            onLeaveSelectedConversation={onLeaveSelectedConversation}
-            onEditConversationClick={onEditConversationClick}
-          />
-          <EventsPane events={events} />
-          <MessageBox
-            isLoading={createMessage.isLoading}
-            name="message"
+        <span className={styles.eventsPanel}>
+          <EventsPanel
             disabled={
               conversations.isLoading ||
               !!conversations.error ||
               events.isLoading
             }
-            value={inputs.message}
+            message={inputs.message}
+            selectedConversation={selectedConversation}
+            isMessageLoading={createMessage.isLoading}
+            events={events}
             onInput={onInput}
-            onSubmit={onMessageCreationSubmit}
+            onLeaveSelectedConversation={onLeaveSelectedConversation}
+            onEditConversationClick={onEditConversationClick}
+            onMessageCreationSubmit={onMessageCreationSubmit}
           />
         </span>
       </Card>
-      {modal && (
-        <Modal title={modal.title} onClose={onModalClose}>
-          {modal.body}
-        </Modal>
-      )}
     </div>
   );
 }
