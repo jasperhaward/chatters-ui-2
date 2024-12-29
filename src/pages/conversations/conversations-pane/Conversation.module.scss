@@ -15,7 +15,7 @@
   &.selected,
   &:hover,
   &:focus {
-    background-color: var(--grey-dark);
+    background-color: var(--grey-3);
   }
 
   .avatar {
@@ -37,21 +37,21 @@
     }
 
     .event {
-      color: var(--grey-light);
+      color: var(--grey-1);
       font-size: var(--font-size-xs);
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
 
       span {
-        color: var(--grey);
+        color: var(--grey-2);
         margin-right: var(--padding-xs);
       }
     }
   }
 
   .timestamp {
-    color: var(--grey);
+    color: var(--grey-2);
     font-size: var(--font-size-xs);
     white-space: nowrap;
   }

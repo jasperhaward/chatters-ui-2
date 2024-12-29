@@ -2,14 +2,14 @@
   animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 
   &.icon {
-    color: var(--grey-dark);
+    color: var(--grey-3);
   }
 
   &.text {
     height: var(--font-size-xs);
     width: 100%;
     border-radius: var(--border-radius);
-    background-color: var(--grey-dark);
+    background-color: var(--grey-3);
   }
 }
 

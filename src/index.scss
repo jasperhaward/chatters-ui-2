@@ -38,9 +38,9 @@
 .light-theme {
   --foreground: rgb(9, 9, 11);
   --background: rgb(250, 250, 250);
-  --grey-light: rgb(35, 35, 37);
-  --grey: rgb(113, 113, 122);
-  --grey-dark: rgb(228, 228, 231);
+  --grey-1: rgb(35, 35, 37);
+  --grey-2: rgb(113, 113, 122);
+  --grey-3: rgb(228, 228, 231);
   --halo-box-shadow: rgb(255, 255, 255) 0px 0px 0px 0px,
     rgb(161, 161, 170) 0px 0px 0px 1px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px;
 }
@@ -48,9 +48,9 @@
 .dark-theme {
   --foreground: rgb(250, 250, 250);
   --background: rgb(9, 9, 11);
-  --grey-light: rgb(210, 210, 210);
-  --grey: rgb(161, 161, 170);
-  --grey-dark: rgb(35, 35, 37);
+  --grey-1: rgb(210, 210, 210);
+  --grey-2: rgb(161, 161, 170);
+  --grey-3: rgb(35, 35, 37);
   --halo-box-shadow: rgb(9, 9, 11) 0px 0px 0px 2px,
     rgb(39, 39, 42) 0px 0px 0px 4px, rgba(0, 0, 0, 0) 0px 0px 0px 0px;
 }
@@ -110,7 +110,7 @@ h4 {
 p {
   margin-top: var(--padding-sm);
   margin-bottom: var(--padding-sm);
-  color: var(--grey);
+  color: var(--grey-2);
   font-size: var(--font-size-sm);
   font-weight: 400;
   line-height: var(--line-height-sm);
@@ -148,7 +148,7 @@ textarea {
 }
 
 hr {
-  border-color: var(--grey-dark);
+  border-color: var(--grey-3);
   border-top-width: 1px;
   width: 100%;
 }
@@ -160,6 +160,6 @@ hr {
 ::-webkit-scrollbar-thumb {
   border: 5px solid transparent;
   border-radius: 10px;
-  background-color: var(--grey-dark);
+  background-color: var(--grey-3);
   background-clip: padding-box;
 }

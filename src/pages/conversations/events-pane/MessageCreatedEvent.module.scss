@@ -4,7 +4,7 @@
 
   .author {
     margin-left: $avatar-width;
-    color: var(--grey);
+    color: var(--grey-2);
     font-size: var(--font-size-xs);
   }
 
@@ -30,7 +30,7 @@
   .timestamp {
     display: block;
     margin-left: $avatar-width;
-    color: var(--grey);
+    color: var(--grey-2);
     font-size: var(--font-size-xs);
   }
 
@@ -41,7 +41,7 @@
       margin-right: 0;
 
       .content {
-        border-color: var(--grey-dark);
+        border-color: var(--grey-3);
         border-width: var(--border-width);
         color: var(--foreground);
         background-color: var(--background);

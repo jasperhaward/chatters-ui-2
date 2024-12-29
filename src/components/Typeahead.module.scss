@@ -20,7 +20,7 @@
     max-height: 250px;
     overflow-y: auto;
     padding: var(--padding-xs);
-    border-color: var(--grey-dark);
+    border-color: var(--grey-3);
     border-width: var(--border-width);
     border-top: 0;
     border-bottom-left-radius: var(--border-radius);
@@ -45,7 +45,7 @@
       &:hover,
       &:focus {
         cursor: pointer;
-        background-color: var(--grey-dark);
+        background-color: var(--grey-3);
       }
     }
   }
