@@ -20,7 +20,7 @@ import {
   TitleUpdatedEvent,
   WebSocketConversationEvent,
 } from "@/types";
-import { useInputs } from "@/hooks";
+import { useInputs, useIsMobile } from "@/hooks";
 import { Button, Card, Modal } from "@/components";
 import { useSession } from "@/features/auth";
 import { useToasts } from "@/features/toasts";
@@ -34,7 +34,7 @@ import CreateConversationForm from "./CreateConversationForm";
 import EditConversationForm from "./EditConversationForm";
 import ConversationHeader from "./ConversationHeader";
 
-type Modal = "CreateConversation" | "EditConversation";
+type Modal = "create-conversation" | "edit-conversation";
 
 interface ConversationsPageProps {
   conversationId?: string;
@@ -43,8 +43,9 @@ interface ConversationsPageProps {
 export default function ConversationsPage({
   conversationId,
 }: ConversationsPageProps) {
-  const [session] = useSession();
+  const isMobile = useIsMobile();
   const [location, setLocation] = useLocation();
+  const [session] = useSession();
   const [toast, clearToasts] = useToasts();
 
   const [activeModal, setActiveModal] = useState<Modal | null>(null);
@@ -72,6 +73,7 @@ export default function ConversationsPage({
 
   useEffect(() => {
     if (
+      !isMobile &&
       conversations.data &&
       conversations.data.length > 0 &&
       !selectedConversation
@@ -260,11 +262,11 @@ export default function ConversationsPage({
   }
 
   function onCreateConversationClick() {
-    setActiveModal("CreateConversation");
+    setActiveModal("create-conversation");
   }
 
   function onEditConversationClick() {
-    setActiveModal("EditConversation");
+    setActiveModal("edit-conversation");
   }
 
   function onModalClose() {
@@ -273,7 +275,7 @@ export default function ConversationsPage({
 
   const modal = useMemo(() => {
     switch (activeModal) {
-      case "CreateConversation":
+      case "create-conversation":
         return {
           title: "Create conversation",
           body: (
@@ -283,7 +285,7 @@ export default function ConversationsPage({
             />
           ),
         };
-      case "EditConversation":
+      case "edit-conversation":
         return {
           title: "Edit conversation",
           body: (

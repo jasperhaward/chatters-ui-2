@@ -8,11 +8,11 @@ import {
   Conversation as IConversation,
 } from "@/types";
 import { useScrollIntoView } from "@/hooks";
-import { Icon } from "@/components";
+import { HighlightedText, Icon } from "@/components";
 
 import { isConversationGroupConversation } from "../utils";
 import { useIsCreatedByUser } from "../useIsCreatedByUser";
-import ConversationTitle from "../ConversationTitle";
+import { useConversationTitle } from "../useConversationTitle";
 
 interface ConversationProps {
   isSelected: boolean;
@@ -27,7 +27,10 @@ export default function Conversation({
   conversation,
   onClick,
 }: ConversationProps) {
-  const ref = useScrollIntoView<HTMLButtonElement>([isSelected]);
+  const ref = useScrollIntoView<HTMLButtonElement>([], {
+    enabled: isSelected,
+  });
+  const title = useConversationTitle(conversation);
   const isLatestEventCreatedByUser = useIsCreatedByUser(
     conversation.latestEvent
   );
@@ -50,11 +53,9 @@ export default function Conversation({
         icon={["fas", isGroupConversation ? "users" : "user"]}
       />
       <div className={styles.details}>
-        <ConversationTitle
-          className={styles.title}
-          query={search}
-          conversation={conversation}
-        />
+        <HighlightedText className={styles.title} query={search}>
+          {title!}
+        </HighlightedText>
         <div className={styles.event}>
           {(isLatestEventCreatedByUser || isGroupConversation) && (
             <span>{author}:</span>

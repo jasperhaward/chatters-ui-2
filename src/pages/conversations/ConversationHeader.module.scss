@@ -1,13 +1,25 @@
-.title {
+.header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: var(--padding-lg);
 
-  h2 {
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+  .title {
+    display: flex;
+    align-items: center;
+    overflow-x: auto;
+
+    .back {
+      padding-left: 0;
+      padding-right: var(--padding-md);
+      font-size: var(--avatar-size);
+    }
+
+    h2 {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
   }
 
   .menu {
@@ -16,7 +28,7 @@
 
     .recipientsIcon {
       padding-right: var(--padding-sm);
-      font-size: 16px;
+      font-size: var(--avatar-size);
       transition: color var(--transition-duration),
         opacity var(--transition-duration);
 
@@ -28,7 +40,7 @@
     .button {
       padding-left: var(--padding-sm);
       padding-right: var(--padding-sm);
-      font-size: 20px;
+      font-size: var(--avatar-size);
     }
   }
 }

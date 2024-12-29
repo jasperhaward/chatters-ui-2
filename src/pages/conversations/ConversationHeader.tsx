@@ -1,16 +1,19 @@
 import { format, isToday, isYesterday, isThisWeek, isThisYear } from "date-fns";
+import { useLocation } from "wouter-preact";
 import styles from "./ConversationHeader.module.scss";
 
+import { paths } from "@/App";
 import { Conversation, Conversation as IConversation } from "@/types";
 import { Icon, IconButton, Popover } from "@/components";
 import { useRemoveRecipient } from "@/api";
+import { useIsMobile } from "@/hooks";
 import { useSession } from "@/features/auth";
 import { useToasts } from "@/features/toasts";
 
 import { isConversationGroupConversation } from "./utils";
 import { useIsCreatedByUser } from "./useIsCreatedByUser";
+import { useConversationTitle } from "./useConversationTitle";
 import RecipientsPopover from "./RecipientsPopover";
-import ConversationTitle from "./ConversationTitle";
 
 interface ConversationHeaderProps {
   selectedConversation: IConversation | undefined;
@@ -23,14 +26,21 @@ export default function ConversationHeader({
   onLeaveSelectedConversation,
   onEditConversationClick,
 }: ConversationHeaderProps) {
+  const isMobile = useIsMobile();
+  const [location, setLocation] = useLocation();
   const [session] = useSession();
   const [toast] = useToasts();
   const deleteRecipient = useRemoveRecipient();
+  const title = useConversationTitle(selectedConversation);
   const isConversationCreatedByUser = useIsCreatedByUser(selectedConversation);
 
   const author = isConversationCreatedByUser
     ? " you "
     : ` ${selectedConversation?.createdBy.username} `;
+
+  function onBackClick() {
+    setLocation(paths.conversations);
+  }
 
   async function onLeaveConversationClick() {
     const result = await deleteRecipient.execute({
@@ -59,10 +69,17 @@ export default function ConversationHeader({
 
   return (
     <div>
-      <div className={styles.title}>
-        <h2>
-          <ConversationTitle conversation={selectedConversation} />
-        </h2>
+      <div className={styles.header}>
+        <div className={styles.title}>
+          {isMobile && (
+            <IconButton
+              className={styles.back}
+              icon={["fas", "angle-left"]}
+              onClick={onBackClick}
+            />
+          )}
+          <h2>{title}</h2>
+        </div>
         <div className={styles.menu}>
           <Popover content={<RecipientsPopover {...selectedConversation} />}>
             <Icon
@@ -72,7 +89,7 @@ export default function ConversationHeader({
           </Popover>
           <IconButton
             className={styles.button}
-            icon={["fas", "pen-to-square"]}
+            icon={["fas", "pen"]}
             onClick={onEditConversationClick}
           />
           {isConversationGroupConversation(selectedConversation) && (

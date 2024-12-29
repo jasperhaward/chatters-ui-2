@@ -8,10 +8,11 @@ import {
   faTerminal,
   faCircleNotch,
   faXmark,
-  faPenToSquare,
+  faPen,
   faUserGroup,
   faRightFromBracket,
   faCircleHalfStroke,
+  faAngleLeft,
 } from "@fortawesome/free-solid-svg-icons";
 import "./index.scss";
 import App from "./App";
@@ -28,10 +29,11 @@ library.add({
   faTerminal,
   faCircleNotch,
   faXmark,
-  faPenToSquare,
+  faPen,
   faUserGroup,
   faRightFromBracket,
   faCircleHalfStroke,
+  faAngleLeft,
 });
 
 render(<App />, document.body);

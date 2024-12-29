@@ -1,16 +1,25 @@
 import { Ref } from "preact";
 import { useEffect, useRef } from "preact/hooks";
 
+export interface UseScrollIntoViewOptions {
+  enabled: boolean;
+}
+
+const defaultOptions: UseScrollIntoViewOptions = {
+  enabled: true,
+};
+
 export function useScrollIntoView<T extends HTMLElement>(
-  dependencies: unknown[]
+  dependencies: unknown[],
+  options: UseScrollIntoViewOptions = defaultOptions
 ): Ref<T> {
   const ref = useRef<T>(null);
 
   useEffect(() => {
-    if (ref.current && !isElementFullyVisible(ref.current)) {
+    if (ref.current && options.enabled && !isElementFullyVisible(ref.current)) {
       ref.current.scrollIntoView({ behavior: "smooth" });
     }
-  }, dependencies);
+  }, [...dependencies, options.enabled]);
 
   return ref;
 }
