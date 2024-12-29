@@ -12,6 +12,7 @@
 
 .modal {
   width: 500px;
+  margin: 0 var(--padding-md);
   padding: var(--padding-xl);
   background-color: var(--background);
   border-color: var(--grey-3);

@@ -1,14 +1,14 @@
 import { ComponentChildren } from "preact";
 import styles from "./Modal.module.scss";
-import { IconButton } from ".";
+import { IconButton } from "@/components";
 
-export interface ModalProps {
+interface ModalProps {
   title: string;
   children: ComponentChildren;
   onClose: () => void;
 }
 
-export function Modal({ title, children, onClose }: ModalProps) {
+export default function Modal({ title, children, onClose }: ModalProps) {
   function stopPropagation(event: JSX.TargetedMouseEvent<HTMLDivElement>) {
     event.stopPropagation();
   }

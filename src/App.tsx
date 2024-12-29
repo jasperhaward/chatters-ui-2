@@ -2,15 +2,16 @@ import { Redirect, Route, Switch, useLocation } from "wouter-preact";
 import styles from "./App.module.scss";
 
 import { Icon, FixedElement } from "./components";
-import { useLocalStorage } from "./hooks";
+import { useIsMobile, useLocalStorage } from "./hooks";
 import {
   Session,
   SessionContext,
   AuthedRoute,
-  AuthedLayout,
+  AuthedMenu,
 } from "./features/auth";
 import { ToastProvider } from "./features/toasts";
 import { ThemeProvider } from "./features/theme";
+import { ModalProvider } from "./features/modal";
 
 import ConversationsPage from "./pages/conversations/ConversationsPage";
 import LoginPage from "./pages/login/LoginPage";
@@ -23,6 +24,7 @@ export const paths = {
 } as const;
 
 function App() {
+  const isMobile = useIsMobile();
   const [location] = useLocation();
   const [session, setSession] = useLocalStorage<Session | null>(
     "session",
@@ -34,45 +36,50 @@ function App() {
   }
 
   return (
-    <ThemeProvider>
-      <ToastProvider>
-        <SessionContext.Provider value={[session, setSession]}>
-          <FixedElement position="topLeft">
-            <h2 className={styles.brand}>
-              <Icon icon={["fas", "terminal"]} />
-              Chatters
-            </h2>
-          </FixedElement>
-          <Switch>
-            <Route path={paths.index}>
-              <RegisterPage />
-            </Route>
-            <Route path={paths.login}>
-              <LoginPage />
-            </Route>
-            <AuthedRoute path={`${paths.conversations}/:conversationId?`}>
-              {(params) => (
-                <AuthedLayout>
-                  <ConversationsPage conversationId={params.conversationId} />
-                </AuthedLayout>
-              )}
-            </AuthedRoute>
-          </Switch>
-          <FixedElement position="bottomLeft">
-            <footer className={styles.footer}>
-              Built with Preact, TypeScript & SASS. Source code on
-              <a
-                target="_blank"
-                href="https://github.com/jasperhaward/chatters-ui"
-              >
-                GitHub
-              </a>
-              .
-            </footer>
-          </FixedElement>
-        </SessionContext.Provider>
-      </ToastProvider>
-    </ThemeProvider>
+    <SessionContext.Provider value={[session, setSession]}>
+      <ThemeProvider>
+        <ToastProvider>
+          <ModalProvider>
+            <FixedElement position="topLeft">
+              <h2 className={styles.brand}>
+                <Icon icon={["fas", "terminal"]} />
+                Chatters
+              </h2>
+            </FixedElement>
+            <Switch>
+              <Route path={paths.index}>
+                <RegisterPage />
+              </Route>
+              <Route path={paths.login}>
+                <LoginPage />
+              </Route>
+              <AuthedRoute path={`${paths.conversations}/:conversationId?`}>
+                {(params) => (
+                  <>
+                    <AuthedMenu />
+                    <ConversationsPage conversationId={params.conversationId} />
+                  </>
+                )}
+              </AuthedRoute>
+            </Switch>
+            {!isMobile && (
+              <FixedElement position="bottomLeft">
+                <footer className={styles.footer}>
+                  Built with Preact, TypeScript & SASS. Source code on
+                  <a
+                    target="_blank"
+                    href="https://github.com/jasperhaward/chatters-ui"
+                  >
+                    GitHub
+                  </a>
+                  .
+                </footer>
+              </FixedElement>
+            )}
+          </ModalProvider>
+        </ToastProvider>
+      </ThemeProvider>
+    </SessionContext.Provider>
   );
 }
 
