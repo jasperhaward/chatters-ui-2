@@ -1,4 +1,5 @@
 interface Config {
+  mobileScreenWidth: number;
   httpApiUrl: string;
   websocketApiUrl: string;
   minUsernameLength: number;
@@ -10,6 +11,7 @@ interface Config {
 }
 
 const config: Readonly<Config> = {
+  mobileScreenWidth: 600,
   httpApiUrl: "${CHATTERS_SERVER_HTTP_URL}",
   websocketApiUrl: "${CHATTERS_SERVER_WS_URL}",
   // below variables based on backend config

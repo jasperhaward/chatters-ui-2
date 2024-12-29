@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from "preact/hooks";
 import styles from "./Panel.module.scss";
+import { useMediaQuery } from "@/hooks";
 
 export interface PanelProps {
   className?: string;
@@ -9,29 +9,12 @@ export interface PanelProps {
 }
 
 export function Panel({ className = "", minWidth, children }: PanelProps) {
-  const query = useMemo(
-    () => window.matchMedia(`(min-width: ${minWidth}px)`),
-    [minWidth]
-  );
-
-  const [isVisible, setIsVisible] = useState(query.matches);
-
-  useEffect(() => {
-    function onMatchMediaChange(event: MediaQueryListEvent) {
-      setIsVisible(event.matches);
-    }
-
-    query.addEventListener("change", onMatchMediaChange);
-
-    return () => {
-      query.removeEventListener("change", onMatchMediaChange);
-    };
-  }, [query]);
+  const isLargeScreen = useMediaQuery(`(min-width: ${minWidth}px)`);
 
   return (
     <div
       className={`${className} ${styles.panel}`}
-      style={{ display: isVisible ? "flex" : "none" }}
+      style={{ display: isLargeScreen ? "flex" : "none" }}
     >
       <h1>{children}</h1>
     </div>
