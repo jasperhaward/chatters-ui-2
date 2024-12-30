@@ -21,9 +21,19 @@ export function Popover({ content, children }: PopoverProps) {
   const [position, setPosition] = useState<PopoverPosition>();
 
   useEffect(() => {
-    window.addEventListener("scroll", onHidePopover, true);
+    function onScroll(event: Event) {
+      // hide the popover only when a scroll occurs outside of the popover
+      if (
+        container.current &&
+        !container.current.contains(event.target as Node)
+      ) {
+        onHidePopover();
+      }
+    }
 
-    return () => window.addEventListener("scroll", onHidePopover, true);
+    window.addEventListener("scroll", onScroll, true);
+
+    return () => window.addEventListener("scroll", onScroll, true);
   }, []);
 
   useLayoutEffect(() => {
