@@ -2,9 +2,12 @@ import { ComponentChildren } from "preact";
 import { useLayoutEffect, useRef, useState } from "preact/hooks";
 import styles from "./Popover.module.scss";
 
-type PopoverPosition =
-  | { top: number; left: number }
-  | { bottom: number; left: number };
+interface PopoverPosition {
+  top?: number;
+  right?: number;
+  bottom?: number;
+  left?: number;
+}
 
 export interface PopoverProps {
   content: ComponentChildren;
@@ -19,33 +22,64 @@ export function Popover({ content, children }: PopoverProps) {
 
   useLayoutEffect(() => {
     if (isDisplay && container.current && popover.current) {
+      // visualViewport contains the correct dimensions for mobile devices
+      const viewportWidth = visualViewport?.width || window.innerWidth;
       const containerRect = container.current.getBoundingClientRect();
-      const popoverHeight = popover.current.offsetHeight;
-      const popoverWidth = popover.current.offsetWidth;
+      const popoverRect = popover.current.getBoundingClientRect();
 
-      const left =
-        containerRect.left + containerRect.width / 2 - popoverWidth / 2;
+      let top, right, bottom, left;
 
-      if (containerRect.bottom + popoverHeight > window.innerHeight) {
-        setPosition({ bottom: window.innerHeight - containerRect.top, left });
+      if (popoverRect.right > viewportWidth) {
+        right = viewportWidth - containerRect.right;
       } else {
-        setPosition({ top: containerRect.bottom, left });
+        left =
+          containerRect.left + containerRect.width / 2 - popoverRect.width / 2;
       }
+
+      if (containerRect.bottom + popoverRect.height > window.innerHeight) {
+        bottom = window.innerHeight - containerRect.top;
+      } else {
+        top = containerRect.bottom;
+      }
+
+      setPosition({ top, left, bottom, right });
     }
   }, [isDisplay]);
 
+  function onMouseOver() {
+    setIsDisplay(true);
+  }
+
+  function onMouseLeave() {
+    setPosition(undefined);
+    setIsDisplay(false);
+  }
+
   return (
-    <span
-      ref={container}
-      onMouseOver={() => setIsDisplay(true)}
-      onMouseLeave={() => setIsDisplay(false)}
-    >
+    <span ref={container} onMouseOver={onMouseOver} onMouseLeave={onMouseLeave}>
       {isDisplay && (
-        <div ref={popover} className={styles.popover} style={position}>
+        <div
+          ref={popover}
+          className={styles.popover}
+          style={convertPropertiesToString(position)}
+        >
           <div className={styles.popoverContent}>{content}</div>
         </div>
       )}
       {children}
     </span>
   );
+}
+
+function convertPropertiesToString(position: PopoverPosition | undefined) {
+  if (!position) {
+    return;
+  }
+
+  return {
+    top: position.top ? `${position.top}px` : undefined,
+    right: position.right ? `${position.right}px` : undefined,
+    bottom: position.bottom ? `${position.bottom}px` : undefined,
+    left: position.left ? `${position.left}px` : undefined,
+  };
 }
