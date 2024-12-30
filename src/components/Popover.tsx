@@ -1,5 +1,5 @@
 import { ComponentChildren } from "preact";
-import { useLayoutEffect, useRef, useState } from "preact/hooks";
+import { useEffect, useLayoutEffect, useRef, useState } from "preact/hooks";
 import styles from "./Popover.module.scss";
 
 interface PopoverPosition {
@@ -19,6 +19,12 @@ export function Popover({ content, children }: PopoverProps) {
   const popover = useRef<HTMLDivElement>(null);
   const [isDisplay, setIsDisplay] = useState(false);
   const [position, setPosition] = useState<PopoverPosition>();
+
+  useEffect(() => {
+    window.addEventListener("scroll", onHidePopover, true);
+
+    return () => window.addEventListener("scroll", onHidePopover, true);
+  }, []);
 
   useLayoutEffect(() => {
     if (isDisplay && container.current && popover.current) {
@@ -46,17 +52,21 @@ export function Popover({ content, children }: PopoverProps) {
     }
   }, [isDisplay]);
 
-  function onMouseOver() {
+  function onDisplayPopover() {
     setIsDisplay(true);
   }
 
-  function onMouseLeave() {
+  function onHidePopover() {
     setPosition(undefined);
     setIsDisplay(false);
   }
 
   return (
-    <span ref={container} onMouseOver={onMouseOver} onMouseLeave={onMouseLeave}>
+    <span
+      ref={container}
+      onMouseOver={onDisplayPopover}
+      onMouseLeave={onHidePopover}
+    >
       {isDisplay && (
         <div
           ref={popover}
