@@ -1,6 +1,8 @@
 .toastContainer {
   position: absolute;
+  z-index: 75;
   top: var(--padding-xl);
   right: var(--padding-xl);
+  padding-left: var(--padding-xl);
   pointer-events: none;
 }
