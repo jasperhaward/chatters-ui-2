@@ -17,11 +17,11 @@ export default function RecipientsCreatedAggregateEvent({
   });
 
   const primaryRecipients = recipients
-    .slice(0, 3)
+    .slice(0, 2)
     .map((recipient) => recipient.username)
     .join(", ");
   const otherRecipients = recipients
-    .slice(3)
+    .slice(2)
     .map((recipient) => <div key={recipient.id}>{recipient.username}</div>);
 
   return (
