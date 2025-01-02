@@ -1,5 +1,6 @@
 export * from "./Button";
 export * from "./Card";
+export * from "./ContextMenu";
 export * from "./ErrorMessage";
 export * from "./FixedElement";
 export * from "./HighlightedText";

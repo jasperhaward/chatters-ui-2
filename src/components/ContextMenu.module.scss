@@ -1,0 +1,27 @@
+.contextMenu {
+  width: 240px;
+  padding: 0 !important;
+
+  .contextMenuSection {
+    padding: var(--padding-xs);
+    border-top: var(--border-width) solid var(--grey-3);
+  }
+
+  .contextMenuItem {
+    display: flex;
+    align-items: center;
+    padding: var(--padding-sm) var(--padding-lg);
+  }
+
+  .contextMenuButton {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
+}
+
+.icon {
+  padding: var(--padding-xs) var(--padding-md);
+  font-size: var(--font-size-md);
+}
