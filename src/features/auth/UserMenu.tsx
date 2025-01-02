@@ -1,13 +1,22 @@
-import styles from "./AuthedMenu.module.scss";
+import styles from "./UserMenu.module.scss";
 
-import { Button, FixedElement, Icon, IconButton, Popover } from "@/components";
+import {
+  Button,
+  ContextMenu,
+  ContextMenuButton,
+  ContextMenuItem,
+  ContextMenuSection,
+  FixedElement,
+  Icon,
+  IconButton,
+} from "@/components";
 import { useLogout } from "@/api";
 import { useIsMobile } from "@/hooks";
 import { useToasts } from "@/features/toasts";
 import { useSession } from "@/features/auth";
 import { useTheme } from "@/features/theme";
 
-export function AuthedMenu() {
+export function UserMenu() {
   const isMobile = useIsMobile();
   const [session, setSession] = useSession();
   const [toast] = useToasts();
@@ -33,31 +42,26 @@ export function AuthedMenu() {
 
   if (isMobile) {
     return (
-      <FixedElement position="topRight">
-        <Popover
-          content={
-            <>
-              <div>{session.user.username}</div>
-              <Button color="ghost" onClick={onToggleThemeClick}>
-                Toggle Theme
-              </Button>
-              <Button
-                color="ghost"
-                disabled={logout.isLoading}
-                spinner={logout.isLoading}
-                onClick={onLogoutClick}
-              >
-                Logout
-              </Button>
-            </>
-          }
-        >
-          <Icon
-            className={styles.ellipsis}
-            icon={["fas", "ellipsis-vertical"]}
-          />
-        </Popover>
-      </FixedElement>
+      <ContextMenu icon={["fas", "user-pen"]}>
+        <ContextMenuItem>
+          <Icon className={styles.icon} icon={["fas", "user"]} />
+          <h4>{session.user.username}</h4>
+        </ContextMenuItem>
+        <ContextMenuSection>
+          <ContextMenuButton color="ghost" onClick={onToggleThemeClick}>
+            Toggle Theme
+            <Icon icon={["fas", "circle-half-stroke"]} />
+          </ContextMenuButton>
+          <ContextMenuButton
+            color="ghost"
+            disabled={logout.isLoading}
+            spinner={logout.isLoading}
+            onClick={onLogoutClick}
+          >
+            Logout
+          </ContextMenuButton>
+        </ContextMenuSection>
+      </ContextMenu>
     );
   }
 

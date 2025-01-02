@@ -10,11 +10,12 @@ interface PopoverPosition {
 }
 
 export interface PopoverProps {
+  className?: string;
   content: ComponentChildren;
   children: ComponentChildren;
 }
 
-export function Popover({ content, children }: PopoverProps) {
+export function Popover({ className = "", content, children }: PopoverProps) {
   const container = useRef<HTMLSpanElement>(null);
   const popover = useRef<HTMLDivElement>(null);
   const [isDisplay, setIsDisplay] = useState(false);
@@ -83,7 +84,9 @@ export function Popover({ content, children }: PopoverProps) {
           className={styles.popover}
           style={convertPropertiesToString(position)}
         >
-          <div className={styles.popoverContent}>{content}</div>
+          <div className={`${className} ${styles.popoverContent}`}>
+            {content}
+          </div>
         </div>
       )}
       {children}

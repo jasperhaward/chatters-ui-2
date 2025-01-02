@@ -2,13 +2,8 @@ import { Redirect, Route, Switch, useLocation } from "wouter-preact";
 import styles from "./App.module.scss";
 
 import { Icon, FixedElement } from "./components";
-import { useIsMobile, useLocalStorage } from "./hooks";
-import {
-  Session,
-  SessionContext,
-  AuthedRoute,
-  AuthedMenu,
-} from "./features/auth";
+import { useLocalStorage } from "./hooks";
+import { Session, SessionContext, AuthedRoute } from "./features/auth";
 import { ToastProvider } from "./features/toasts";
 import { ThemeProvider } from "./features/theme";
 import { ModalProvider } from "./features/modal";
@@ -24,7 +19,6 @@ export const paths = {
 } as const;
 
 function App() {
-  const isMobile = useIsMobile();
   const [location] = useLocation();
   const [session, setSession] = useLocalStorage<Session | null>(
     "session",
@@ -55,27 +49,22 @@ function App() {
               </Route>
               <AuthedRoute path={`${paths.conversations}/:conversationId?`}>
                 {(params) => (
-                  <>
-                    <AuthedMenu />
-                    <ConversationsPage conversationId={params.conversationId} />
-                  </>
+                  <ConversationsPage conversationId={params.conversationId} />
                 )}
               </AuthedRoute>
             </Switch>
-            {!isMobile && (
-              <FixedElement position="bottomLeft">
-                <footer className={styles.footer}>
-                  Built with Preact, TypeScript & SASS. Source code on
-                  <a
-                    target="_blank"
-                    href="https://github.com/jasperhaward/chatters-ui"
-                  >
-                    GitHub
-                  </a>
-                  .
-                </footer>
-              </FixedElement>
-            )}
+            <FixedElement position="bottomLeft">
+              <footer className={styles.footer}>
+                Built with Preact, TypeScript & SASS. Source code on
+                <a
+                  target="_blank"
+                  href="https://github.com/jasperhaward/chatters-ui"
+                >
+                  GitHub
+                </a>
+                .
+              </footer>
+            </FixedElement>
           </ModalProvider>
         </ToastProvider>
       </ThemeProvider>
