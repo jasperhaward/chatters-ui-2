@@ -48,6 +48,8 @@ export function Popover({ className = "", content, children }: PopoverProps) {
 
       if (popoverRect.right > viewportWidth) {
         right = viewportWidth - containerRect.right;
+      } else if (popoverRect.left - popoverRect.width / 2 < 0) {
+        left = containerRect.left;
       } else {
         left =
           containerRect.left + containerRect.width / 2 - popoverRect.width / 2;
