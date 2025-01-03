@@ -323,7 +323,6 @@ export default function ConversationsPage({
     <div className={styles.conversations}>
       <Card>
         <span className={styles.conversationsPanel}>
-          <h2>Conversations</h2>
           <ConversationsPanel
             search={inputs.search}
             selectedConversation={selectedConversation}

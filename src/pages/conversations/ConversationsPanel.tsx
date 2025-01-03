@@ -1,4 +1,7 @@
+import styles from "./ConversationsPanel.module.scss";
 import { Button } from "@/components";
+import { UserMenu } from "@/features/auth";
+
 import SearchBox from "./SearchBox";
 import ConversationsPane, {
   ConversationsPaneProps,
@@ -23,6 +26,10 @@ export default function ConversationsPanel({
 
   return (
     <>
+      <div className={styles.heading}>
+        <h2>Conversations</h2>
+        <UserMenu />
+      </div>
       <SearchBox
         name="search"
         disabled={disabled}
