@@ -4,7 +4,10 @@
 
   .contextMenuSection {
     padding: var(--padding-xs);
-    border-top: var(--border-width) solid var(--grey-3);
+
+    &:not(:first-child) {
+      border-top: var(--border-width) solid var(--grey-3);
+    }
   }
 
   .contextMenuItem {
