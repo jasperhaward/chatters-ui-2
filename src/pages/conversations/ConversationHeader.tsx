@@ -1,17 +1,22 @@
-import { format, isToday, isYesterday, isThisWeek, isThisYear } from "date-fns";
 import { useLocation } from "wouter-preact";
 import styles from "./ConversationHeader.module.scss";
 
 import { paths } from "@/App";
-import { Conversation, Conversation as IConversation } from "@/types";
-import { Icon, IconButton, Popover } from "@/components";
+import { Conversation as IConversation } from "@/types";
+import {
+  ContextMenu,
+  ContextMenuButton,
+  ContextMenuSection,
+  Icon,
+  IconButton,
+  Popover,
+} from "@/components";
 import { useRemoveRecipient } from "@/api";
 import { useIsMobile } from "@/hooks";
 import { useSession } from "@/features/auth";
 import { useToasts } from "@/features/toasts";
 
 import { isConversationGroupConversation } from "./utils";
-import { useIsCreatedByUser } from "./useIsCreatedByUser";
 import { useConversationTitle } from "./useConversationTitle";
 import RecipientsPopover from "./RecipientsPopover";
 
@@ -30,20 +35,15 @@ export default function ConversationHeader({
   const [location, setLocation] = useLocation();
   const [session] = useSession();
   const [toast] = useToasts();
-  const deleteRecipient = useRemoveRecipient();
+  const removeRecipient = useRemoveRecipient();
   const title = useConversationTitle(selectedConversation);
-  const isConversationCreatedByUser = useIsCreatedByUser(selectedConversation);
-
-  const author = isConversationCreatedByUser
-    ? " you "
-    : ` ${selectedConversation?.createdBy.username} `;
 
   function onBackClick() {
     setLocation(paths.conversations);
   }
 
   async function onLeaveConversationClick() {
-    const result = await deleteRecipient.execute({
+    const result = await removeRecipient.execute({
       conversationId: selectedConversation!.conversationId,
       recipientId: session.user.id,
     });
@@ -67,62 +67,46 @@ export default function ConversationHeader({
     );
   }
 
+  const isGroupConversation =
+    isConversationGroupConversation(selectedConversation);
+
   return (
-    <div>
-      <div className={styles.header}>
-        <div className={styles.title}>
-          {isMobile && (
-            <IconButton
-              className={styles.back}
-              icon={["fas", "angle-left"]}
-              onClick={onBackClick}
-            />
-          )}
-          <h2>{title}</h2>
-        </div>
-        <div className={styles.menu}>
-          <Popover content={<RecipientsPopover {...selectedConversation} />}>
-            <Icon
-              className={styles.recipientsIcon}
-              icon={["fas", "user-group"]}
-            />
-          </Popover>
-          <IconButton
-            className={styles.button}
-            icon={["fas", "pen"]}
-            onClick={onEditConversationClick}
-          />
-          {isConversationGroupConversation(selectedConversation) && (
-            <IconButton
-              className={styles.button}
-              icon={["fas", "right-from-bracket"]}
-              onClick={onLeaveConversationClick}
-            />
-          )}
-        </div>
+    <div className={styles.header}>
+      {isMobile && (
+        <IconButton
+          className={styles.back}
+          icon={["fas", "arrow-left"]}
+          onClick={onBackClick}
+        />
+      )}
+      <Icon
+        className={styles.icon}
+        icon={["fas", isGroupConversation ? "users" : "user"]}
+      />
+      <div className={styles.title}>
+        <h3>{title}</h3>
+        <Popover
+          content={
+            <RecipientsPopover recipients={selectedConversation.recipients} />
+          }
+        >
+          <span className={styles.participants}>
+            {selectedConversation.recipients.length} participants
+          </span>
+        </Popover>
       </div>
-      <p className={styles.description}>
-        Conversation created by
-        {author}
-        {formatConversationCreatedAt(selectedConversation)}.
-      </p>
-      <hr />
+      <ContextMenu>
+        <ContextMenuSection>
+          <ContextMenuButton color="ghost" onClick={onEditConversationClick}>
+            Edit conversation
+          </ContextMenuButton>
+          {isGroupConversation && (
+            <ContextMenuButton color="ghost" onClick={onLeaveConversationClick}>
+              Leave conversation
+            </ContextMenuButton>
+          )}
+        </ContextMenuSection>
+      </ContextMenu>
     </div>
   );
-}
-
-function formatConversationCreatedAt(conversation: Conversation) {
-  const date = new Date(conversation.createdAt);
-
-  if (isToday(date)) {
-    return "today";
-  } else if (isYesterday(date)) {
-    return "yesterday";
-  } else if (isThisWeek(date)) {
-    return `on ${format(date, "EEEE")}`;
-  } else if (isThisYear(date)) {
-    return `in ${format(date, "MMMM")}`;
-  } else {
-    return "last year";
-  }
 }

@@ -1,50 +1,32 @@
 .header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: var(--padding-lg);
+
+  .back {
+    padding-left: 0;
+    padding-right: var(--padding-md);
+    font-size: var(--avatar-size);
+  }
+
+  .icon {
+    font-size: var(--avatar-size);
+    margin-right: var(--padding-md);
+  }
 
   .title {
-    display: flex;
-    align-items: center;
-    overflow-x: auto;
+    flex-grow: 1;
+    overflow-x: hidden;
 
-    .back {
-      padding-left: 0;
-      padding-right: var(--padding-md);
-      font-size: var(--avatar-size);
-    }
-
-    h2 {
+    h3 {
+      font-size: 1rem;
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
     }
-  }
 
-  .menu {
-    display: flex;
-    align-items: center;
-
-    .recipientsIcon {
-      padding-right: var(--padding-sm);
-      font-size: var(--avatar-size);
-      transition: color var(--transition-duration),
-        opacity var(--transition-duration);
-
-      &:hover {
-        color: var(--grey-2);
-      }
-    }
-
-    .button {
-      padding-left: var(--padding-sm);
-      padding-right: var(--padding-sm);
-      font-size: var(--avatar-size);
+    .participants {
+      font-size: var(--font-size-xs);
+      color: var(--grey-2);
     }
   }
-}
-
-.description {
-  margin-top: 0;
 }
