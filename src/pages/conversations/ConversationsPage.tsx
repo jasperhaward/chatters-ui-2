@@ -253,7 +253,7 @@ export default function ConversationsPage({
 
   function onCreateConversationClick() {
     modal({
-      title: "Create conversation",
+      title: "New conversation",
       content: (onClose) => (
         <CreateConversationForm
           contacts={contacts}

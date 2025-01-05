@@ -93,7 +93,7 @@ export default function EditRecipientsForm({
             Failed to load contacts, please refresh the page.
           </ErrorMessage>
         ) : (
-          <p>Chose from your contacts</p>
+          <p>To add a recipient, select a user from your contacts above</p>
         )
       }
       value={recipients.map(toMultiselectValue)}

@@ -59,14 +59,14 @@ export default function ConversationHeader({
 
   function onEditTitleClick() {
     modal({
-      title: "Edit title",
+      title: "Title",
       content: () => <EditTitleForm conversation={selectedConversation!} />,
     });
   }
 
   function onEditRecipientsClick() {
     modal({
-      title: "Edit recipients",
+      title: "Recipients",
       content: () => (
         <EditRecipientsForm
           conversation={selectedConversation!}

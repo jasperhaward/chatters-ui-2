@@ -16,48 +16,32 @@ export default function EditTitleForm({ conversation }: EditTitleFormProps) {
   const [toast] = useToasts();
   const updateTitle = useUpdateTitle();
 
+  // prettier-ignore
   const {
     inputs,
     hasErrors,
     errors,
     hasSubmitted,
     onInput,
-    setInputs,
     setHasSubmitted,
   } = useForm({ title: conversation.title || "" }, { title: titleValidation });
-
-  async function onRemoveTitleClick() {
-    const result = await executeUpdateTitle(null);
-
-    if (!result.isError) {
-      setInputs({ title: "" });
-    }
-  }
 
   async function onUpdateTitleClick() {
     setHasSubmitted(true);
 
     if (!hasErrors) {
-      await executeUpdateTitle(inputs.title === "" ? null : inputs.title);
-    }
-  }
-
-  async function executeUpdateTitle(title: string | null) {
-    const result = await updateTitle.execute({
-      conversationId: conversation.conversationId,
-      title,
-    });
-
-    if (result.error) {
-      toast({
-        title: "Failed to update title, please try again.",
-        description: result.error.message,
+      const result = await updateTitle.execute({
+        conversationId: conversation.conversationId,
+        title: inputs.title === "" ? null : inputs.title,
       });
 
-      return { isError: true };
+      if (result.error) {
+        toast({
+          title: "Failed to update title, please try again.",
+          description: result.error.message,
+        });
+      }
     }
-
-    return { isError: false };
   }
 
   return (
@@ -69,27 +53,20 @@ export default function EditTitleForm({ conversation }: EditTitleFormProps) {
         value={inputs.title}
         onInput={onInput}
       />
-      {hasSubmitted && errors.title && (
+      {hasSubmitted && errors.title ? (
         <ErrorMessage>{errors.title}</ErrorMessage>
+      ) : (
+        <p>To remove the title, clear the input and press save</p>
       )}
-      <div className={styles.buttons}>
-        <Button
-          color="ghost"
-          disabled={updateTitle.isLoading}
-          spinner={updateTitle.isLoading}
-          onClick={onRemoveTitleClick}
-        >
-          Remove title
-        </Button>
-        <Button
-          color="foreground"
-          disabled={updateTitle.isLoading}
-          spinner={updateTitle.isLoading}
-          onClick={onUpdateTitleClick}
-        >
-          Update title
-        </Button>
-      </div>
+      <Button
+        className={styles.saveButton}
+        color="foreground"
+        disabled={updateTitle.isLoading}
+        spinner={updateTitle.isLoading}
+        onClick={onUpdateTitleClick}
+      >
+        Save
+      </Button>
     </>
   );
 }
