@@ -1,4 +1,18 @@
-.conversations {
+.conversationsHeading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mobilePanel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: var(--padding-sm);
+  padding: var(--padding-xl);
+}
+
+.desktopPanel {
   width: 85%;
   height: 100%;
   margin-left: auto;
@@ -25,12 +39,4 @@
     min-width: 0;
     padding: var(--padding-xl);
   }
-}
-
-.mobilePanel {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  gap: var(--padding-sm);
-  padding: var(--padding-xl);
 }

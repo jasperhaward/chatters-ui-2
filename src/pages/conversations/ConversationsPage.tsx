@@ -21,15 +21,18 @@ import {
   WebSocketConversationEvent,
 } from "@/types";
 import { useInputs, useIsMobile } from "@/hooks";
-import { Card } from "@/components";
-import { useSession } from "@/features/auth";
+import { Button, Card } from "@/components";
+import { UserMenu, useSession } from "@/features/auth";
 import { useToasts } from "@/features/toasts";
 import { useModal } from "@/features/modal";
 
 import { sortConversationsByLatestEvent, sortUsersByUsername } from "./utils";
 import CreateConversationForm from "./CreateConversationForm";
-import EventsPanel from "./EventsPanel";
-import ConversationsPanel from "./ConversationsPanel";
+import ConversationHeader from "./ConversationHeader";
+import EventsPane from "./events-pane/EventsPane";
+import MessageBox from "./MessageBox";
+import SearchBox from "./SearchBox";
+import ConversationsPane from "./conversations-pane/ConversationsPane";
 
 interface ConversationsPageProps {
   conversationId?: string;
@@ -190,7 +193,9 @@ export default function ConversationsPage({
     if (event.conversationId === selectedConversation?.conversationId) {
       events.setData((events) => [event, ...events]);
     }
-    // if the current user is the recipient being removed, remove the conversation
+
+    // remove the conversation from the inbox when either the user is removed from
+    // the conversation by another recipient or leaves themselves
     if (event.recipient.id === session.user.id) {
       return conversations.setData((conversations) => {
         return conversations.filter((conversation) => {
@@ -258,73 +263,80 @@ export default function ConversationsPage({
     });
   }
 
+  const eventsPanel = useMemo(
+    () => (
+      <>
+        <ConversationHeader
+          selectedConversation={selectedConversation}
+          contacts={contacts}
+        />
+        <EventsPane events={events} />
+        <MessageBox
+          name="message"
+          isLoading={createMessage.isLoading}
+          disabled={
+            conversations.isLoading || !!conversations.error || events.isLoading
+          }
+          value={inputs.message}
+          onInput={onInput}
+          onSubmit={onMessageCreationSubmit}
+        />
+      </>
+    ),
+    [
+      selectedConversation,
+      contacts.isLoading,
+      events.isLoading,
+      conversations.isLoading,
+      inputs.message,
+    ]
+  );
+
+  const conversationsPanel = useMemo(
+    () => (
+      <>
+        <div className={styles.conversationsHeading}>
+          <h2>Conversations</h2>
+          <UserMenu />
+        </div>
+        <SearchBox
+          name="search"
+          disabled={conversations.isLoading || !!conversations.error}
+          value={inputs.search}
+          onInput={onInput}
+          onClear={onSearchClearClick}
+        />
+        <ConversationsPane
+          search={inputs.search}
+          conversations={conversations}
+          selectedConversation={selectedConversation}
+          onConversationClick={onConversationClick}
+        />
+        <Button
+          color="foreground"
+          disabled={conversations.isLoading || !!conversations.error}
+          onClick={onCreateConversationClick}
+        >
+          Create conversation
+        </Button>
+      </>
+    ),
+    [selectedConversation, conversations.isLoading, inputs.search]
+  );
+
   if (isMobile) {
     if (selectedConversation) {
-      return (
-        <div className={styles.mobilePanel}>
-          <EventsPanel
-            disabled={
-              conversations.isLoading ||
-              !!conversations.error ||
-              events.isLoading
-            }
-            message={inputs.message}
-            isMessageLoading={createMessage.isLoading}
-            selectedConversation={selectedConversation}
-            events={events}
-            contacts={contacts}
-            onInput={onInput}
-            onMessageCreationSubmit={onMessageCreationSubmit}
-          />
-        </div>
-      );
+      return <div className={styles.mobilePanel}>{eventsPanel}</div>;
     } else {
-      return (
-        <div className={styles.mobilePanel}>
-          <ConversationsPanel
-            search={inputs.search}
-            selectedConversation={selectedConversation}
-            conversations={conversations}
-            onInput={onInput}
-            onSearchClearClick={onSearchClearClick}
-            onConversationClick={onConversationClick}
-            onCreateConversationClick={onCreateConversationClick}
-          />
-        </div>
-      );
+      return <div className={styles.mobilePanel}>{conversationsPanel}</div>;
     }
   }
 
   return (
-    <div className={styles.conversations}>
+    <div className={styles.desktopPanel}>
       <Card>
-        <span className={styles.conversationsPanel}>
-          <ConversationsPanel
-            search={inputs.search}
-            selectedConversation={selectedConversation}
-            conversations={conversations}
-            onInput={onInput}
-            onSearchClearClick={onSearchClearClick}
-            onConversationClick={onConversationClick}
-            onCreateConversationClick={onCreateConversationClick}
-          />
-        </span>
-        <span className={styles.eventsPanel}>
-          <EventsPanel
-            disabled={
-              conversations.isLoading ||
-              !!conversations.error ||
-              events.isLoading
-            }
-            message={inputs.message}
-            isMessageLoading={createMessage.isLoading}
-            selectedConversation={selectedConversation}
-            events={events}
-            contacts={contacts}
-            onInput={onInput}
-            onMessageCreationSubmit={onMessageCreationSubmit}
-          />
-        </span>
+        <span className={styles.conversationsPanel}>{conversationsPanel}</span>
+        <span className={styles.eventsPanel}>{eventsPanel}</span>
       </Card>
     </div>
   );
