@@ -1,0 +1,36 @@
+.mobileLayout {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: var(--padding-sm);
+  padding: var(--padding-xl);
+}
+
+.desktopLayout {
+  width: 85%;
+  height: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding-top: 5rem;
+  padding-bottom: 4rem;
+
+  .lhs {
+    display: flex;
+    flex-direction: column;
+    flex-basis: 0;
+    gap: var(--padding-sm);
+    min-width: 375px;
+    padding: var(--padding-xl);
+    border-color: var(--grey-3);
+    border-right-width: var(--border-width);
+  }
+
+  .rhs {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--padding-sm);
+    min-width: 0;
+    padding: var(--padding-xl);
+  }
+}

@@ -21,12 +21,13 @@ import {
   WebSocketConversationEvent,
 } from "@/types";
 import { useInputs, useIsMobile } from "@/hooks";
-import { Button, Card } from "@/components";
+import { Button } from "@/components";
 import { UserMenu, useSession } from "@/features/auth";
 import { useToasts } from "@/features/toasts";
 import { useModal } from "@/features/modal";
 
 import { sortConversationsByLatestEvent, sortUsersByUsername } from "./utils";
+import InboxLayout from "./InboxLayout";
 import CreateConversationForm from "./CreateConversationForm";
 import ConversationHeader from "./ConversationHeader";
 import EventsPane from "./events-pane/EventsPane";
@@ -263,81 +264,58 @@ export default function ConversationsPage({
     });
   }
 
-  const eventsPanel = useMemo(
-    () => (
-      <>
-        <ConversationHeader
-          selectedConversation={selectedConversation}
-          contacts={contacts}
-        />
-        <EventsPane events={events} />
-        <MessageBox
-          name="message"
-          isLoading={createMessage.isLoading}
-          disabled={
-            conversations.isLoading || !!conversations.error || events.isLoading
-          }
-          value={inputs.message}
-          onInput={onInput}
-          onSubmit={onMessageCreationSubmit}
-        />
-      </>
-    ),
-    [
-      selectedConversation,
-      contacts.isLoading,
-      events.isLoading,
-      conversations.isLoading,
-      inputs.message,
-    ]
-  );
-
-  const conversationsPanel = useMemo(
-    () => (
-      <>
-        <div className={styles.conversationsHeading}>
-          <h2>Conversations</h2>
-          <UserMenu />
-        </div>
-        <SearchBox
-          name="search"
-          disabled={conversations.isLoading || !!conversations.error}
-          value={inputs.search}
-          onInput={onInput}
-          onClear={onSearchClearClick}
-        />
-        <ConversationsPane
-          search={inputs.search}
-          conversations={conversations}
-          selectedConversation={selectedConversation}
-          onConversationClick={onConversationClick}
-        />
-        <Button
-          color="foreground"
-          disabled={conversations.isLoading || !!conversations.error}
-          onClick={onCreateConversationClick}
-        >
-          Create conversation
-        </Button>
-      </>
-    ),
-    [selectedConversation, conversations.isLoading, inputs.search]
-  );
-
-  if (isMobile) {
-    if (selectedConversation) {
-      return <div className={styles.mobilePanel}>{eventsPanel}</div>;
-    } else {
-      return <div className={styles.mobilePanel}>{conversationsPanel}</div>;
-    }
-  }
-
   return (
-    <div className={styles.desktopPanel}>
-      <Card>
-        <span className={styles.conversationsPanel}>{conversationsPanel}</span>
-        <span className={styles.eventsPanel}>{eventsPanel}</span>
-      </Card>
-    </div>
+    <InboxLayout
+      isDisplayRhs={selectedConversation !== undefined}
+      lhs={
+        <>
+          <div className={styles.conversationsHeading}>
+            <h2>Conversations</h2>
+            <UserMenu />
+          </div>
+          <SearchBox
+            name="search"
+            disabled={conversations.isLoading || !!conversations.error}
+            value={inputs.search}
+            onInput={onInput}
+            onClear={onSearchClearClick}
+          />
+          <ConversationsPane
+            search={inputs.search}
+            conversations={conversations}
+            selectedConversation={selectedConversation}
+            onConversationClick={onConversationClick}
+          />
+          <Button
+            color="foreground"
+            disabled={conversations.isLoading || !!conversations.error}
+            onClick={onCreateConversationClick}
+          >
+            Create conversation
+          </Button>
+        </>
+      }
+      rhs={
+        <>
+          <ConversationHeader
+            selectedConversation={selectedConversation}
+            contacts={contacts}
+          />
+          <EventsPane events={events} />
+          <MessageBox
+            name="message"
+            isLoading={createMessage.isLoading}
+            disabled={
+              conversations.isLoading ||
+              !!conversations.error ||
+              events.isLoading
+            }
+            value={inputs.message}
+            onInput={onInput}
+            onSubmit={onMessageCreationSubmit}
+          />
+        </>
+      }
+    />
   );
 }
