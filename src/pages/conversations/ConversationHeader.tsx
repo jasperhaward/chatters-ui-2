@@ -2,7 +2,7 @@ import { useLocation } from "wouter-preact";
 import styles from "./ConversationHeader.module.scss";
 
 import { paths } from "@/App";
-import { Conversation as IConversation } from "@/types";
+import { Conversation, User } from "@/types";
 import {
   ContextMenu,
   ContextMenuButton,
@@ -11,30 +11,32 @@ import {
   IconButton,
   Popover,
 } from "@/components";
-import { useRemoveRecipient } from "@/api";
+import { UseQuery, useRemoveRecipient } from "@/api";
 import { useIsMobile } from "@/hooks";
 import { useSession } from "@/features/auth";
 import { useToasts } from "@/features/toasts";
+import { useModal } from "@/features/modal";
 
 import { isConversationGroupConversation } from "./utils";
 import { useConversationTitle } from "./useConversationTitle";
 import RecipientsPopover from "./RecipientsPopover";
+import EditTitleForm from "./EditTitleForm";
+import EditRecipientsForm from "./EditRecipientsForm";
 
 export interface ConversationHeaderProps {
-  selectedConversation: IConversation | undefined;
-  onLeaveSelectedConversation: () => void;
-  onEditConversationClick: () => void;
+  selectedConversation: Conversation | undefined;
+  contacts: UseQuery<User[]>;
 }
 
 export default function ConversationHeader({
   selectedConversation,
-  onLeaveSelectedConversation,
-  onEditConversationClick,
+  contacts,
 }: ConversationHeaderProps) {
   const isMobile = useIsMobile();
   const [location, setLocation] = useLocation();
   const [session] = useSession();
   const [toast] = useToasts();
+  const modal = useModal();
   const removeRecipient = useRemoveRecipient();
   const title = useConversationTitle(selectedConversation);
 
@@ -53,9 +55,26 @@ export default function ConversationHeader({
         title: "Failed to leave conversation, please try again.",
         description: result.error.message,
       });
-    } else {
-      onLeaveSelectedConversation();
     }
+  }
+
+  function onEditTitleClick() {
+    modal({
+      title: "Edit title",
+      content: () => <EditTitleForm conversation={selectedConversation!} />,
+    });
+  }
+
+  function onEditRecipientsClick() {
+    modal({
+      title: "Edit recipients",
+      content: () => (
+        <EditRecipientsForm
+          conversation={selectedConversation!}
+          contacts={contacts}
+        />
+      ),
+    });
   }
 
   if (!selectedConversation) {
@@ -97,11 +116,14 @@ export default function ConversationHeader({
       </div>
       <ContextMenu>
         <ContextMenuSection>
-          <ContextMenuButton color="ghost" onClick={onEditConversationClick}>
-            Edit conversation
+          <ContextMenuButton onClick={onEditTitleClick}>
+            Edit title
+          </ContextMenuButton>
+          <ContextMenuButton onClick={onEditRecipientsClick}>
+            Edit recipients
           </ContextMenuButton>
           {isGroupConversation && (
-            <ContextMenuButton color="ghost" onClick={onLeaveConversationClick}>
+            <ContextMenuButton onClick={onLeaveConversationClick}>
               Leave conversation
             </ContextMenuButton>
           )}

@@ -41,8 +41,17 @@ export function ContextMenuItem({
   );
 }
 
-export function ContextMenuButton({ className = "", ...props }: ButtonProps) {
+export type ContextMenuButtonProps = Omit<ButtonProps, "color">;
+
+export function ContextMenuButton({
+  className = "",
+  ...props
+}: ContextMenuButtonProps) {
   return (
-    <Button className={`${className} ${styles.contextMenuButton}`} {...props} />
+    <Button
+      className={`${className} ${styles.contextMenuButton}`}
+      color="ghost"
+      {...props}
+    />
   );
 }

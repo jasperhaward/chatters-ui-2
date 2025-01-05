@@ -28,7 +28,6 @@ import { useModal } from "@/features/modal";
 
 import { sortConversationsByLatestEvent, sortUsersByUsername } from "./utils";
 import CreateConversationForm from "./CreateConversationForm";
-import EditConversationForm from "./EditConversationForm";
 import EventsPanel from "./EventsPanel";
 import ConversationsPanel from "./ConversationsPanel";
 
@@ -247,16 +246,6 @@ export default function ConversationsPage({
     setLocation(`${paths.conversations}/${conversation.conversationId}`);
   }
 
-  function onLeaveSelectedConversation() {
-    conversations.setData((conversations) => {
-      return conversations.filter((conversation) => {
-        return (
-          conversation.conversationId !== selectedConversation!.conversationId
-        );
-      });
-    });
-  }
-
   function onCreateConversationClick() {
     modal({
       title: "Create conversation",
@@ -264,18 +253,6 @@ export default function ConversationsPage({
         <CreateConversationForm
           contacts={contacts}
           onConversationCreated={onClose}
-        />
-      ),
-    });
-  }
-
-  function onEditConversationClick() {
-    modal({
-      title: "Edit conversation",
-      content: () => (
-        <EditConversationForm
-          conversation={selectedConversation!}
-          contacts={contacts}
         />
       ),
     });
@@ -295,9 +272,8 @@ export default function ConversationsPage({
             isMessageLoading={createMessage.isLoading}
             selectedConversation={selectedConversation}
             events={events}
+            contacts={contacts}
             onInput={onInput}
-            onLeaveSelectedConversation={onLeaveSelectedConversation}
-            onEditConversationClick={onEditConversationClick}
             onMessageCreationSubmit={onMessageCreationSubmit}
           />
         </div>
@@ -341,12 +317,11 @@ export default function ConversationsPage({
               events.isLoading
             }
             message={inputs.message}
-            selectedConversation={selectedConversation}
             isMessageLoading={createMessage.isLoading}
+            selectedConversation={selectedConversation}
             events={events}
+            contacts={contacts}
             onInput={onInput}
-            onLeaveSelectedConversation={onLeaveSelectedConversation}
-            onEditConversationClick={onEditConversationClick}
             onMessageCreationSubmit={onMessageCreationSubmit}
           />
         </span>

@@ -18,17 +18,15 @@ export default function EventsPanel({
   selectedConversation,
   isMessageLoading,
   events,
+  contacts,
   onInput,
-  onLeaveSelectedConversation,
-  onEditConversationClick,
   onMessageCreationSubmit,
 }: EventsPanelProps) {
   return (
     <>
       <ConversationHeader
         selectedConversation={selectedConversation}
-        onLeaveSelectedConversation={onLeaveSelectedConversation}
-        onEditConversationClick={onEditConversationClick}
+        contacts={contacts}
       />
       <EventsPane events={events} />
       <MessageBox
