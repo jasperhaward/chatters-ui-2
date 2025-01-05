@@ -9,7 +9,6 @@ import {
   ContextMenuSection,
   Icon,
   IconButton,
-  Popover,
 } from "@/components";
 import { UseQuery, useRemoveRecipient } from "@/api";
 import { useIsMobile } from "@/hooks";
@@ -102,17 +101,9 @@ export default function ConversationHeader({
         className={styles.icon}
         icon={["fas", isGroupConversation ? "users" : "user"]}
       />
-      <div className={styles.title}>
+      <div className={styles.details}>
         <h3>{title}</h3>
-        <Popover
-          content={
-            <RecipientsPopover recipients={selectedConversation.recipients} />
-          }
-        >
-          <span className={styles.participants}>
-            {selectedConversation.recipients.length} participants
-          </span>
-        </Popover>
+        <RecipientsPopover recipients={selectedConversation.recipients} />
       </div>
       <ContextMenu>
         <ContextMenuSection>

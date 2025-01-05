@@ -13,7 +13,7 @@
     margin-right: var(--padding-md);
   }
 
-  .title {
+  .details {
     flex-grow: 1;
     overflow-x: hidden;
 
@@ -22,11 +22,6 @@
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
-    }
-
-    .participants {
-      font-size: var(--font-size-xs);
-      color: var(--grey-2);
     }
   }
 }
