@@ -48,12 +48,11 @@ export function UserMenu() {
           <h4>{session.user.username}</h4>
         </ContextMenuItem>
         <ContextMenuSection>
-          <ContextMenuButton color="ghost" onClick={onToggleThemeClick}>
+          <ContextMenuButton onClick={onToggleThemeClick}>
             Toggle Theme
             <Icon icon={["fas", "circle-half-stroke"]} />
           </ContextMenuButton>
           <ContextMenuButton
-            color="ghost"
             disabled={logout.isLoading}
             spinner={logout.isLoading}
             onClick={onLogoutClick}
